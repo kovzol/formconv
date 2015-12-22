@@ -1,0 +1,1 @@
+echo "111111111111" | $F -x aa,.. -x bb,$ -l simple -I intuitive -O maxima -r 

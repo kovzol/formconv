@@ -1,0 +1,51 @@
+<project name="formconv" default="generateSources">
+	<property name="src.dir" value="src"/>
+	<property name="grm.dir" value="${src.dir}/grm"/>
+	<property name="grmInput.dir" value="${grm.dir}/input"/>
+	<property name="grmOutput.dir" value="${grm.dir}/output"/>
+	<property name="gensrc.dir" value="gensrc"/>
+	<property name="obj.dir" value="obj"/>
+	<property name="bin.dir" value="bin"/>
+	<target name="clean" description="Delete all generated files.">
+		<delete failonerror="false">
+			<fileset dir="${gensrc.dir}"/>
+			<fileset dir="${obj.dir}"/>
+			<fileset dir="${bin.dir}"/>
+		</delete>
+	</target>
+	<target name="genSrcCreation" description="Making the directory for the generated source files.">
+		<mkdir dir="${gensrc.dir}"/>
+		<mkdir dir="${obj.dir}"/>
+		<mkdir dir="${bin.dir}"/>
+	</target>
+	<target name="generateInputParsingSources" depends="genSrcCreation" description="Generates the C++ sources for input parsing.">
+		<antlr target="${grm.dir}/intuitive.g" outputdirectory="${gensrc.dir}"/>
+		<antlr target="${grm.dir}/contmathmlin.g" outputdirectory="${gensrc.dir}"/>
+		<antlr target="${grmInput.dir}/lisp.g" outputdirectory="${gensrc.dir}"/>
+	</target>
+	<target name="generateTransformationSources" depends="genSrcCreation, generateInputParsingSources" description="Generates the C++ sources for various transformations.">
+		<antlr target="${grm.dir}/contmathmltointuitive.g" outputdirectory="${gensrc.dir}"/>
+		<antlr target="${grm.dir}/contenttransform.g" outputdirectory="${gensrc.dir}"/>
+		<antlr target="${grm.dir}/contenttransform2.g" outputdirectory="${gensrc.dir}"/>
+		<antlr target="${grm.dir}/presentationtransform.g" outputdirectory="${gensrc.dir}"/>
+		<antlr target="${grm.dir}/transform.g" outputdirectory="${gensrc.dir}"/>
+	</target>
+	<target name="generateOutputSources" depends="genSrcCreation, generateInputParsingSources" description="Generates the C++ sources for various output formats.">
+		<antlr target="${grm.dir}/c.g" outputdirectory="${gensrc.dir}"/>
+		<antlr target="${grm.dir}/java.g" outputdirectory="${gensrc.dir}"/>
+		<antlr target="${grm.dir}/latex.g" outputdirectory="${gensrc.dir}"/>
+		<antlr target="${grm.dir}/mathematica.g" outputdirectory="${gensrc.dir}"/>
+		<antlr target="${grm.dir}/mathml.g" outputdirectory="${gensrc.dir}"/>
+		<antlr target="${grmOutput.dir}/gnuplot.g" outputdirectory="${gensrc.dir}"/>
+		<antlr target="${grmOutput.dir}/html.g" outputdirectory="${gensrc.dir}"/>
+		<antlr target="${grmOutput.dir}/lisp.g" outputdirectory="${gensrc.dir}"/>
+		<antlr target="${grmOutput.dir}/maple.g" outputdirectory="${gensrc.dir}"/>
+		<antlr target="${grmOutput.dir}/maxima.g" outputdirectory="${gensrc.dir}"/>
+		<antlr target="${grmOutput.dir}/mupad.g" outputdirectory="${gensrc.dir}"/>
+	</target>
+	<target name="generateComputingSources" depends="genSrcCreation, generateInputParsingSources" description="Generates (some of) the C++ sources for computing values.">
+		<antlr target="${grm.dir}/complexcompute.g" outputdirectory="${gensrc.dir}"/>
+		<antlr target="${grm.dir}/complexcomputeboost.g" outputdirectory="${gensrc.dir}"/>
+	</target>
+	<target name="generateSources" depends="generateInputParsingSources, generateTransformationSources, generateOutputSources, generateComputingSources" description="Generates the C++ sources from the antlr source files."/>
+</project>

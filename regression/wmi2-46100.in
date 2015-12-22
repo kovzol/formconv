@@ -1,0 +1,1 @@
+echo "x(t)=cos(t),y(t)=sin(t),z(t)=t/(2*pi)" | $F -x aa,.. -x bb,$ -l simple -I intuitive -O gnuplot -r 

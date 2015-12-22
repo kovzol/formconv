@@ -1,0 +1,1 @@
+echo "z*|z|" | $F -O ccomplex

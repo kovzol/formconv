@@ -1,0 +1,1 @@
+echo "69-96 bb " | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r 

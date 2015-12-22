@@ -1,0 +1,186 @@
+.TH FORMCONV "1" "4 January 2009" "Formula converter 0.9"
+.SH NAME
+formconv \- a general formula converter
+.SH SYNOPSIS
+.B formconv
+[\fIOPTIONS\fR]...
+.SH DESCRIPTION
+The
+.I formconv
+utility converts files (defaults are stdin and stdout)
+between various formula formats.
+
+formconv is designed to be a universal tool to convert from
+known formats to others, including many known CAS (computer algebra
+system) formats. Currently it supports intuitive,
+MathML and LISP input and HTML, LaTeX, CAS (MuPAD, Maple,
+Mathematica, Maxima), gnuplot, C (complex), MathML, LISP, Java
+and complex computed (boost) output formats. Complex computed output
+can also be used for calculating
+thousands of evaluation for the same formula, called from
+a C or C++ program using libformconv.so.
+(XaoS, available on http://xaos.sf.net, has a libformconv-like built-in complex
+arithmetics evaluator, SFFE, developed by Mateusz Malczak.)
+
+formconv is mainly used in mathematics web applications to
+check the input syntactically and convert it to various formats
+in order to work on it by other programs: CAS or other mathematics tools.
+
+The most widely used input format is `intuitive' which is a kind
+of mixture of Pascal-like syntax with natural simplifications.
+For example, 2sin^2x stands for 2*(sin(x))^2. Of course, longer
+(unsimplified) inputs are also allowed.
+
+Although many CAS are able to export formulas in various formats,
+formconv is known to be faster and smaller as a general tool.
+However, there are no official statistics or benchmarking tests yet
+to show scientifically reliable differences of efficiency of
+the export facility of the mathematical systems and formconv.
+.SH DOCUMENTATION
+This manual page is not intended to be a detailed resource of information.
+Instead, try
+
+.B
+$ formconv -h
+
+on command line to learn how formconv works.
+
+Further examples are shown in the source distribution of formconv
+which can be downloaded from http://formconv.sf.net. See the doc/
+directory for details.
+
+Another way to learn formconv usage is to observe the source code
+of WMI1/WMI2 (WebMathematics Interactive, see http://matek.hu)
+or RTZME (Real-Time Zooming Math Engine, http://rtzme.sf.net).
+.SH EXAMPLES
+.B
+$ echo "sin^2x/log_a(b)" | formconv
+
+gives
+
+.nf
+\\frac{\\sin ^{2}{x}}{\\log_{a}^{}{\\left(b\\right)}}
+.fi
+
+as output (LaTeX is default).
+
+.B
+$ echo "e^-(x^2+y^2)" | formconv -O maxima
+
+will give
+
+.nf
+(%e^(-(((x^2)+(y^2)))))
+.fi
+
+which can be immediately used in the Maxima CAS.
+
+Finally, the following shell command line gives an example of showing
+an input formula in all available output formats:
+
+.B
+$ INPUT="sinx^2";
+.B
+for i in ccomplex complexcompute java latex mathematica mathml lisp maxima maple gnuplot mupad html debug debugContent; do echo "# Output for $i:"; echo $INPUT | formconv -O $i; done
+
+.nf
+# Output for ccomplex:
+FC_VAR_TYPE  x;
+(csin(cpow(x,2)))
+# Output for complexcompute:
+Exception: St9exception
+# Output for java:
+(Math.sin(Math.pow(x,2)))
+# Output for latex:
+\\sin ^{}{\\left(x^{2}\\right)}
+# Output for mathematica:
+Sin[(x^2)]
+# Output for mathml:
+
+<apply>
+  <sin/>
+  <apply>
+    <power/>
+    <ci>x</ci>
+    <cn>2</cn>
+  </apply>
+</apply>
+# Output for lisp:
+(sin  (expt x 2))
+# Output for maxima:
+sin((x^2))
+# Output for maple:
+sin((x^2))
+# Output for gnuplot:
+(sin((x**2)))
+# Output for mupad:
+sin(x^2)
+# Output for html:
+<table cellspacing="0" cellpadding="0"><tr><td align="right" nowrap="nowrap"><font style="font-size: 12pt">sin </font><sup/></td><td align="left" nowrap="nowrap"><table cellspacing="0" cellpadding="0"><tr><td align="center" nowrap="nowrap"><font style="font-size: 16pt"> (</font></td><td align="left" nowrap="nowrap"><table cellspacing="0" cellpadding="0"><tr><td rowspan="2"><font style="font-size: 12pt"><i>x</i></font></td><td><font style="font-size: 8pt">2</font></td></tr><tr><td>&nbsp;</td></tr></table></td><td align="center" nowrap="nowrap"><font style="font-size: 16pt">)</font></tr></table></td></tr></table>
+# Output for debug:
+
+Intuitive input, before transformations.
+ ( function sin ( ^ x 2 ) )
+After presentation transformation.
+ ( function sin ( ( ( ^ x 2 ) ) )
+# Output for debugContent:
+
+Intuitive input, before transformations.
+ ( function sin ( ^ x 2 ) )
+After first content transformation.
+ ( function sin ( ^ x 2 ) )
+After second content transformation.
+ ( function sin ( ^ x 2 ) )
+.fi
+
+Note that complexcompute output must have the -V option to get a proper answer:
+
+.B
+$ echo x^3 | formconv -V x=1+i -O complexcompute
+
+.nf
+-2+2i
+.fi
+
+debug and debugContent output formats are designed for testing purposes.
+For further examples please refer to the regression test suite in the
+source distribution.
+.SH DIAGNOSTICS
+formconv returns 0 if the input has been correctly processed and some
+output has been returned. Otherwise (on illegal input) it returns 255 (-1).
+Finally, on bad parameters (given on command line) formconv exits with 1.
+.SH AUTHORS
+Gabor Bakos (baga@users.sourceforge.net, primary author) and
+Zoltan Kovacs (kovzol@matek.hu, maintainer)
+.SH "KNOWN BUGS"
+The intuitive format is not fully documented.
+Some types of input and output formats are not exhaustively tested yet.
+You are encouraged to send a bug report if you find one.
+.SH COPYRIGHT
+Copyright \(co 2003-2010 Zoltan Kovacs and Gabor Bakos.
+.br
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU Library or Lesser General Public License
+(LGPL) as published by the Free Software Foundation.
+There is NO warranty; not even for MERCHANTABILITY or 
+FITNESS FOR A PARTICULAR PURPOSE.
+.SH ACKNOWLEDGMENTS
+formconv is based on a "Calculator Demo" published by Ferenc Havasi, 2000.
+Thanks to Tibor Gyimothy, Laszlo Vidacs, Ferenc Havasi
+and Robert Vajda for their support. Version 0.7 and below were
+using PCCTS as the underlying lexer and parser. Version 0.8 and
+above use ANTLR for this.
+
+formconv is continuously tested by contributors, namely
+Robert Marik, Martin Dozsa and others. Kalin Kozhuharov contributed
+some MathML specific code to the formconv project.
+
+formconv is a subproject of WebMathematics Interactive
+which is supported by the
+Hungarian Ministry of Information and Communication,
+ITEM K+F, 203/2003.
+.SH "SEE ALSO"
+.B
+recode(1), maxima(1), mupad(1), latex(1), gnuplot(1),
+.B
+mathematica(1), java(1), gcc(1), xaos(6)

@@ -1,0 +1,844 @@
+/**
+ * @Author: Gábor Bakos (Bakos.Gabor.1@stud.u-szeged.hu)
+ * Version: $Id: beautify.sor,v 1.2 2004/12/15 13:37:36 baga Exp $
+ */
+
+#header <<
+#include <string>
+#include <iostream>
+#include <fstream>
+using namespace std;
+#include "tokens.h"
+#include "AST.h"
+typedef AST SORAST;
+>>
+
+class TreeParser_Beautify {
+<<
+private:
+	bool middle, compute_valign, C_precedence;
+	int in_up;
+	int in_down;
+	ofstream cout;
+
+public:
+	TreeParser_Beautify(const bool x, const char *fn, bool C_prec = false): cout(fn), compute_valign(x), middle(false), in_up(0), in_down(0), C_precedence(C_prec)
+	{
+	}
+>>
+inp: {expr}
+	;
+expr:
+	 !#(n:NL {f:expr
+	                <<
+			  if (compute_valign)
+	                  {
+	                    if (middle) cout << "middle" << endl;
+	                    else cout << "bottom" << endl;
+	                    middle=false;
+	                  }
+	                >>
+	                 {g:expr}})
+	  <<
+	    if (f==NULL) #expr=n;
+	    else
+	      if (f->type()==LPAREN) {
+	      	f->down()->setRight(NULL);
+		#expr=#(n,f->down(),g);
+	      } else #expr=#(n,f,g);
+	  >>
+	| #(ASSIGN expr expr
+	                <<
+			  if (compute_valign)
+	                  {
+	                    if (middle) cout << "middle" << endl;
+	                    else cout << "bottom" << endl;
+	                    middle=false;
+	                  }
+	                >>
+		{expr})
+	|!#(e:AND f:expr g:expr)
+	  <<
+	    if (!(C_precedence))
+	    {
+	      int u=f->type(), v=g->type();
+	      if (u==EQUAL || u==NEQ)
+	        if (v==EQUAL || v==NEQ)
+	          #expr=#(e,#(#[LPAREN,"("], f, #[RPAREN,")"]),#(#[LPAREN,"("], g, #[RPAREN,")"]));
+	        else
+	          #expr=#(e,#(#[LPAREN,"("], f, #[RPAREN,")"]), g);
+	      else
+	        if (v==EQUAL || v==NEQ)
+	          #expr=#(e, f, #(#[LPAREN,"("], g, #[RPAREN,")"]));
+	        else
+	          #expr=#(e, f, g);
+	    }
+	    else #expr=#(e,f,g);
+	  >>
+	|!#(e:NAND f:expr g:expr)
+	  <<
+	    if (!(C_precedence))
+	    {
+	      int u=f->type(), v=g->type();
+	      if (u==EQUAL || u==NEQ)
+	        if (v==EQUAL || v==NEQ)
+	          #expr=#(e,#(#[LPAREN,"("], f, #[RPAREN,")"]),#(#[LPAREN,"("], g, #[RPAREN,")"]));
+	        else
+	          #expr=#(e,#(#[LPAREN,"("], f, #[RPAREN,")"]), g);
+	      else
+	        if (v==EQUAL || v==NEQ)
+	          #expr=#(e, f, #(#[LPAREN,"("], g, #[RPAREN,")"]));
+	        else
+	          #expr=#(e, f, g);
+	    }
+	    else #expr=#(e,f,g);
+	  >>
+	|!#(e:OR f:expr g:expr)
+	  <<
+	    if (!(C_precedence))
+	    {
+	      int u=f->type(), v=g->type();
+	      if (u==EQUAL || u==NEQ)
+	        if (v==EQUAL || v==NEQ)
+	          #expr=#(e,#(#[LPAREN,"("], f, #[RPAREN,")"]),#(#[LPAREN,"("], g, #[RPAREN,")"]));
+	        else
+	          #expr=#(e,#(#[LPAREN,"("], f, #[RPAREN,")"]), g);
+	      else
+	        if (v==EQUAL || v==NEQ)
+	          #expr=#(e, f, #(#[LPAREN,"("], g, #[RPAREN,")"]));
+	        else
+	          #expr=#(e, f, g);
+	    }
+	    else #expr=#(e,f,g);
+	  >>
+	|!#(e:NOR f:expr g:expr)
+	  <<
+	    if (!(C_precedence))
+	    {
+	      int u=f->type(), v=g->type();
+	      if (u==EQUAL || u==NEQ)
+	        if (v==EQUAL || v==NEQ)
+	          #expr=#(e,#(#[LPAREN,"("], f, #[RPAREN,")"]),#(#[LPAREN,"("], g, #[RPAREN,")"]));
+	        else
+	          #expr=#(e,#(#[LPAREN,"("], f, #[RPAREN,")"]), g);
+	      else
+	        if (v==EQUAL || v==NEQ)
+	          #expr=#(e, f, #(#[LPAREN,"("], g, #[RPAREN,")"]));
+	        else
+	          #expr=#(e, f, g);
+	    }
+	    else #expr=#(e,f,g);
+	  >>
+	|!#(e:XOR f:expr g:expr)
+	  <<
+	    if (!(C_precedence))
+	    {
+	      int u=f->type(), v=g->type();
+	      if (u==EQUAL || u==NEQ)
+	        if (v==EQUAL || v==NEQ)
+	          #expr=#(e,#(#[LPAREN,"("], f, #[RPAREN,")"]),#(#[LPAREN,"("], g, #[RPAREN,")"]));
+	        else
+	          #expr=#(e,#(#[LPAREN,"("], f, #[RPAREN,")"]), g);
+	      else
+	        if (v==EQUAL || v==NEQ)
+	          #expr=#(e, f, #(#[LPAREN,"("], g, #[RPAREN,")"]));
+	        else
+	          #expr=#(e, f, g);
+	    }
+	    else #expr=#(e,f,g);
+	  >>
+	| #(IMPLY expr expr)
+	| #(NOT expr)
+	| #(True)
+	| #(False)
+	|!#(e:LESS f:expr g:expr)
+	  <<
+	    if (f->type()==LPAREN) {
+	      if (g->type()==LPAREN)
+	      {
+	        f->down()->setRight(NULL);
+		g->down()->setRight(NULL);
+		#expr=#(e,f->down(),g->down());
+	      }
+	      else
+	      {
+	      	f->down()->setRight(NULL);
+		#expr=#(e,f->down(),g);
+	      }
+	    }
+	    else {
+	      if (g->type()==LPAREN)
+	      {
+	        g->down()->setRight(NULL);
+		#expr=#(e,f,g->down());
+	      }
+	      else #expr=#(e,f,g);
+	    }
+	  >>
+	|!#(e:LE f:expr g:expr)
+	  <<
+	    if (f->type()==LPAREN) {
+	      if (g->type()==LPAREN)
+	      {
+	        f->down()->setRight(NULL);
+		g->down()->setRight(NULL);
+		#expr=#(e,f->down(),g->down());
+	      }
+	      else
+	      {
+	      	f->down()->setRight(NULL);
+		#expr=#(e,f->down(),g);
+	      }
+	    }
+	    else {
+	      if (g->type()==LPAREN)
+	      {
+	        g->down()->setRight(NULL);
+		#expr=#(e,f,g->down());
+	      }
+	      else #expr=#(e,f,g);
+	    }
+	  >>
+	|!#(e:EL f:expr g:expr)
+	  <<
+	    if (f->type()==LPAREN) {
+	      if (g->type()==LPAREN)
+	      {
+	        f->down()->setRight(NULL);
+		g->down()->setRight(NULL);
+		#expr=#(e,f->down(),g->down());
+	      }
+	      else
+	      {
+	      	f->down()->setRight(NULL);
+		#expr=#(e,f->down(),g);
+	      }
+	    }
+	    else {
+	      if (g->type()==LPAREN)
+	      {
+	        g->down()->setRight(NULL);
+		#expr=#(e,f,g->down());
+	      }
+	      else #expr=#(e,f,g);
+	    }
+	  >>
+	|!#(e:GREATER f:expr g:expr)
+	  <<
+	    if (f->type()==LPAREN) {
+	      if (g->type()==LPAREN)
+	      {
+	        f->down()->setRight(NULL);
+		g->down()->setRight(NULL);
+		#expr=#(e,f->down(),g->down());
+	      }
+	      else
+	      {
+	      	f->down()->setRight(NULL);
+		#expr=#(e,f->down(),g);
+	      }
+	    }
+	    else {
+	      if (g->type()==LPAREN)
+	      {
+	        g->down()->setRight(NULL);
+		#expr=#(e,f,g->down());
+	      }
+	      else #expr=#(e,f,g);
+	    }
+	  >>
+	|!#(e:GE f:expr g:expr)
+	  <<
+	    if (f->type()==LPAREN) {
+	      if (g->type()==LPAREN)
+	      {
+	        f->down()->setRight(NULL);
+		g->down()->setRight(NULL);
+		#expr=#(e,f->down(),g->down());
+	      }
+	      else
+	      {
+	      	f->down()->setRight(NULL);
+		#expr=#(e,f->down(),g);
+	      }
+	    }
+	    else {
+	      if (g->type()==LPAREN)
+	      {
+	        g->down()->setRight(NULL);
+		#expr=#(e,f,g->down());
+	      }
+	      else #expr=#(e,f,g);
+	    }
+	  >>
+	|!#(e:EG f:expr g:expr)
+	  <<
+	    if (f->type()==LPAREN) {
+	      if (g->type()==LPAREN)
+	      {
+	        f->down()->setRight(NULL);
+		g->down()->setRight(NULL);
+		#expr=#(e,f->down(),g->down());
+	      }
+	      else
+	      {
+	      	f->down()->setRight(NULL);
+		#expr=#(e,f->down(),g);
+	      }
+	    }
+	    else {
+	      if (g->type()==LPAREN)
+	      {
+	        g->down()->setRight(NULL);
+		#expr=#(e,f,g->down());
+	      }
+	      else #expr=#(e,f,g);
+	    }
+	  >>
+	|!#(e:EQUAL f:expr g:expr)
+	  <<
+	    int t=0,u=0;
+	    if (f->type()==LPAREN) t=f->down()->type(); //checking is just to avoid segmentation fault if there are no children
+	    if (f->type()==LPAREN && !(t==AND || t==OR || t==XOR || t==NAND || t==NOR || t==IMPLY || t==LESS || t==LE || t==EL || t==GREATER || t==GE || t==EG || t==EQUAL || t==NEQ)) //lhs is LPAREN, but it does not contain logical relation, or operator.
+	    {
+	      if (g->type()==LPAREN) u=g->down()->type();
+	      if (g->type()==LPAREN && !(u==AND || u==OR || u==XOR || u==NAND || u==NOR || u==IMPLY || u==LESS || u==LE || u==EL || u==GREATER || u==GE || u==EG || u==EQUAL || u==NEQ)) //rhs is LPAREN, but it does not contain logical relation, or operator. (No need for LPAREN)
+	      {
+	        f->down()->setRight(NULL);
+		g->down()->setRight(NULL);
+		#expr=#(e,f->down(),g->down());
+	      }
+	      else //rhs is not LPAREN, or it is log. expr in LPAREN
+	      {
+	      	f->down()->setRight(NULL);
+		u=g->type();
+		if (u==AND || u==OR || u==XOR || u==NAND || u==NOR || u==IMPLY || u==LESS || u==LE || u==EL || u==GREATER || u==GE || u==EG || u==EQUAL || u==NEQ) //We must create LPAREN to rhs
+		  #expr=#(e,f->down(),#(#[LPAREN,"("],g,#[RPAREN,")"]));
+		else #expr=#(e,f->down(),g); //rhs is OK.
+	      }
+	    }
+	    else { //lhs is not LPAREN, or it is log. expr in LPAREN (-> LPRAREN must survive)
+	      t=f->type();
+	      if (g->type()==LPAREN) u=g->down()->type();
+	      if (g->type()==LPAREN && !(u==AND || u==OR || u==XOR || u==NAND || u==NOR || u==IMPLY || u==LESS || u==LE || u==EL || u==GREATER || u==GE || u==EG || u==EQUAL || u==NEQ)) //rhs is LPAREN, but it does not contain logical relation, or operator. (No need for LPAREN)
+	      {
+	        g->down()->setRight(NULL);
+		if (t==AND || t==OR || t==XOR || t==NAND || t==NOR || t==IMPLY || t==LESS || t==LE || t==EL || t==GREATER || t==GE || t==EG || t==EQUAL || t==NEQ) //We must create LPAREN to lhs
+		  #expr=#(e,#(#[LPAREN,"("],f,#[RPAREN,")"]));
+		else #expr=#(e,f,g->down());
+	      }
+	      else if (C_precedence) //lhs, rhs are not LPAREN, they are not log. expr in LPAREN (possibly need to create some LPARENs)
+	      {
+	        t=f->type();
+		u=g->type();
+		if (t==AND || t==OR || t==XOR || t==NAND || t==NOR || t==IMPLY || t==LESS || t==LE || t==EL || t==GREATER || t==GE || t==EG || t==EQUAL || t==NEQ) //have to create LPAREN to lhs
+		  if (u==AND || u==OR || u==XOR || u==NAND || u==NOR || u==IMPLY || u==LESS || u==LE || u==EL || u==GREATER || u==GE || u==EG || u==EQUAL || u==NEQ) //have to create LPAREN to rhs too
+		    #expr=#(e,#(#[LPAREN,"("],f,#[RPAREN,")"]),#(#[LPAREN,"("],g,#[RPAREN,")"]));
+		  else //rhs is OK.
+		    #expr=#(e,#(#[LPAREN,"("],f,#[RPAREN,")"]),g);
+		else //lhs is OK.
+		  if (u==AND || u==OR || u==XOR || u==NAND || u==NOR || u==IMPLY || u==LESS || u==LE || u==EL || u==GREATER || u==GE || u==EG || u==EQUAL || u==NEQ) // have to create LPAREN to lhs
+		    #expr=#(e,f,#(#[LPAREN,"("],g,#[RPAREN,")"]));
+		  else //rhs is OK.
+		    #expr=#(e,f,g);
+	      }
+	      else //NOT C_precedence, so it is easy.
+	      {
+	        #expr=#(e,f,g);
+	      }
+	    }
+	  >>
+	|!#(e:NEQ f:expr g:expr)
+	  <<
+	    int t=0,u=0;
+	    if (f->type()==LPAREN) t=f->down()->type(); //checking is just to avoid segmentation fault if there are no children
+	    if (f->type()==LPAREN && !(t==AND || t==OR || t==XOR || t==NAND || t==NOR || t==IMPLY || t==LESS || t==LE || t==EL || t==GREATER || t==GE || t==EG || t==EQUAL || t==NEQ)) //lhs is LPAREN, but it does not contain logical relation, or operator.
+	    {
+	      if (g->type()==LPAREN) u=g->down()->type();
+	      if (g->type()==LPAREN && !(u==AND || u==OR || u==XOR || u==NAND || u==NOR || u==IMPLY || u==LESS || u==LE || u==EL || u==GREATER || u==GE || u==EG || u==EQUAL || u==NEQ)) //rhs is LPAREN, but it does not contain logical relation, or operator. (No need for LPAREN)
+	      {
+	        f->down()->setRight(NULL);
+		g->down()->setRight(NULL);
+		#expr=#(e,f->down(),g->down());
+	      }
+	      else //rhs is not LPAREN, or it is log. expr in LPAREN
+	      {
+	      	f->down()->setRight(NULL);
+		u=g->type();
+		if (u==AND || u==OR || u==XOR || u==NAND || u==NOR || u==IMPLY || u==LESS || u==LE || u==EL || u==GREATER || u==GE || u==EG || u==EQUAL || u==NEQ) //We must create LPAREN to rhs
+		  #expr=#(e,f->down(),#(#[LPAREN,"("],g,#[RPAREN,")"]));
+		else #expr=#(e,f->down(),g); //rhs is OK.
+	      }
+	    }
+	    else { //lhs is not LPAREN, or it is log. expr in LPAREN (-> LPRAREN must survive)
+	      t=f->type();
+	      if (g->type()==LPAREN) u=g->down()->type();
+	      if (g->type()==LPAREN && !(u==AND || u==OR || u==XOR || u==NAND || u==NOR || u==IMPLY || u==LESS || u==LE || u==EL || u==GREATER || u==GE || u==EG || u==EQUAL || u==NEQ)) //rhs is LPAREN, but it does not contain logical relation, or operator. (No need for LPAREN)
+	      {
+	        g->down()->setRight(NULL);
+		if (t==AND || t==OR || t==XOR || t==NAND || t==NOR || t==IMPLY || t==LESS || t==LE || t==EL || t==GREATER || t==GE || t==EG || t==EQUAL || t==NEQ) //We must create LPAREN to lhs
+		  #expr=#(e,#(#[LPAREN,"("],f,#[RPAREN,")"]));
+		else #expr=#(e,f,g->down());
+	      }
+	      else //lhs, rhs are not LPAREN, they are not log. expr in LPAREN (possibly need to create some LPARENs)
+	      {
+	        t=f->type();
+		u=g->type();
+		if (t==AND || t==OR || t==XOR || t==NAND || t==NOR || t==IMPLY || t==LESS || t==LE || t==EL || t==GREATER || t==GE || t==EG || t==EQUAL || t==NEQ) //have to create LPAREN to lhs
+		  if (u==AND || u==OR || u==XOR || u==NAND || u==NOR || u==IMPLY || u==LESS || u==LE || u==EL || u==GREATER || u==GE || u==EG || u==EQUAL || u==NEQ) //have to create LPAREN to rhs too
+		    #expr=#(e,#(#[LPAREN,"("],f,#[RPAREN,")"]),#(#[LPAREN,"("],g,#[RPAREN,")"]));
+		  else //rhs is OK.
+		    #expr=#(e,#(#[LPAREN,"("],f,#[RPAREN,")"]),g);
+		else //lhs is OK.
+		  if (u==AND || u==OR || u==XOR || u==NAND || u==NOR || u==IMPLY || u==LESS || u==LE || u==EL || u==GREATER || u==GE || u==EG || u==EQUAL || u==NEQ) // have to create LPAREN to lhs
+		    #expr=#(e,f,#(#[LPAREN,"("],g,#[RPAREN,")"]));
+		  else //rhs is OK.
+		    #expr=#(e,f,g);
+	      }
+	    }
+	  >>
+	| #(IN expr expr)
+	| #(NI expr expr)
+	| #(SUPSET expr expr)
+	| #(SUBSET expr expr)
+	| #(SUPSETEQ expr expr)
+	| #(SUBSETEQ expr expr)
+	| #(UNION expr expr)
+	| #(INTERSECT expr expr)
+	| #(EXCEPT expr expr)
+	| #(SETDEF expr expr)
+
+	| #(FORALL expr expr)
+	| #(EXISTS expr expr)
+	| #(CROSS expr expr)
+	
+	| #(PLUS expr expr)
+	| #(MINUS expr expr)
+	| #(NEG expr)
+	| #(MULT expr expr)
+	|!#(d:DIV e1:expr e2:expr)<<
+			   if (e1->type()==LPAREN && e2->type()!=LPAREN) {
+			     e1->down()->setRight(NULL);
+			     #expr=#(d,e1->down(),e2);
+			   }
+			   else if (e1->type()==LPAREN && e2->type()==LPAREN) {
+			     e1->down()->setRight(NULL);
+			     e2->down()->setRight(NULL);
+			     #expr=#(d,e1->down(),e2->down());
+			   }
+			   else if (e1->type()!=LPAREN && e2->type()!=LPAREN) #expr=#(d,e1,e2);
+			   else if (e1->type()!=LPAREN && e2->type()==LPAREN) {
+			     e2->down()->setRight(NULL);
+			     #expr=#(d,e1,e2->down());
+			   }
+			   if (!(in_up) && !(in_down)) middle=true;
+			  >>
+	| #(DIVI expr expr)
+	| #(MOD expr expr)
+	| #(MULTNONE expr expr)
+	|!#(c:CIRCUM e1:expr <<in_up++;>> e2:expr <<in_up--;>>)<<
+			   if (e2->type()==LPAREN) {
+			     if (e1->type()==FUNCTION) {
+			       if (e1->down()->type()==EXP) {
+			         if (e1->down()->right()->right()==NULL) {
+			           #expr=e1->down()->right();
+				   e1->down()->setRight(#(#[MULTNONE],#expr,e2));
+				   #expr=e1;
+			         }
+			         else {//EXP has exponent
+				   #expr=#(#[MULTNONE],e1->down()->right()->right(),e2);
+			           e1->down()->setRight(#(#[MULTNONE],e1->down()->right(),#expr));
+				   #expr=e1;
+			         }
+			       }
+			       else {//FUNCTION is not EXP
+			         if (e1->down()->type()==LOG) {//FUNCTION is LOG
+			           if (e1->down()->right()->right()==NULL) {
+			             e2->down()->setRight(NULL);
+			             e1->down()->right()->setRight(e2->down());
+				     #expr=e1;
+			           }
+			           else {//LOG has exponent or base
+				     if (e1->down()->right()->type()==UNDERSCORELOG) {//LOG has base
+				       if (e1->down()->right()->right()->right()->right()==NULL) {
+				         e2->down()->setRight(NULL);
+				         e1->down()->right()->right()->right()->setRight(e2->down());
+				         #expr=e1;
+				       }
+				       else {//LOG has base and exponent
+				         int t=e1->down()->right()->right()->right()->right()->type();
+				         if (t==CONST || t==VARIABLE || t==NUM || t==ABS || t==DIV)
+				           #expr=#(#[MULTNONE],e1->down()->right()->right()->right()->right(),e2);
+				         else
+				           #expr=#(#[MULTNONE],#(#[LPAREN,"("],e1->down()->right()->right()->right()->right(),#[RPAREN,")"]),e2);
+			                 e1->down()->right()->right()->right()->setRight(#expr);
+				         #expr=e1;
+				         
+				       }
+				     }
+				     else {//the LOG has not base, but has exponent.
+				       int t=e1->down()->right()->right()->type();
+				       if (t==CONST || t==VARIABLE || t==NUM || t==ABS || t==DIV)
+				         #expr=#(#[MULTNONE],e1->down()->right()->right(),e2);
+				       else
+				         #expr=#(#[MULTNONE],#(#[LPAREN,"("],e1->down()->right()->right(),#[RPAREN,")"]),e2);
+			               e1->down()->right()->setRight(#expr);
+				       #expr=e1;
+				     }
+			           }
+				 }
+				 else { //FUNCTION is not LOG, nor EXP
+			           if (e1->down()->right()->right()==NULL) {
+			             e2->down()->setRight(NULL);
+			             e1->down()->right()->setRight(e2->down());
+				     #expr=e1;
+			           }
+			           else {//FUNCTION already has exponent
+				     //If there was something like (expr) in the exponent, then there is only expr, so we have to create the parents again.
+				     int t=e1->down()->right()->right()->type();
+				     if (t==CONST || t==VARIABLE || t==NUM || t==ABS || t==DIV)
+				       #expr=#(#[MULTNONE],e1->down()->right()->right(),e2);
+				     else
+				       #expr=#(#[MULTNONE],#(#[LPAREN,"("],e1->down()->right()->right(),#[RPAREN,")"]),e2);
+			             e1->down()->right()->setRight(#expr);
+				     #expr=e1;
+			           }
+			         }
+			       }
+			     }
+			     else {//It is not FUNCTION
+			       e2->down()->setRight(NULL);
+			       if (e1->type()==DIV) #expr=#(c,#(#[LPAREN,"("],e1,#[RPAREN,")"]),e2->down()); //We have to create the parents again.
+			       else #expr=#(c,e1,e2->down());
+			     }
+			   }
+			   else {//The exponent in CIRCUM is not LPAREN
+			     if (e1->type()==FUNCTION) {
+			       if (e1->down()->type()==EXP) {
+			         if (e1->down()->right()->right()==NULL) {
+			           #expr=e1->down()->right();
+				   e1->down()->setRight(#(#[MULTNONE],#expr,e2));
+			         }
+			         else {//EXP has exponent
+				   #expr=#(#[MULTNONE],e1->down()->right()->right(),e2);
+			           e1->down()->setRight(#(#[MULTNONE],e1->down()->right(),#expr));
+			         }
+			         #expr=e1;
+			       }
+			       else {//FUNCTION is not EXP
+			         if (e1->down()->type()==LOG) {//FUNCTION is LOG
+			           if (e1->down()->right()->right()==NULL) {
+			             e1->down()->right()->setRight(e2);
+				     #expr=e1;
+			           }
+			           else {//LOG has exponent or base
+				     if (e1->down()->right()->type()==UNDERSCORELOG) {//LOG has base
+				       if (e1->down()->right()->right()->right()->right()==NULL) {
+				         e1->down()->right()->right()->right()->setRight(e2);
+				         #expr=e1;
+				       }
+				       else {//LOG has base and exponent
+				         int t=e1->down()->right()->right()->right()->right()->type();
+				         if (t==CONST || t==VARIABLE || t==NUM || t==ABS || t==DIV)
+				           #expr=#(#[MULTNONE],e1->down()->right()->right()->right()->right(),e2);
+				         else
+				           #expr=#(#[MULTNONE],#(#[LPAREN,"("],e1->down()->right()->right()->right()->right(),#[RPAREN,")"]),e2);
+			                 e1->down()->right()->right()->right()->setRight(#expr);
+				         #expr=e1;
+				         
+				       }
+				     }
+				     else {//the LOG has not base, but has exponent.
+				       int t=e1->down()->right()->right()->type();
+				       if (t==CONST || t==VARIABLE || t==NUM || t==ABS || t==DIV)
+				         #expr=#(#[MULTNONE],e1->down()->right()->right(),e2);
+				       else
+				         #expr=#(#[MULTNONE],#(#[LPAREN,"("],e1->down()->right()->right(),#[RPAREN,")"]),e2);
+			               e1->down()->right()->setRight(#expr);
+				       #expr=e1;
+				     }
+			           }
+			         }
+			         else {//FUNCTION is not LOG, nor EXP
+			           if (e1->down()->right()->right()==NULL) {
+			             e1->down()->right()->setRight(e2);
+				     #expr=e1;
+			           }
+			           else {//FUNCTION has exponent
+				     //If there was something like (expr) in the exponent, then there is only expr, so we have to create the parents again.
+				     int t=e1->down()->right()->right()->type();
+				     if (t==CONST || t==VARIABLE || t==NUM)
+				       #expr=#(#[MULTNONE],e1->down()->right()->right(),e2);
+				     else
+				       #expr=#(#[MULTNONE],#(#[LPAREN,"("],e1->down()->right()->right(),#[RPAREN,")"]),e2);
+			             e1->down()->right()->setRight(#expr);
+				     #expr=e1;
+			           }
+			         }
+			       }
+			     }
+			     else if (e1->type()==UFUNCTION)
+			       {
+			         PCCTS_AST *i;
+			         for (i=e1->down(); (i->right())!=NULL; i=i->right()) {} // i is the last index
+			         i->setRight(e2);
+			         #expr=e1;
+			       }
+			     else //It is not FUNCTION nor UFUNCTION
+			       if (e1->type()==DIV) #expr=#(c,#(#[LPAREN,"("],e1,#[RPAREN,")"]),e2); //We have to create the parents again.
+			       else #expr=#(c,e1,e2);
+			   }
+			  >>
+
+	| #(SIN)
+	| #(COS)
+	| #(SEC)
+	| #(COSEC)
+	| #(TAN)
+	| #(COT)
+	| #(SINH)
+	| #(COSH)
+	| #(SECH)
+	| #(COSECH)
+	| #(TANH)
+	| #(COTH)
+	| #(ARCSIN)
+	| #(ARCCOS)
+	| #(ARCSEC)
+	| #(ARCCOSEC)
+	| #(ARCTAN)
+	| #(ARCCOT)
+	| #(ARCSINH)
+	| #(ARCCOSH)
+	| #(ARCSECH)
+	| #(ARCCOSECH)
+	| #(ARCTANH)
+	| #(ARCCOTH)
+	| #(EXP)
+	| #(LOG)
+	| #(ARG)
+	| #(IM)
+	| #(RE)
+	| #(CONJUGATE)
+	| #(SQRT)
+	| #(LN)
+	| #(FLOOR expr)
+	| #(CEIL expr)
+	| #(COMPLEMENTER)
+	| #(TRANSPONATE)
+
+	| nvc
+	|!#(l:LBRACKET e0:expr <<in_down;>> e1:expr {c:COMMA e2:expr} r:RBRACKET <<in_down--;>>)
+	  <<if (e2==NULL)
+	      if (e1->type()==LPAREN)
+	      {
+	        e1->down()->setRight(NULL);
+	        #expr=#(l,e0,e1->down(),r);
+	      }
+	      else #expr=#(l,e0,e1,r);
+	    else if (e2->type()==LPAREN)
+	      if (e1->type()==LPAREN)
+	      {
+	        e1->down()->setRight(NULL);
+	        e2->down()->setRight(NULL);
+	        #expr=#(l,e0,e1->down(),c,e2->down(),r);
+	      }
+	      else
+	      {
+	        e2->down()->setRight(NULL);
+	        #expr=#(l,e0,e1,c,e2->down(),r);
+	      }
+	    else 
+	      if (e1->type()==LPAREN)
+	      {
+	        e1->down()->setRight(NULL);
+	        #expr=#(l,e0,e1->down(),c,e2,r);
+	      }
+	      else #expr=#(l,e0,e1,c,e2,r);
+	  >>
+	|!#(u:UNDERSCORE e0:expr <<in_down++;>> e1:expr {c:COMMA e2:expr} <<in_down--;>>)
+	  <<if (e2==NULL)
+	      if (e1->type()==LPAREN)
+	      {
+	        e1->down()->setRight(NULL);
+	        #expr=#(u,e0,e1->down());
+	      }
+	      else #expr=#(u,e0,e1);
+	    else if (e2->type()==LPAREN)
+	      if (e1->type()==LPAREN)
+	      {
+	        e1->down()->setRight(NULL);
+	        e2->down()->setRight(NULL);
+	        #expr=#(u,e0,e1->down(),c,e2->down());
+	      }
+	      else
+	      {
+	        e2->down()->setRight(NULL);
+	        #expr=#(u,e0,e1,c,e2->down());
+	      }
+	    else 
+	      if (e1->type()==LPAREN)
+	      {
+	        e1->down()->setRight(NULL);
+	        #expr=#(u,e0,e1->down(),c,e2);
+	      }
+	      else #expr=#(u,e0,e1,c,e2);
+	  >>
+	|!#(l:LPAREN e:expr r:RPAREN) <<if (e->type()==LPAREN) {
+					  e->down()->setRight(NULL);
+					  #expr=#(l,e->down(),r);
+					}
+					else if (e->type()==ABS) {
+					  e->setRight(NULL);
+					  #expr=e;
+					}
+					else if (e->type()==CONST || e->type()==VARIABLE || e->type()==NUM || e->type()==FUNCTION || e->type()==UFUNCTION || e->type()==UNDERSCORE) {
+					  e->setRight(NULL);
+					  #expr=e;
+					}
+					else if (e->type()==DIV) {
+                                          e->setRight(NULL);
+                                          #expr=e;
+					}
+					else #expr=#(l,e,r);>>
+	| #(LBRACE expr)
+	| #(RBRACKET {expr})
+	| #(UFUNCTION expr expr (COMMA expr)*)
+	|!#(f:FUNCTION e0:expr {u:UNDERSCORELOG e3:expr} e1:expr {e2:expr})
+	<<
+		if (e2!=NULL) //There is exponent
+		{
+		  if (e0->type()==EXP) #expr=#(f,e0,#(#[MULTNONE],e2,e1),NULL);
+		  else
+		    if (e2->type()==LPAREN)
+		    {
+		      e2->down()->setRight(NULL);
+		      if (e3==NULL)
+		      {
+		        if (e0->type()==SQRT && e1->type()==LPAREN)
+		        {
+		          e1->down()->setRight(NULL);
+		          #expr=#(f,e0,e1->down(),e2->down());
+		        }else #expr=#(f,e0,e1,e2->down());
+		      }
+		      else
+		        if (e3->type()==LPAREN)
+			{
+			  e3->down()->setRight(NULL);
+			  #expr=#(f,e0,u,e3->down(),e1,e2->down());
+			}
+		        else #expr=#(f,e0,u,e3,e1,e2->down());
+		    }
+		    else
+		      if (e3==NULL)
+		      {
+		        if (e0->type()==SQRT && e1->type()==LPAREN)
+			{
+		          e1->down()->setRight(NULL);
+		          #expr=#(f,e0,e1->down(),e2);
+			} else #expr=#(f,e0,e1,e2);
+		      }
+		      else
+		        if (e3->type()==LPAREN)
+		        {
+		          e3->down()->setRight(NULL);
+			  #expr=#(f,e0,u,e3->down(),e1,e2);
+		        }
+		        else #expr=#(f,e0,u,e3,e1,e2);
+		} else //there is no exponent
+		{
+		  if ((e0->type()==EXP || e0->type()==SQRT) && e1->type()==LPAREN) {
+		    e1->down()->setRight(NULL);
+		    if (e3==NULL)
+		      #expr=#(f,e0,e1->down());
+		    else
+		      if (e3->type()==LPAREN)
+		      {
+		        e3->down()->setRight(NULL);
+		        #expr=#(f,e0,u,e3->down(),e1->down());
+		      }
+		      else #expr=#(f,e0,u,e3,e1->down());
+		  }
+		  else
+		    if (e3==NULL)
+		      #expr=#(f,e0,e1);
+		    else
+		      if (e3->type()==LPAREN)
+		      {
+		        e3->down()->setRight(NULL);
+		        #expr=#(f,e0,u,e3->down(),e1);
+		      }
+		      else #expr=#(f,e0,u,e3,e1);
+		}
+	>>
+	|!#(a:ABS e:expr) <<
+			   if (e->type()==LPAREN) {
+			     e->down()->setRight(NULL);
+			     #expr=#(a,e->down());
+			   }
+			   else if (e->type()==ABS) #expr=e;
+			   else #expr=#(a,e);
+			  >>
+	| #(ROOT expr LPAREN expr RPAREN)
+	;
+nvc:
+	  #(n:NUM
+	           <<char *s=n->getText();
+		     int len=strlen(s), i;
+		     for (i=0; i<len; i++) if (s[i]=='E' || s[i]=='e') break;
+		     if (i<len)
+		     {
+		     	s[i]=0;
+			if (s[i+1]=='-')
+			{
+			  ++i;
+			  while (s[i+1]=='0') ++i;
+			  if (s[i+1]==0) --i;
+			  s[i]='-';
+			  --i;
+			}
+			else
+			{
+			  while (s[i+1]=='0') ++i;
+			  if (s[i+1]==0) --i;
+			}
+			#nvc=#(#[MULTNONE,""],n,#(#[CIRCUM,"^"],#[NUM,"10"],#[NUM,s+i+1]));
+		     }
+		   >>
+	   )
+	| #(VARIABLE)
+	| #(CONST)
+	| #(INFTY)
+	| #(UNDEFINED)
+	| #(ALPHA)
+	| #(BETA)
+	| #(GAMMA)
+	| #(DELTA)
+	| #(EPSILON)
+	| #(ZETA)
+	| #(ETA)
+	| #(THETA)
+	| #(IOTA)
+	| #(KAPPA)
+	| #(LAMBDA)
+	| #(MU)
+	| #(NU)
+	| #(XI)
+	| #(OMICRON)
+	| #(PI)
+	| #(RHO)
+	| #(SIGMA)
+	| #(TAU)
+	| #(UPSILON)
+	| #(PHI)
+	| #(CHI)
+	| #(PSI)
+	| #(OMEGA)
+	| #(DOTS)
+	| #(EMPTYSET)
+	| #(FACTORIAL expr)
+	| #(DFACTORIAL expr)
+	| #(ENUMERATE (expr)+)
+	;
+}
+

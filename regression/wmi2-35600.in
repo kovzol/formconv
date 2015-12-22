@@ -1,0 +1,2 @@
+#!/bin/sh
+echo "sgn(2n-10Í bb " | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r 

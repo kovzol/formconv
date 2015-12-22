@@ -1,0 +1,1 @@
+echo "120/8+89/7" | $F -x aa,.. -x bb,$ -l simple -I intuitive -O maxima -r 

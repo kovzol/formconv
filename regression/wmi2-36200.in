@@ -1,0 +1,1 @@
+echo "sin(58+cos(87*log_10(552 bb )))" | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r 

@@ -1,0 +1,1 @@
+echo "9*sin(3+6*sqrt(2*x)) bb " | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r 

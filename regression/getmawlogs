@@ -1,0 +1,3 @@
+#!/bin/sh
+wget http://wood.mendelu.cz/math/maw/common/log/integral-original.log
+echo "Now you may want to run ./makemaw.ins."

@@ -1,0 +1,1 @@
+echo "4x*exp(2x)" | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r

@@ -1,0 +1,1 @@
+echo "18+18+18+18 bb " | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r 

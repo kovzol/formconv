@@ -1,0 +1,2 @@
+FC_VAR_TYPE  x;
+(csin(cpow(x,2)))

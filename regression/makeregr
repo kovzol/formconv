@@ -1,0 +1,32 @@
+#!/bin/bash
+# Makes an output for the input test, assuming that current binary is correct.
+# Example: ./makeregr example1
+# This will run example1.in and generate example1.out.
+
+test -x ./runtest || {
+ echo "$0 should be run within its directory, exiting"
+ exit 255
+ }
+
+F=../bin/formconv_runme
+test -x $F || {
+ echo "Binary $F is missing, exiting (please compile it first)"
+ exit 254
+ }
+
+if [ $# -ne 1 ]; then
+ echo "Invalid number of parameters (1 is needed), exiting"
+ exit 252
+ fi
+
+T=$1
+test -x $T || {
+ echo "No test named $T, exiting"
+ exit 251
+ }
+
+O=`basename $1 .in`.out
+
+echo -n "creating output for test $T..."
+. $T > $O
+echo " done"

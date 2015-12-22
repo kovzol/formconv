@@ -1,0 +1,5686 @@
+#LyX 1.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 221
+\textclass article
+\language magyar
+\inputencoding latin2
+\fontscheme default
+\graphics default
+\paperfontsize 10
+\spacing single 
+\papersize Default
+\paperpackage a4
+\use_geometry 1
+\use_amsmath 0
+\use_natbib 0
+\use_numerical_citations 0
+\paperorientation portrait
+\leftmargin 1cm
+\rightmargin 5cm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\defskip medskip
+\quotes_language german
+\quotes_times 2
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+
+\layout Standard
+
+
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
+
+\backslash 
+tolerance10000
+\end_inset 
+
+
+\layout Title
+\added_space_top vfill \added_space_bottom vfill 
+
+\lang american
+Formula Converter
+\layout Author
+
+Kovács Zoltán, Bakos Gábor 
+\layout Date
+
+
+\begin_inset External Date,"","-I"
+
+\end_inset 
+
+
+\layout Abstract
+
+Kivonat
+\layout Standard
+
+Installálás, kapcsolók, leírás/példák, programozói dokumentáció
+\layout Standard
+
+
+\begin_inset LatexCommand \tableofcontents{}
+
+\end_inset 
+
+
+\layout Section
+
+Installálás
+\layout Standard
+
+
+\begin_inset LatexCommand \label{sec:Installálás}
+
+\end_inset 
+
+Fordításhoz szükséges könyvtár: 
+\begin_inset LatexCommand \htmlurl[PCCTS]{http://www.polhode.com/pccts133mr.zip}
+
+\end_inset 
+
+.
+\layout Standard
+
+Installálás forráskódból: letölthetõ a 
+\begin_inset LatexCommand \htmlurl[formconv-0.6.0.tar.gz]{http://prdownloads.sourceforge.net/formconv/formconv-0.6.0.tar.gz}
+
+\end_inset 
+
+ címrõl, vagy a sourceforge publikus cvs szerverérõl (
+\family typewriter 
+\lang american
+cvs -d:pserver:anonymous@cvs.sourceforge.net:/cvsroot/formconv login; cvs
+ -z3 -d:pserver:anonymous@cvs.sourceforge.net:/cvsroot/formconv co formconv
+\family default 
+\lang magyar
+)\SpecialChar \@.
+ (Ez utóbbi többnyire frissebb, jobb, bár lehetnek problémák vele\SpecialChar \@.
+) Miután
+ kicsomagolta, lépjen be a formconv alkönyvtárba és adja ki a 
+\family typewriter 
+\lang american
+./configure
+\family default 
+\lang magyar
+ parancsot\SpecialChar \@.
+ Ennek hatására létrejön a Makefile\SpecialChar \@.
+ Ha valamilyen probléma merült
+ fel, az valószínûleg annak tudható be, hogy nincs feltelepítve a PCCTS
+ (kicsomagolás után 
+\family typewriter 
+\lang american
+cd pccts; make
+\family default 
+\lang magyar
+ ezek után elérhetõvé kell tenni a 
+\family typewriter 
+\lang american
+locate
+\family default 
+\lang magyar
+ parancshoz az 
+\family typewriter 
+\lang american
+STreeParser.cpp
+\family default 
+\lang magyar
+ állományt is, vagy a 
+\family typewriter 
+\lang american
+SORCERER_CPPS
+\family default 
+\lang magyar
+ környezeti változót erre állítani), vagy nincs a feltelepített PCCTS változatho
+z mellékelve az 
+\family typewriter 
+\lang american
+STreeParser.cpp
+\family default 
+\lang magyar
+ állomány (ekkor a forrásból kell megszerezni a megfelelõ állományt (késõbbi
+ verziókban valószínûleg belerakjuk a saját csomagunkba is))\SpecialChar \@.
+
+\layout Standard
+
+Miután létrejött a Makefile, kiadhatja a make parancsot\SpecialChar \@.
+ Ha valami probléma
+ miatt nem fordult le, akkor kérem jelezze.
+ (Egy ismert gond a 0.6.0-s kiadással, hogy nem fordul le a gcc 3.x-es változatával
+, a CVS-bõl vett forrásnak már fordulnia kell azzal is.) A 
+\family typewriter 
+\lang american
+make install
+\family default 
+\lang magyar
+ hatására bemásolódik a 
+\family typewriter 
+\lang american
+/usr/bin
+\family default 
+\lang magyar
+-be a 
+\family typewriter 
+\lang american
+formconv
+\family default 
+\lang magyar
+ állomány, illetve a 
+\family typewriter 
+\lang american
+/usr/man/
+\family default 
+\lang magyar
+\SpecialChar \ldots{}
+ alkönyvtárba a 
+\family typewriter 
+\lang american
+formconv.1
+\family default 
+\lang magyar
+ állomány\SpecialChar \@.
+ Ha a dokumentációt akarja elkészíteni, akkor a 
+\family typewriter 
+\lang american
+make doc
+\family default 
+\lang magyar
+ parancs hatására létrejön\SpecialChar \@.
+ Ehhez a LyX szövegszerkesztõ és a latex2html
+ segédprogramra van szükség\SpecialChar \@.
+ A 
+\family typewriter 
+\lang american
+make test
+\family default 
+\lang magyar
+ parancs hatására néhány tesztet hajt végre a program\SpecialChar \@.
+ Sajnos a tesztek nincsenek
+ megfelelõ mennyiségben, és minõségben kidolgozva\SpecialChar \@.
+
+\layout Standard
+
+Ha bármi problémája van a forrással kapcsolatban, forduljon 
+\begin_inset LatexCommand \htmlurl[Bakos Gábor]{mailto:baga@users.sourceforge.net}
+
+\end_inset 
+
+hoz, aki igyekszik megoldani azt.
+\layout Standard
+
+Installálás rpm csomagból: letölthetõ a 
+\begin_inset LatexCommand \htmlurl[formconv-0.6.0-2.i386.rpm]{http://prdownloads.sourceforge.net/formconv/formconv-0.6.0-2.i386.rpm}
+
+\end_inset 
+
+ címrõl.
+ A csomag a SuSE Linux valamelyik változatához készült (jó lenne a következõ
+ kiadáshoz ezt igazoló név is)\SpecialChar \@.
+ Ha jól sejtem, akkor az rpm -i formconv-0.6.0-2.rpm
+ parancs hatására települ fel\SpecialChar \@.
+
+\layout Standard
+
+Ha bármilyen kérdése, problémája van a csomaggal kapcsolatban, kérem 
+\begin_inset LatexCommand \htmlurl[Kovács Zoltán]{mailto:kovzol@math.u-szeged.hu}
+
+\end_inset 
+
+t keresse meg\SpecialChar \@.
+
+\layout Standard
+
+Kellemes használatot!
+\layout Section
+
+Kapcsolók
+\layout Standard
+
+
+\begin_inset LatexCommand \label{sec:Kapcsolók}
+
+\end_inset 
+
+Az érvényes kapcsolók:
+\layout Standard
+
+
+\family typewriter 
+\lang american
+
+\begin_inset LatexCommand \label{--help}
+
+\end_inset 
+
+--help
+\lang magyar
+ | -h: 
+\family default 
+Segítséget nyújt a program felhasználásához, röviden felsorolja a kapcsolókat\SpecialChar \@.
+
+\layout Standard
+
+
+\family typewriter 
+\lang american
+
+\begin_inset LatexCommand \label{--input-format}
+
+\end_inset 
+
+--input-format
+\lang magyar
+ | -I bemenet_formátuma: 
+\family default 
+A
+\family typewriter 
+ bemenet_formátumá
+\family default 
+nak megfelelõ bemenetként kezeli a kapott adatokat\SpecialChar \@.
+ Jelenleg csak az
+\family typewriter 
+ Intuitive 
+\family default 
+bemenetet képes kezelni, de ez többnyire megfelelõ a yacas, Maple, Mathematica,
+ LaTeX, MuPAD, Maxima, vagy C stílushoz\SpecialChar \@.
+
+\layout Standard
+
+
+\family typewriter 
+\lang american
+
+\begin_inset LatexCommand \label{--output-format}
+
+\end_inset 
+
+--output format
+\lang magyar
+ | -O kimenet_formátuma: 
+\family default 
+A 
+\family typewriter 
+kimenet_formátumá
+\family default 
+nak megfelelõ kimenetet generál a kapott adatokból.
+ Jelenleg a LaTeX, Maple, MuPAD, yacas, Maxima, HTML valign, parse, MathML
+ content, gnuplot és Java kimenetet támogatja\SpecialChar \@.
+ A LaTeX (
+\family typewriter 
+latex
+\family default 
+) kimenet formázott képletet takar (ez az alapértelmezett), Maple (
+\family typewriter 
+maple
+\family default 
+), MuPAD (
+\family typewriter 
+mupad
+\family default 
+), yacas (
+\family typewriter 
+yacas
+\family default 
+), Maxima (
+\family typewriter 
+maxima
+\family default 
+) kimenetek a megfelelõ kompjuter algebrai rendszereknek szolgálhatnak bemenetké
+nt\SpecialChar \@.
+ A gnuplot (
+\family typewriter 
+gnuplot
+\family default 
+) kimenet a gnuplot függvényábrázolónak lehet bemenete, de nem az inputot
+ nem annak megfelelõen kezeli, hanem inkább a többi programhoz hasonlóan\SpecialChar \@.
+
+ (Pl.: x^(1/3) helyett x^(1e0/3)-at ad\SpecialChar \@.
+) A HTML valign (
+\family typewriter 
+html_valign
+\family default 
+) a LaTeX kimenetként kapott formulából kapott kép weboldalon való elhelyezéséhe
+z nyújthat segítséget, megadja a kép pozícionálásához szükséges valign értéket
+ (formulánként 1-et)\SpecialChar \@.
+ A parse(
+\family typewriter 
+parse
+\family default 
+) az adott bemeneti formátumnak megfelelõ formulákra 
+\family typewriter 
+yes
+\family default 
+, az azoknak nem megfelelõ esetén 
+\family typewriter 
+no
+\family default 
+ értéket ad, illetve ekkor le is áll (az összes formulára ad egy választ)\SpecialChar \@.
+
+ A MathML content (
+\family typewriter 
+matml
+\family default 
+) kimeneti formátum a MathML 2.0 tartalmat leíró szabványnak megfelelõ outputot
+ generál\SpecialChar \@.
+ (Ehhez érdemes lehet használni a 
+\family typewriter 
+\lang american
+--header, --footer, --prefix, --suffix
+\family default 
+\lang magyar
+ kapcsolókat is, mivel nem teszi ki például az <mrow> tageket, illetve hasznos
+ lehet HTML generálásakor is\SpecialChar \@.
+) A Java (
+\family typewriter 
+java
+\family default 
+) kimenet egy olyan kódot takar, mely alkalmas lehet egy class készítésére
+ és azt lefordítva azt használni\SpecialChar \@.
+ (Ennek a kimenetnek az eredeti célja egy
+ kliens-szerver modellre épülõ függvényábrázolóhoz a szerver oldali függvénygene
+rálás volt, de példa lehet más nyelvek kimenetének generálásához is\SpecialChar \@.
+ A kimeneten
+ sokat lehet javítani, hogy például a mûveleteket valamilyen interface-nek
+ megfelelõ osztály hívásaira cserélje\SpecialChar \@.
+)
+\layout Standard
+
+
+\family typewriter 
+\lang american
+
+\begin_inset LatexCommand \label{--input-file}
+
+\end_inset 
+
+--input-file
+\lang magyar
+ | -i bemeneti_állomány_neve: 
+\family default 
+A 
+\family typewriter 
+bemeneti_állomány_nevé
+\family default 
+nek megfelelõ állományból olvassa az adatokat\SpecialChar \@.
+ (Alapértelmezésben ez a 
+\family typewriter 
+/dev/stdin
+\family default 
+, azaz a standard bemenet\SpecialChar \@.
+)
+\layout Standard
+
+
+\family typewriter 
+\lang american
+
+\begin_inset LatexCommand \label{--output-file}
+
+\end_inset 
+
+--output-file
+\lang magyar
+ | -o kimeneti_állomány_neve: 
+\family default 
+A 
+\family typewriter 
+kimeneti_állomány_nevé
+\family default 
+nek megfelelõ állományba írja ki a generált formulákat\SpecialChar \@.
+ (Alapértelmezésben
+ ez a 
+\family typewriter 
+/dev/stdout
+\family default 
+, azaz a standard kimenet\SpecialChar \@.
+)
+\layout Standard
+
+
+\family typewriter 
+\lang american
+
+\begin_inset LatexCommand \label{--header}
+
+\end_inset 
+
+--header
+\lang magyar
+ | -H szöveg:
+\family default 
+ A 
+\family typewriter 
+szöveg
+\family default 
+et fûzi hozzá a kimenet elejéhez\SpecialChar \@.
+ Ez hasznos lehet, ha pl.
+ a MathML kimenetet akarja automatikusan egy xml állományba menteni, amit
+ pl.
+ egy böngészõvel szeretne megjeleníteni\SpecialChar \@.
+ (Tipp: megkönnyíthetõ ezzel a tesztelés\SpecialChar \@.
+)
+\layout Standard
+
+
+\family typewriter 
+\lang american
+
+\begin_inset LatexCommand \label{--footer}
+
+\end_inset 
+
+--footer
+\lang magyar
+ | -F szöveg:
+\family default 
+ A 
+\family typewriter 
+szöveg
+\family default 
+et fûzi hozzá a kimenet végéhez\SpecialChar \@.
+
+\layout Standard
+
+
+\family typewriter 
+\lang american
+
+\begin_inset LatexCommand \label{--prefix}
+
+\end_inset 
+
+--prefix
+\lang magyar
+ | -P szöveg:
+\family default 
+ A 
+\family typewriter 
+szöveg
+\family default 
+et írja a kimenet minden formulája elé\SpecialChar \@.
+ Ez hasznos lehet, ha pl.
+ a gnuplotot akarja meghívni automatikusan egy generált formulahalmazra\SpecialChar \@.
+
+ (De MathML készítéskor szintén jól jöhet\SpecialChar \@.
+)
+\layout Standard
+
+
+\family typewriter 
+\lang american
+
+\begin_inset LatexCommand \label{--suffix}
+
+\end_inset 
+
+--suffix
+\lang magyar
+ | -s szöveg: 
+\family default 
+A 
+\family typewriter 
+szöveg
+\family default 
+et írja a kimenet minden formulája mögé\SpecialChar \@.
+
+\layout Standard
+
+
+\family typewriter 
+\lang american
+
+\begin_inset LatexCommand \label{--allowed-letters}
+
+\end_inset 
+
+--allowed-letters
+\lang magyar
+ | -A betûk: 
+\family default 
+A 
+\family typewriter 
+betûk
+\family default 
+et fogatdja el bemenetként a kis illetve nagy betûs párjukkal együtt\SpecialChar \@.
+ Az
+ alapértelmezett érték: 
+\family typewriter 
+abceinptxyz
+\family default 
+\SpecialChar \@.
+ e, illetve i nélkül nem ismeri fel ezeket a konstansokat\SpecialChar \@.
+ A görög betûket
+ (egyenlõre) nem lehet letiltani, mindegyiket elfogadja a program\SpecialChar \@.
+
+\layout Standard
+
+
+\family typewriter 
+\lang american
+
+\begin_inset LatexCommand \label{--input-content}
+
+\end_inset 
+
+--input-content
+\lang magyar
+ | -C típus: 
+\family default 
+A 
+\family typewriter 
+típus
+\family default 
+ a következõ lehet: 
+\family typewriter 
+expression
+\family default 
+,
+\family typewriter 
+ boolean-expression
+\family default 
+, ill.
+
+\family typewriter 
+ equation
+\family default 
+\SpecialChar \@.
+ Az 
+\family typewriter 
+expression
+\family default 
+ (alapértelmezett) típus esetén a feldolgozó elfogadja a standard függvényeket,
+ a felhasználó által definiált föggvényeket, +, -, *, /, ^, div, mod mûveleteket
+, konstansokat, változókat, illetve a relációs jeleket lehet formulánként
+ legfeljebb egyszer használni\SpecialChar \@.
+ Az 
+\family typewriter 
+equation
+\family default 
+ típus esetén pontosan egy reláció, az egyenlõség megengedett, egyéb jellemzõibe
+n megegyezik az elõzõvel\SpecialChar \@.
+ Végül a 
+\family typewriter 
+boolean-expression
+\family default 
+ típus a logikai formulákat is engedélyezi, azaz lehet használni a logikai
+ konstansokat, mûveleteket, illetve a relációkat mint logikai értékeket\SpecialChar \@.
+
+ (Szám értékû kifejezéseket nem tekint logikai kifejezésnek\SpecialChar \@.
+)
+\layout Standard
+
+
+\family typewriter 
+\lang american
+
+\begin_inset LatexCommand \label{--no-dynamic-parentheses}
+
+\end_inset 
+
+--no-dynamic-parentheses
+\lang magyar
+ | -d: 
+\family default 
+Ezen kapcsoló hatására a LaTeX kimenetben a zárójelek nem feltétlenül olyan
+ magasak, mint a zárójelben lévõ kifejezés magassága\SpecialChar \@.
+
+\layout Standard
+
+
+\family typewriter 
+\lang american
+
+\begin_inset LatexCommand \label{--no-cdots}
+
+\end_inset 
+
+--no-cdots
+\lang magyar
+ | -c: 
+\family default 
+Ezen kapcsoló hatására a LaTeX kimenetben nem tesz pontot a szorzás jelölésére,
+ csak egymás mellé írja az elemeket\SpecialChar \@.
+
+\layout Standard
+
+
+\family typewriter 
+\lang american
+
+\begin_inset LatexCommand \label{--beauty-parentheses}
+
+\end_inset 
+
+--beauty-parentheses
+\lang magyar
+ | -b: 
+\family default 
+Ez a kapcsoló a LaTeX kimenetben a sok zárójelt tartalmazó formulák esetében
+ megkönnyíti az olvasásukat, mivel csak a legbelsõ zárójelet hagyja meg
+ ()-ként, a következõ szinten lévõket []-re, a többit pedig {}-re cseréli\SpecialChar \@.
+
+ (Jó szolgálatot tehet egy bonyolultabb logikai formula értelmezésekor\SpecialChar \@.
+)
+\layout Standard
+
+
+\family typewriter 
+\lang american
+
+\begin_inset LatexCommand \label{--no-auto-simplify}
+
+\end_inset 
+
+--no-auto-simplify
+\lang magyar
+ | -a: 
+\family default 
+Ez a kapcsoló szintén a LaTeX kimenetet befolyásolja\SpecialChar \@.
+ Ennek hatására nem
+ tûnnek el a felesleges zárójelek, például a következõ formulából: (x^(5/3))\SpecialChar \@.
+
+ Ez a kapcsoló nincs hatással a zárójelek kinézetére, tehát ha az eredeti
+ formulához legközelebbi eredményt szeretnénk viszont látni, akkor érdemes
+ lehet a 
+\family typewriter 
+\lang american
+--no-dynamic-parentheses
+\family default 
+\lang magyar
+ kapcsolóval használni.
+\layout Standard
+
+
+\family typewriter 
+\lang american
+
+\begin_inset LatexCommand \label{--C-precedence}
+
+\end_inset 
+
+--C-precedence
+\lang magyar
+ | -P: 
+\family default 
+Ezzel a kapcsolóval az alapértelmezett Pascalszerû precedenciaszabályok
+ helyett a C-s precedencia szabályok lépnek érvénybe (a legtöbb rendszerben
+ szintén a Pascalos precedenciát valósították meg)\SpecialChar \@.
+ (A 
+\family typewriter 
+--input-content
+\family default 
+ 
+\family typewriter 
+boolean-expression
+\family default 
+ kapcsoló nélkül nincs túl sok értelme a használatának, mivel csak a logikai
+ mûveletek precedenciájában térnek el\SpecialChar \@.
+) A következõ a bemenet: 
+\family typewriter 
+hamis 
+\backslash 
+/ hamis = hamis
+\family default 
+.
+ Ebbõl Pascalos precedenciával a következõ kimenetet készíti: 
+\family typewriter 
+\lang american
+
+\backslash 
+left(
+\backslash 
+mathrm{FALSE} 
+\backslash 
+vee 
+\backslash 
+mathrm{FALSE} 
+\backslash 
+right)=
+\backslash 
+mathrm{FALSE}
+\family default 
+\lang magyar
+, míg C-s precedenciaszabályok mellett: 
+\family typewriter 
+\lang american
+
+\backslash 
+mathrm{FALSE} 
+\backslash 
+vee 
+\backslash 
+mathrm{FALSE} =
+\backslash 
+mathrm{FALSE}
+\family default 
+\lang magyar
+\SpecialChar \@.
+
+\layout Standard
+
+
+\family typewriter 
+\lang american
+
+\begin_inset LatexCommand \label{--type-check}
+
+\end_inset 
+
+--type-check
+\lang magyar
+ | -t: 
+\family default 
+Ezzel a kapcsolóval lehet bekapcsolni a típusellenõrzést\SpecialChar \@.
+ Ekkor hibát jelez
+ olyan formuláknál is, amelyeket biztosan nem lehet kiértékelni (ha nem
+ lehet kiértékelni, attól még nem biztos, hogy jelez!)\SpecialChar \@.
+ Például: 
+\family typewriter 
+\lang american
+1.4!
+\family default 
+\lang magyar
+, vagy 
+\family typewriter 
+\lang american
+sinx mod cosx
+\family default 
+\lang magyar
+\SpecialChar \@.
+
+\layout Section
+
+Használat
+\layout Standard
+
+
+\begin_inset LatexCommand \label{sec:Használat}
+
+\end_inset 
+
+Az alapértelmezett Intuitive formátum egy átfogó leírásával kezdeném\SpecialChar \@.
+
+\layout Standard
+
+Az intuitív formátum nem tesz különbséget a kis és nagy betûk között, a
+ változók csak egy görög vagy latin betûbõl állhatnak, ám lehet ezeket indexelni
+ is (_, illetve [] jelekkel)\SpecialChar \@.
+ A görög betûknél többnyire az elsõ betû alapján
+ ír kis vagy nagy görög betût, ez alól csak a 
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
+$
+\backslash 
+pi$
+\end_inset 
+
+ a kivétel, ebbõl csak a csupa nagy betûs bemenet hatására ír nagy betût\SpecialChar \@.
+
+ A használható mûveletek a +, -, *, /, ^, ** (a ** és a ^ a hatványozásnak
+ felel meg)\SpecialChar \@.
+ A szorzásnál nem kötelezõ kiraknia a *-ot, illetve a szóközt\SpecialChar \@.
+
+ (Persze számok közé azért tegye ki legalább az egyiket\SpecialChar \@.
+) Az elõre definiált
+ függvényeknél sem kötelezõ kiraknia a zárójeleket, a hatványozás pedig
+ mehet oda is, ahol általában írásban tesszük (logaritmus alapszámát is
+ írhatja a log után _, majd egy kifejezés)\SpecialChar \@.
+ Tehát a következõ példa legális:
+ 
+\family typewriter 
+sin^-4-x
+\family default 
+ és a következõ lesz belõle: 
+\family typewriter 
+
+\backslash 
+sin^{-4}{-x}
+\family default 
+, azaz 
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
+$
+\backslash 
+sin^{-4}{-x}$
+\end_inset 
+
+\SpecialChar \@.
+ A + elõjelet nem lehet jelölni, a + jel csak összeadásra használható.
+ A formula azon részei, ahol egy kifejezés állhat többnyire megengedik a
+ - elõjel, !, !!, illetve a függvények használatát, valamint az | |, ( )
+ alkalmazását\SpecialChar \@.
+ Az | jelet is használhatja az abszolútérték képzéséhez, de
+ ekkor figyeljen oda, hogy ha nem rakja ki a *-ot szorzásnál nem csak egyfélekép
+pen olvasható
+\begin_inset Foot
+collapsed true
+
+\layout Standard
+
+|x|y|z| lehet |x| y |z|, vagy |x |y| z| is.
+ Ön mit gondol melyikként értelmezi a gép.
+ Kérem próbálja ki.
+ (Igen jól gondolta: |x| y |z|.)
+\end_inset 
+
+\SpecialChar \@.
+ A saját függvényeknél kötelezõ kitenni a zárójeleket (az argumentum köré)\SpecialChar \@.
+
+ Ha bekapcsolja a logikai formulák értelmezését, akkor a precedenciaszabályok
+ alapértelmezésben Pascalszerûek, de egy kapcsolóval átállítható C-szerûre
+ is\SpecialChar \@.
+ A logikai mûveletek lehetnek angolul, magyarul, C-szerûen (a bitenkénti
+ mûveletek is így mûködnek), illetve a 
+\backslash 
+/, /
+\backslash 
+, -> jelsorozatok használatával\SpecialChar \@.
+ Az értékadáshoz csak a := forma megengedett,
+ az =, == az összehasonlítást szolgálják.
+ A mûveleteket balról jobbra olvassa, annak megfelelõ kifejezéseket készít
+ belõlük.
+ A változók alapértelmezetten számot tárolnak, de ha logikai értéket kapnak,
+ akkor logikai változóként viselkednek\SpecialChar \@.
+ A változók lehetnek ugyanolyan névvel
+ skalárok, vektorok, illetve mátrixok is, de ezekkel egyszerre nem lehetnek
+ logikaiak is\SpecialChar \@.
+
+\layout Standard
+
+A használat: a 
+\family typewriter 
+\lang american
+formconv
+\family default 
+\lang magyar
+ parancs hatására a standard bemenetrõl elkezdi beolvasni a formulákat\SpecialChar \@.
+ A
+ hibákat csak a sorvégjel érzékelése után jelzi\SpecialChar \@.
+ A jelzés ez esetben mindössze
+ annyi, hogy leáll a program futása (késõbb ez még finomodik)\SpecialChar \@.
+
+\layout Standard
+
+Miután a bemenet végére ért - 
+\family typewriter 
+\lang american
+Ctrl+d
+\family default 
+\lang magyar
+, vagy állomány vége - a program generálja a kimenetét\SpecialChar \@.
+
+\layout Section
+
+Példák
+\layout Standard
+
+
+\begin_inset LatexCommand \label{sec:Példák}
+
+\end_inset 
+
+A következõ táblázatban szeretném bemutatni a helyességet különbözõ bemenetek
+ esetén\SpecialChar \@.
+ Ez segíthet a kapcsolók helyes megválasztásában\SpecialChar \@.
+ (Ha több formula
+ van egy sorban, akkor vesszõvel választom el a különbözõ formulákat, illetve
+ a táblázatban is így hivatkozom rájuk\SpecialChar \@.
+ A
+\begin_inset Formula $\surd$
+\end_inset 
+
+ a helyességet jelöli, az 
+\begin_inset Formula $\times$
+\end_inset 
+
+ pedig a helytelenséget, azaz az adott kapcsolók esetén nem ismeri fel\SpecialChar \@.
+)
+\layout Standard
+\noindent \align left 
+
+\begin_inset  Tabular
+<lyxtabular version="3" rows="10" columns="5">
+<features>
+<column alignment="center" valignment="top" leftline="true" width="0">
+<column alignment="center" valignment="top" leftline="true" width="0">
+<column alignment="center" valignment="top" leftline="true" width="0">
+<column alignment="center" valignment="top" leftline="true" width="0">
+<column alignment="center" valignment="top" leftline="true" rightline="true" width="0">
+<row topline="true" bottomline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Formulák
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+-C expression
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+-C boolean-expression
+\begin_inset Foot
+collapsed true
+
+\layout Standard
+
+Pascal precedencia
+\end_inset 
+
+
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+--C-precedence
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+--type-check
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+ex, ab, (-b+sqrt(b^2-4ac))/(2a)
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\begin_inset Formula $\times$
+\end_inset 
+
+, 
+\begin_inset Formula $\times$
+\end_inset 
+
+, 
+\begin_inset Formula $\times$
+\end_inset 
+
+
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\begin_inset Formula $\times$
+\end_inset 
+
+, 
+\begin_inset Formula $\times$
+\end_inset 
+
+, 
+\begin_inset Formula $\times$
+\end_inset 
+
+
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\begin_inset Formula $\times$
+\end_inset 
+
+, 
+\begin_inset Formula $\times$
+\end_inset 
+
+, 
+\begin_inset Formula $\times$
+\end_inset 
+
+
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\begin_inset Formula $\times$
+\end_inset 
+
+, 
+\begin_inset Formula $\times$
+\end_inset 
+
+, 
+\begin_inset Formula $\times$
+\end_inset 
+
+
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+-(3x-sin^-2(x-Pi))
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\begin_inset Formula $\surd$
+\end_inset 
+
+
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
+$-
+\backslash 
+left(3
+\backslash 
+cdot x-
+\backslash 
+sin ^{-2}{
+\backslash 
+left(x-
+\backslash 
+pi
+\backslash 
+right)}
+\backslash 
+right)$
+\end_inset 
+
+
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\begin_inset Formula $\surd$
+\end_inset 
+
+
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\begin_inset Formula $\surd$
+\end_inset 
+
+
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+igaz|nem igaz=hamis 
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\begin_inset Formula $\times$
+\end_inset 
+
+
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\size footnotesize 
+
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
+$
+\backslash 
+left(
+\backslash 
+mathrm{TRUE} 
+\backslash 
+vee 
+\backslash 
+neg 
+\backslash 
+mathrm{TRUE} 
+\backslash 
+right)=
+\backslash 
+mathrm{FALSE}$
+\end_inset 
+
+
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\size footnotesize 
+
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
+$
+\backslash 
+mathrm{TRUE} 
+\backslash 
+vee 
+\backslash 
+neg 
+\backslash 
+mathrm{TRUE} =
+\backslash 
+mathrm{FALSE}$
+\end_inset 
+
+
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\begin_inset Formula $\surd$
+\end_inset 
+
+
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+c
+\backslash 
+/b
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\begin_inset Formula $\times$
+\end_inset 
+
+
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\begin_inset Formula $\times$
+\end_inset 
+
+
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\begin_inset Formula $\times$
+\end_inset 
+
+
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\begin_inset Formula $\times$
+\end_inset 
+
+
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+sin^(.3!-2)y
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\begin_inset Formula $\surd$
+\end_inset 
+
+
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
+$
+\backslash 
+sin ^{.3!-2}{y}$
+\end_inset 
+
+
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\begin_inset Formula $\surd$
+\end_inset 
+
+
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\begin_inset Formula $\times$
+\end_inset 
+
+
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+c_3*(sinx div sqrt(z))
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\begin_inset Formula $\surd$
+\end_inset 
+
+
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
+$c_{3}
+\backslash 
+cdot 
+\backslash 
+left(
+\backslash 
+sin {x}:
+\backslash 
+sqrt {z}
+\backslash 
+right)$
+\end_inset 
+
+
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\begin_inset Formula $\surd$
+\end_inset 
+
+
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\begin_inset Formula $\times$
+\end_inset 
+
+
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+dx/dt
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\begin_inset Formula $\times$
+\end_inset 
+
+
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\begin_inset Formula $\times$
+\end_inset 
+
+
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\begin_inset Formula $\times$
+\end_inset 
+
+
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\begin_inset Formula $\times$
+\end_inset 
+
+
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+sinxx div (x-3)
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\begin_inset Formula $\surd$
+\end_inset 
+
+
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
+$
+\backslash 
+sin {x}
+\backslash 
+cdot x:
+\backslash 
+left(x-3
+\backslash 
+right)$
+\end_inset 
+
+
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\begin_inset Formula $\surd$
+\end_inset 
+
+
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\begin_inset Formula $\surd$
+\end_inset 
+
+
+\end_inset 
+</cell>
+</row>
+<row topline="true" bottomline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+(3x^4--6) mod (x^2-3)
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\begin_inset Formula $\surd$
+\end_inset 
+
+
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
+$
+\backslash 
+left(3
+\backslash 
+cdot x^{4}-6
+\backslash 
+right) 
+\backslash 
+mathrm{mod} 
+\backslash 
+left(x^{2}-3
+\backslash 
+right)$
+\end_inset 
+
+
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\begin_inset Formula $\surd$
+\end_inset 
+
+
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\begin_inset Formula $\surd$
+\end_inset 
+
+
+\end_inset 
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset 
+
+
+\layout Standard
+
+Megjegyzések:
+\layout Standard
+
+1.
+ sor: Ezek a formulák mindegyikben érvényesek, ám egyikben sem ismeri fel
+ az értelmezõ\SpecialChar \@.
+ Egy késõbbi megvalósításba bele lehet majd venni, egynlõre
+ azonban nem kívánjuk ilyesmivel terhelni a forrást\SpecialChar \@.
+ Ha szüksége van valamelyikre
+, kérem rakjon szóközt, vagy *-ot az ex, ab, illetve ac kapcsolatok közé\SpecialChar \@.
+
+\layout Standard
+
+4.
+ sor: A változók alapértelmezetten nem logikaiak, ezen lehet segíteni úgy,
+ ha elõtte minden használni kívánt változónak egy logikai értéket ad.
+\layout Standard
+
+5.
+ sor: A nem egész számokra általában nem értelmezik a faktoriálist.
+ (Lehetne éppen 
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
+$
+\backslash 
+Gamma(x-1)$
+\end_inset 
+
+\SpecialChar \@.
+)
+\layout Standard
+
+7.
+ sor: Az elfogadott latin betûket egy kapcsolóval (
+\family typewriter 
+\lang american
+--allowed-letters
+\family default 
+\lang magyar
+) lehet beállítani, a d nem tartozik az alapértelmezettek közé\SpecialChar \@.
+ (A deriválás,
+ integrálás nem támogatott jelenleg\SpecialChar \@.
+)
+\layout Standard
+
+8.
+ sor: Amint látható, a típusellenõrzés (még) nem tökéletes\SpecialChar \@.
+
+\layout Standard
+
+9.
+ sor: Ehhez még nem feltétlenül a megfelelõ kódot készíti a kimeneteiben\SpecialChar \@.
+
+\layout Standard
+
+A következõ táblázatokban a LaTeX kimenetet mutatom be különbözõ kapcsolók
+ mellett:
+\layout Standard
+\noindent 
+
+\begin_inset  Tabular
+<lyxtabular version="3" rows="10" columns="3">
+<features>
+<column alignment="center" valignment="top" leftline="true" width="0">
+<column alignment="center" valignment="top" leftline="true" width="0">
+<column alignment="center" valignment="top" leftline="true" rightline="true" width="0">
+<row topline="true" bottomline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Formulák
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+egyszerûsít a formulákon (alapértelmezett)
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+--no-auto-simplify
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+sin(x/2)
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
+$
+\backslash 
+sin {
+\backslash 
+frac{x}{2}}$
+\end_inset 
+
+
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
+$
+\backslash 
+sin {
+\backslash 
+left(
+\backslash 
+frac{x}{2}
+\backslash 
+right)}$
+\end_inset 
+
+
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+(x-3)^(y-1)
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
+$
+\backslash 
+left(x-3
+\backslash 
+right)^{y-1}$
+\end_inset 
+
+
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
+$
+\backslash 
+left(x-3
+\backslash 
+right)^{
+\backslash 
+left(y-1
+\backslash 
+right)}$
+\end_inset 
+
+
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+sin(x)
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
+$
+\backslash 
+sin {x}$
+\end_inset 
+
+
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
+$
+\backslash 
+sin {
+\backslash 
+left(x
+\backslash 
+right)}$
+\end_inset 
+
+
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+a((x-3)-(2-3))
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
+$a(
+\backslash 
+left(x-3
+\backslash 
+right)-
+\backslash 
+left(2-3
+\backslash 
+right))$
+\end_inset 
+
+
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
+$a(
+\backslash 
+left(x-3
+\backslash 
+right)-
+\backslash 
+left(2-3
+\backslash 
+right))$
+\end_inset 
+
+
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+(x-9)/(x-6)+7
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
+$
+\backslash 
+frac{x-9}{x-6}+7$
+\end_inset 
+
+
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
+$
+\backslash 
+frac{
+\backslash 
+left(x-9
+\backslash 
+right)}{
+\backslash 
+left(x-6
+\backslash 
+right)}+7$
+\end_inset 
+
+
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+((a))
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
+$a$
+\end_inset 
+
+
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
+$
+\backslash 
+left(
+\backslash 
+left(a
+\backslash 
+right)
+\backslash 
+right)$
+\end_inset 
+
+
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+((x/2)/(x/3/7))
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
+$
+\backslash 
+frac{
+\backslash 
+frac{x}{2}}{
+\backslash 
+frac{
+\backslash 
+frac{x}{3}}{7}}$
+\end_inset 
+
+
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
+$
+\backslash 
+left(
+\backslash 
+frac{
+\backslash 
+left(
+\backslash 
+frac{x}{2}
+\backslash 
+right)}{
+\backslash 
+left(
+\backslash 
+frac{
+\backslash 
+frac{x}{3}}{7}
+\backslash 
+right)}
+\backslash 
+right) $
+\end_inset 
+
+
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+x^(4^7)
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
+$x^{4^{7}}$
+\end_inset 
+
+
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
+$
+\backslash 
+left(x^{8}
+\backslash 
+right)^{5}$
+\end_inset 
+
+
+\end_inset 
+</cell>
+</row>
+<row topline="true" bottomline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+(x^8)^5
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
+$
+\backslash 
+left(x^{8}
+\backslash 
+right)^{5}$
+\end_inset 
+
+
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
+$x^{
+\backslash 
+left(4^{7}
+\backslash 
+right)}$
+\end_inset 
+
+
+\end_inset 
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset 
+
+
+\layout Standard
+
+Mint az látható, az alapértelmezett viselkedésben sem távolít el olyan zárójelek
+et, amelyek feleslegességét nem tudja garantálni\SpecialChar \@.
+ Az összegeknél, szorzatoknál
+ is megtartja a zárójeleket, hogy ki lehessen fejezni például a levezetésekben
+ az asszociativitást\SpecialChar \@.
+ Ahol csak a kényszer miatt kell zárójelet használni
+ -- azokon a helyeken, ahol TeX-ben {} jeleket használnak -- ott eltünteti\SpecialChar \@.
+
+ Emiatt sajnos a többszörös deriválást nem lehet ilyen beállítások mellett
+ használni, ekkor érdemes lehet a 
+\family typewriter 
+--no-auto-simplify
+\family default 
+ kapcsolóval futtatni a programot, bár ekkor máshol jelenhetnek meg zavaró
+ zárójelek\SpecialChar \@.
+ Az alapértelmezett beállítás többnyire megfelelõ, mivel a program
+ a többi kimenetre is annak megfelelõ értelmû adatot küld azonos bemenetre,
+ és nincs benne sok felesleges zárójel\SpecialChar \@.
+
+\layout Standard
+
+
+\begin_inset  Tabular
+<lyxtabular version="3" rows="4" columns="3">
+<features>
+<column alignment="center" valignment="top" leftline="true" width="0">
+<column alignment="center" valignment="top" leftline="true" width="0">
+<column alignment="center" valignment="top" leftline="true" rightline="true" width="0">
+<row topline="true" bottomline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Formulák
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+középen ponttal jelzett szorzás (alapértelmezett)
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+--no-cdots
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+xyz
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
+$x
+\backslash 
+cdot y
+\backslash 
+cdot z$
+\end_inset 
+
+
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
+$x
+\backslash 
+,y
+\backslash 
+,z$
+\end_inset 
+
+
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+3*xx 4 5
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
+$3
+\backslash 
+cdot x
+\backslash 
+cdot x
+\backslash 
+cdot 4
+\backslash 
+cdot 5$
+\end_inset 
+
+
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
+$3
+\backslash 
+,x
+\backslash 
+,x
+\backslash 
+,4
+\backslash 
+,5$
+\end_inset 
+
+
+\end_inset 
+</cell>
+</row>
+<row topline="true" bottomline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+(x3)*(3x)
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
+$
+\backslash 
+left(x
+\backslash 
+cdot 3
+\backslash 
+right)
+\backslash 
+cdot 
+\backslash 
+left(3
+\backslash 
+cdot x
+\backslash 
+right)$
+\end_inset 
+
+
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
+$
+\backslash 
+left(x
+\backslash 
+,3
+\backslash 
+right)
+\backslash 
+,
+\backslash 
+left(3
+\backslash 
+,x
+\backslash 
+right)$
+\end_inset 
+
+
+\end_inset 
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset 
+
+
+\layout Standard
+
+Ebbõl a táblázatból --helyesen-- azt a következtetést vonhatja le, hogy
+ a program a kapcsolónak megfelelõen vagy kiteszi mindenhová a pontot, vagy
+ sehová sem, attól függetlenül, hogy milyen formulát kapott\SpecialChar \@.
+ (Nem lehet
+\begin_inset Formula $\times$
+\end_inset 
+
+-et, vagy *-ot szorzat jelölésére alkalmazni\SpecialChar \@.
+)
+\layout Standard
+\noindent 
+
+\begin_inset  Tabular
+<lyxtabular version="3" rows="5" columns="3">
+<features>
+<column alignment="center" valignment="top" leftline="true" width="0">
+<column alignment="center" valignment="top" leftline="true" width="0">
+<column alignment="center" valignment="top" leftline="true" rightline="true" width="0">
+<row topline="true" bottomline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Formulák
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+dinamikus méretû zárójelek (alapértelmezett)
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+--no-dynamic-parentheses
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+(x*(x/3))^2
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
+$
+\backslash 
+left(x
+\backslash 
+cdot 
+\backslash 
+frac{x}{3}
+\backslash 
+right)^{2}$
+\end_inset 
+
+
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
+$(x
+\backslash 
+cdot 
+\backslash 
+frac{x}{3})^{2}$
+\end_inset 
+
+
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+-(-(x^2)/3)
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
+$-
+\backslash 
+left(-
+\backslash 
+frac{x^{2}}{3}
+\backslash 
+right)$
+\end_inset 
+
+
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
+$-(-
+\backslash 
+frac{x^{2}}{3})$
+\end_inset 
+
+
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+-(b/(2a)+(sqrt(b^2-4a c))/(2a)
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
+$-
+\backslash 
+left(
+\backslash 
+frac{b}{2
+\backslash 
+cdot a}+
+\backslash 
+frac{
+\backslash 
+sqrt {b^{2}-4
+\backslash 
+cdot a
+\backslash 
+cdot c}}{2
+\backslash 
+cdot a}
+\backslash 
+right)$
+\end_inset 
+
+
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
+$-(
+\backslash 
+frac{b}{2
+\backslash 
+cdot a}+
+\backslash 
+frac{
+\backslash 
+sqrt {b^{2}-4
+\backslash 
+cdot a
+\backslash 
+cdot c}}{2
+\backslash 
+cdot a})$
+\end_inset 
+
+
+\end_inset 
+</cell>
+</row>
+<row topline="true" bottomline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+\end_inset 
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset 
+
+
+\layout Standard
+
+Mint látható dinamikus zárójelek nélkül kissé furcsán fest némely formula\SpecialChar \@.
+
+ Ha szükség van rá kikapcsolható, az alapértelmezett változat szerintem
+ a legtöbb felhasználónak megfelelõ\SpecialChar \@.
+
+\layout Standard
+\noindent 
+
+\begin_inset  Tabular
+<lyxtabular version="3" rows="7" columns="2">
+<features>
+<column alignment="center" valignment="top" leftline="true" width="0">
+<column alignment="center" valignment="top" leftline="true" rightline="true" width="0">
+<row topline="true" bottomline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Formulák
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Esetek
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+-(((x-3)-7)^2-x)
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
+$-
+\backslash 
+left(
+\backslash 
+left(
+\backslash 
+left(x-3
+\backslash 
+right)-7
+\backslash 
+right)^{2}-x
+\backslash 
+right)$
+\end_inset 
+
+
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+\end_inset 
+</cell>
+<cell multicolumn="1" alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
+$-
+\backslash 
+left
+\backslash 
+{
+\backslash 
+left[
+\backslash 
+left(x-3
+\backslash 
+right)-7
+\backslash 
+right]^{2}-x
+\backslash 
+right
+\backslash 
+}$
+\end_inset 
+
+
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+nem (((a=b
+\backslash 
+/x=0
+\backslash 
+/y=0) /
+\backslash 
+ (a=b))->(x=y))
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
+$
+\backslash 
+neg 
+\backslash 
+left(
+\backslash 
+left(
+\backslash 
+left(
+\backslash 
+left(a=b
+\backslash 
+right)
+\backslash 
+vee 
+\backslash 
+left(x=0
+\backslash 
+right)
+\backslash 
+vee 
+\backslash 
+left(y=0
+\backslash 
+right)
+\backslash 
+right)
+\backslash 
+wedge 
+\backslash 
+left(a=b
+\backslash 
+right)
+\backslash 
+right)
+\backslash 
+rightarrow 
+\backslash 
+left(x=y
+\backslash 
+right)
+\backslash 
+right)$
+\end_inset 
+
+
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
+$
+\backslash 
+neg 
+\backslash 
+left
+\backslash 
+{
+\backslash 
+left
+\backslash 
+{
+\backslash 
+left[
+\backslash 
+left(a=b
+\backslash 
+right)
+\backslash 
+vee 
+\backslash 
+left(x=0
+\backslash 
+right)
+\backslash 
+vee 
+\backslash 
+left(y=0
+\backslash 
+right)
+\backslash 
+right]
+\backslash 
+wedge 
+\backslash 
+left(a=b
+\backslash 
+right)
+\backslash 
+right
+\backslash 
+}
+\backslash 
+rightarrow 
+\backslash 
+left(x=y
+\backslash 
+right)
+\backslash 
+right
+\backslash 
+}$
+\end_inset 
+
+
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+x-e*(x-2(c/45))^(sin^(3(n-2))(-x*(-x-7((c-x)-3x))))
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
+$x-e
+\backslash 
+cdot 
+\backslash 
+left(x-2
+\backslash 
+cdot 
+\backslash 
+frac{c}{45}
+\backslash 
+right)^{
+\backslash 
+sin ^{3
+\backslash 
+cdot 
+\backslash 
+left(n-2
+\backslash 
+right)}{
+\backslash 
+left(-x
+\backslash 
+cdot 
+\backslash 
+left(-x-7
+\backslash 
+cdot 
+\backslash 
+left(
+\backslash 
+left(c-x
+\backslash 
+right)-3
+\backslash 
+cdot x
+\backslash 
+right)
+\backslash 
+right)
+\backslash 
+right)}}$
+\end_inset 
+
+
+\end_inset 
+</cell>
+</row>
+<row topline="true" bottomline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
+$x-e
+\backslash 
+cdot 
+\backslash 
+left(x-2
+\backslash 
+cdot 
+\backslash 
+frac{c}{45}
+\backslash 
+right)^{
+\backslash 
+sin ^{3
+\backslash 
+cdot 
+\backslash 
+left(n-2
+\backslash 
+right)}{
+\backslash 
+left
+\backslash 
+{-x
+\backslash 
+cdot 
+\backslash 
+left
+\backslash 
+{-x-7
+\backslash 
+cdot 
+\backslash 
+left[
+\backslash 
+left(c-x
+\backslash 
+right)-3
+\backslash 
+cdot x
+\backslash 
+right]
+\backslash 
+right
+\backslash 
+}
+\backslash 
+right
+\backslash 
+}}}$
+\end_inset 
+
+
+\end_inset 
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset 
+
+
+\layout Standard
+
+A táblázatban a formulával egy sorban az egyféle zárójelet alkalmazó (alapértelm
+ezett) eset van, alatta a --beauty-parentheses kapcsoló hatását bemutató
+ formulák kaptak helyet\SpecialChar \@.
+ Érdemes megfigyelni, hogy ez viszonylag intelligens
+ megvalósítás, mivel a kitevõkben újrakezdi a a zárójelek kiosztását\SpecialChar \@.
+
+\layout Standard
+
+Íme néhány formula különbözõ rendszerekhez szánt kimenettel\SpecialChar \@.
+ A 
+\begin_inset Formula $\times$
+\end_inset 
+
+jelöli, hogy nem támogatott az adott rendszerben a bemenet, nem lehet (illetve
+ jelenleg nem tud) megfelelõ formulát készíteni a formula converter.
+ Ha ön tudja, hogyan kellene ilyet készíteni, kérem írja meg 
+\begin_inset LatexCommand \htmlurl[Bakos Gábor]{mailto:baga@users.sourceforge.net}
+
+\end_inset 
+
+nak, vagy keresse fel a projekt 
+\begin_inset LatexCommand \htmlurl[honlap]{http://www.sourceforge.net/projects/formconv}
+
+\end_inset 
+
+ját és az ott lévõ megfelelõ fórumban jelezze\SpecialChar \@.
+
+\layout Standard
+
+
+\begin_inset  Tabular
+<lyxtabular version="3" rows="10" columns="1">
+<features>
+<column alignment="center" valignment="top" leftline="true" rightline="true" width="0">
+<row topline="true" bottomline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Formulák
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+x:=3^-2-5!/(3!*2!)
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+f(x):=cosec^2(x-3)*atan(x-7)
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+4!!
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+cosech(x)
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+c:=igaz; a:=c
+\backslash 
+/hamis->c
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+c_4
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+sin(pí/3)
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+(x^2+3x^5-5x-27) mod (x^2-5)
+\end_inset 
+</cell>
+</row>
+<row topline="true" bottomline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+dzeta(z)
+\end_inset 
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset 
+
+
+\begin_inset  Tabular
+<lyxtabular version="3" rows="10" columns="1">
+<features>
+<column alignment="center" valignment="top" leftline="true" rightline="true" width="0">
+<row topline="true" bottomline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Maple
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\family roman 
+\series medium 
+\shape up 
+\size normal 
+\emph off 
+\bar no 
+\noun off 
+\color none
+x:=(((3)^(-2))-((factorial(5))/((((factorial(3))*(factorial(2)))))))
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\family roman 
+\series medium 
+\shape up 
+\size normal 
+\emph off 
+\bar no 
+\noun off 
+\color none
+f(x):=(((csc(((x-3)))^(2)))*((arctan(((x-7))))))
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\begin_inset Formula $\times$
+\end_inset 
+
+
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\family roman 
+\series medium 
+\shape up 
+\size normal 
+\emph off 
+\bar no 
+\noun off 
+\color none
+(csch((x)))
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\family roman 
+\series medium 
+\shape up 
+\size normal 
+\emph off 
+\bar no 
+\noun off 
+\color none
+c:=true
+\family default 
+\series default 
+\shape default 
+\size default 
+\emph default 
+\bar default 
+\noun default 
+\color default
+ _újsor_ 
+\family roman 
+\series medium 
+\shape up 
+\size normal 
+\emph off 
+\bar no 
+\noun off 
+\color none
+a:=(not ((c or false )) or (c))
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+c[4]
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\family roman 
+\series medium 
+\shape up 
+\size normal 
+\emph off 
+\bar no 
+\noun off 
+\color none
+(sin((((Pi)/(3)))))
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\family roman 
+\series medium 
+\shape up 
+\size normal 
+\emph off 
+\bar no 
+\noun off 
+\color none
+((((((((x)^(2))+((3)*(((x)^(5)))))-((5)*(x)))-27))) mod (((((x)^(2))-5))))
+\end_inset 
+</cell>
+</row>
+<row topline="true" bottomline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\family roman 
+\series medium 
+\shape up 
+\size normal 
+\emph off 
+\bar no 
+\noun off 
+\color none
+zeta(z)
+\end_inset 
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset 
+
+
+\layout Standard
+
+Megjegyzések: 
+\layout Standard
+
+
+\begin_inset  Tabular
+<lyxtabular version="3" rows="10" columns="1">
+<features>
+<column alignment="center" valignment="top" leftline="true" rightline="true" width="0">
+<row topline="true" bottomline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Formulák
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+x:=3^-2-5!/(3!*2!)
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+f(x):=cosec^2(x-3)*atan(x-7)
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+4!!
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+cosech(x)
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+c:=igaz; a:=c
+\backslash 
+/hamis->c
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+c_4
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+sin(pí/3)
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+(x^2+3x^5-5x-27) mod (x^2-5)
+\end_inset 
+</cell>
+</row>
+<row topline="true" bottomline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+dzeta(z)
+\end_inset 
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset 
+
+
+\begin_inset  Tabular
+<lyxtabular version="3" rows="10" columns="1">
+<features>
+<column alignment="center" valignment="top" leftline="true" rightline="true" width="0">
+<row topline="true" bottomline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+MuPAD
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\family roman 
+\series medium 
+\shape up 
+\size normal 
+\emph off 
+\bar no 
+\noun off 
+\color none
+x:=(((3)^(-(2)))-(((5)!)/(((((3)!)*((2)!))))))
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\family roman 
+\series medium 
+\shape up 
+\size normal 
+\emph off 
+\bar no 
+\noun off 
+\color none
+f(x):=(((csc(((x-3)))^(2)))*((arctan(((x-7))))))
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\begin_inset Formula $\times$
+\end_inset 
+
+
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\family roman 
+\series medium 
+\shape up 
+\size normal 
+\emph off 
+\bar no 
+\noun off 
+\color none
+(csch((x)))
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\family roman 
+\series medium 
+\shape up 
+\size normal 
+\emph off 
+\bar no 
+\noun off 
+\color none
+c:=TRUE
+\family default 
+\series default 
+\shape default 
+\size default 
+\emph default 
+\bar default 
+\noun default 
+\color default
+ _újsor_ 
+\family roman 
+\series medium 
+\shape up 
+\size normal 
+\emph off 
+\bar no 
+\noun off 
+\color none
+a:=(not ((c or FALSE )) or (c))
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\family roman 
+\series medium 
+\shape up 
+\size normal 
+\emph off 
+\bar no 
+\noun off 
+\color none
+c[4]
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\family roman 
+\series medium 
+\shape up 
+\size normal 
+\emph off 
+\bar no 
+\noun off 
+\color none
+(sin((((PI)/(3)))))
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\family roman 
+\series medium 
+\shape up 
+\size normal 
+\emph off 
+\bar no 
+\noun off 
+\color none
+((((((((x)^(2))+((3)*(((x)^(5)))))-((5)*(x)))-27))) mod (((((x)^(2))-5))))
+\end_inset 
+</cell>
+</row>
+<row topline="true" bottomline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\family roman 
+\series medium 
+\shape up 
+\size normal 
+\emph off 
+\bar no 
+\noun off 
+\color none
+zeta(z)
+\end_inset 
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset 
+
+
+\layout Standard
+
+Megjegyzések:
+\layout Standard
+
+
+\begin_inset  Tabular
+<lyxtabular version="3" rows="10" columns="1">
+<features>
+<column alignment="center" valignment="top" leftline="true" rightline="true" width="0">
+<row topline="true" bottomline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Formulák
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+x:=3^-2-5!/(3!*2!)
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+f(x):=cosec^2(x-3)*atan(x-7)
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+4!!
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+cosech(x)
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+c:=igaz; a:=c
+\backslash 
+/hamis->c
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+c_4
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+sin(pí/3)
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+(x^2+3x^5-5x-27) mod (x^2-5)
+\end_inset 
+</cell>
+</row>
+<row topline="true" bottomline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+dzeta(z)
+\end_inset 
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset 
+
+
+\begin_inset  Tabular
+<lyxtabular version="3" rows="10" columns="1">
+<features>
+<column alignment="center" valignment="top" leftline="true" rightline="true" width="0">
+<row topline="true" bottomline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+yacas
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\family roman 
+\series medium 
+\shape up 
+\size normal 
+\emph off 
+\bar no 
+\noun off 
+\color none
+x:=(((3)^(-(2)))-((5!)/((((3!)*(2!))))))
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\family roman 
+\series medium 
+\shape up 
+\size normal 
+\emph off 
+\bar no 
+\noun off 
+\color none
+f(x):=(((Csc((((x-3))))^(2)))*((ArcTan((((x-7))))))
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\family roman 
+\series medium 
+\shape up 
+\size normal 
+\emph off 
+\bar no 
+\noun off 
+\color none
+4!!
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\family roman 
+\series medium 
+\shape up 
+\size normal 
+\emph off 
+\bar no 
+\noun off 
+\color none
+(Csch(((x)))
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\family roman 
+\series medium 
+\shape up 
+\size normal 
+\emph off 
+\bar no 
+\noun off 
+\color none
+c:=True
+\family default 
+\series default 
+\shape default 
+\size default 
+\emph default 
+\bar default 
+\noun default 
+\color default
+ _újsor_ 
+\family roman 
+\series medium 
+\shape up 
+\size normal 
+\emph off 
+\bar no 
+\noun off 
+\color none
+a:=(Not (c Or False ) Or (c))
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\family roman 
+\series medium 
+\shape up 
+\size normal 
+\emph off 
+\bar no 
+\noun off 
+\color none
+c[4]
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\family roman 
+\series medium 
+\shape up 
+\size normal 
+\emph off 
+\bar no 
+\noun off 
+\color none
+(Sin(((((Pi)/(3)))))
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\family roman 
+\series medium 
+\shape up 
+\size normal 
+\emph off 
+\bar no 
+\noun off 
+\color none
+Mod(((((((x)^(2))+((3)*(((x)^(5)))))-((5)*(x)))-27)),((((x)^(2))-5)))
+\end_inset 
+</cell>
+</row>
+<row topline="true" bottomline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\family roman 
+\series medium 
+\shape up 
+\size normal 
+\emph off 
+\bar no 
+\noun off 
+\color none
+zeta(z)
+\end_inset 
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset 
+
+
+\layout Standard
+
+Megjegyzések:
+\layout Standard
+
+
+\begin_inset  Tabular
+<lyxtabular version="3" rows="10" columns="1">
+<features>
+<column alignment="center" valignment="top" leftline="true" rightline="true" width="0">
+<row topline="true" bottomline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Formulák
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+x:=3^-2-5!/(3!*2!)
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+f(x):=cosec^2(x-3)*atan(x-7)
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+4!!
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+cosech(x)
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+c:=igaz; a:=c
+\backslash 
+/hamis->c
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+c_4
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+sin(pí/3)
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+(x^2+3x^5-5x-27) mod (x^2-5)
+\end_inset 
+</cell>
+</row>
+<row topline="true" bottomline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+dzeta(z)
+\end_inset 
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset 
+
+
+\begin_inset  Tabular
+<lyxtabular version="3" rows="10" columns="1">
+<features>
+<column alignment="center" valignment="top" leftline="true" rightline="true" width="0">
+<row topline="true" bottomline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Maxima
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\family roman 
+\series medium 
+\shape up 
+\size normal 
+\emph off 
+\bar no 
+\noun off 
+\color none
+x:(((3)**(-(2)))-((5!)/((((3!)*(2!))))))
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\family roman 
+\series medium 
+\shape up 
+\size normal 
+\emph off 
+\bar no 
+\noun off 
+\color none
+f(x):=(((CSC(((x-3)))**(2)))*((ATAN(((x-7))))))
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\family roman 
+\series medium 
+\shape up 
+\size normal 
+\emph off 
+\bar no 
+\noun off 
+\color none
+4!!
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\family roman 
+\series medium 
+\shape up 
+\size normal 
+\emph off 
+\bar no 
+\noun off 
+\color none
+(CSCH((x)))
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\family roman 
+\series medium 
+\shape up 
+\size normal 
+\emph off 
+\bar no 
+\noun off 
+\color none
+c:TRUE
+\family default 
+\series default 
+\shape default 
+\size default 
+\emph default 
+\bar default 
+\noun default 
+\color default
+ _újsor_ 
+\family roman 
+\series medium 
+\shape up 
+\size normal 
+\emph off 
+\bar no 
+\noun off 
+\color none
+a:(NOT ((c OR FALSE )) OR (c))
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\family roman 
+\series medium 
+\shape up 
+\size normal 
+\emph off 
+\bar no 
+\noun off 
+\color none
+c[4]
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\family roman 
+\series medium 
+\shape up 
+\size normal 
+\emph off 
+\bar no 
+\noun off 
+\color none
+(SIN((((%PI)/(3)))))
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\family roman 
+\series medium 
+\shape up 
+\size normal 
+\emph off 
+\bar no 
+\noun off 
+\color none
+REMAINDER(((((((x)**(2))+((3)*(((x)**(5)))))-((5)*(x)))-27)),((((x)**(2))-5)))
+\end_inset 
+</cell>
+</row>
+<row topline="true" bottomline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\family roman 
+\series medium 
+\shape up 
+\size normal 
+\emph off 
+\bar no 
+\noun off 
+\color none
+%ZETA(z)
+\end_inset 
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset 
+
+
+\layout Standard
+
+Megjegyzések:
+\layout Standard
+
+
+\begin_inset  Tabular
+<lyxtabular version="3" rows="10" columns="1">
+<features>
+<column alignment="center" valignment="top" leftline="true" rightline="true" width="0">
+<row topline="true" bottomline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Formulák
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+x:=3^-2-5!/(3!*2!)
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+f(x):=cosec^2(x-3)*atan(x-7)
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+4!!
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+cosech(x)
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+c:=igaz; a:=c
+\backslash 
+/hamis->c
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+c_4
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+sin(pí/3)
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+(x^2+3x^5-5x-27) mod (x^2-5)
+\end_inset 
+</cell>
+</row>
+<row topline="true" bottomline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+dzeta(z)
+\end_inset 
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset 
+
+
+\begin_inset  Tabular
+<lyxtabular version="3" rows="10" columns="1">
+<features>
+<column alignment="center" valignment="top" leftline="true" rightline="true" width="0">
+<row topline="true" bottomline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+gnuplot
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\family roman 
+\series medium 
+\shape up 
+\size normal 
+\emph off 
+\bar no 
+\noun off 
+\color none
+x=(((3)**(-(2)))-(1.0*(5!)/((((3!)*(2!))))))
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\family roman 
+\series medium 
+\shape up 
+\size normal 
+\emph off 
+\bar no 
+\noun off 
+\color none
+f(x)=(((1e0/sin((((x-3))))**((2))))*((atan((((x-7)))))))
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\begin_inset Formula $\times$
+\end_inset 
+
+
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\family roman 
+\series medium 
+\shape up 
+\size normal 
+\emph off 
+\bar no 
+\noun off 
+\color none
+(cosh(1e0/((x))))
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\family roman 
+\series medium 
+\shape up 
+\size normal 
+\emph off 
+\bar no 
+\noun off 
+\color none
+c=true
+\family default 
+\series default 
+\shape default 
+\size default 
+\emph default 
+\bar default 
+\noun default 
+\color default
+ _újsor_ 
+\family roman 
+\series medium 
+\shape up 
+\size normal 
+\emph off 
+\bar no 
+\noun off 
+\color none
+a=(! ((c|| false )) || (c))
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\begin_inset Formula $\times$
+\end_inset 
+
+
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\family roman 
+\series medium 
+\shape up 
+\size normal 
+\emph off 
+\bar no 
+\noun off 
+\color none
+(sin((((1.0*(pi)/(3))))))
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\family roman 
+\series medium 
+\shape up 
+\size normal 
+\emph off 
+\bar no 
+\noun off 
+\color none
+(((((((x)**(2))+((3)*(((x)**(5)))))-((5)*(x)))-27)))%(((((x)**(2))-5)))
+\end_inset 
+</cell>
+</row>
+<row topline="true" bottomline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\family roman 
+\series medium 
+\shape up 
+\size normal 
+\emph off 
+\bar no 
+\noun off 
+\color none
+zeta(z)
+\end_inset 
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset 
+
+
+\layout Standard
+
+Megjegyzések:
+\layout Standard
+
+
+\begin_inset  Tabular
+<lyxtabular version="3" rows="10" columns="1">
+<features>
+<column alignment="center" valignment="top" leftline="true" rightline="true" width="0">
+<row topline="true" bottomline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Formulák
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+x:=3^-2-5!/(3!*2!)
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+f(x):=cosec^2(x-3)*atan(x-7)
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+4!!
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+cosech(x)
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+c:=igaz; a:=c
+\backslash 
+/hamis->c
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+c_4
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+sin(pí/3)
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+(x^2+3x^5-5x-27) mod (x^2-5)
+\end_inset 
+</cell>
+</row>
+<row topline="true" bottomline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+dzeta(z)
+\end_inset 
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset 
+
+
+\begin_inset  Tabular
+<lyxtabular version="3" rows="10" columns="1">
+<features>
+<column alignment="center" valignment="top" leftline="true" rightline="true" width="0">
+<row topline="true" bottomline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Java
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\begin_inset Formula $\times$
+\end_inset 
+
+
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\family roman 
+\series medium 
+\shape up 
+\size normal 
+\emph off 
+\bar no 
+\noun off 
+\color none
+f(x)=((Math.pow((1.0/Math.sin(((x-3)))),(2)))*((Math.arctan(((x-7))))))
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\begin_inset Formula $\times$
+\end_inset 
+
+
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\begin_inset Formula $\times$
+\end_inset 
+
+
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\family roman 
+\series medium 
+\shape up 
+\size normal 
+\emph off 
+\bar no 
+\noun off 
+\color none
+c=true
+\family default 
+\series default 
+\shape default 
+\size default 
+\emph default 
+\bar default 
+\noun default 
+\color default
+ _újsor_ 
+\family roman 
+\series medium 
+\shape up 
+\size normal 
+\emph off 
+\bar no 
+\noun off 
+\color none
+a=(! ((c || false )) || (c))
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+c[4] 
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\family roman 
+\series medium 
+\shape up 
+\size normal 
+\emph off 
+\bar no 
+\noun off 
+\color none
+(Math.sin((((Math.PI)/(3)))))
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\family roman 
+\series medium 
+\shape up 
+\size normal 
+\emph off 
+\bar no 
+\noun off 
+\color none
+((((((Math.pow(x,2)+((3)*(Math.pow(x,5))))-((5)*(x)))-27)))%(((Math.pow(x,2)-5))))
+\end_inset 
+</cell>
+</row>
+<row topline="true" bottomline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\family roman 
+\series medium 
+\shape up 
+\size normal 
+\emph off 
+\bar no 
+\noun off 
+\color none
+zeta(z)
+\end_inset 
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset 
+
+
+\layout Standard
+
+Megjegyzések:
+\layout Standard
+
+
+\begin_inset  Tabular
+<lyxtabular version="3" rows="10" columns="1">
+<features>
+<column alignment="center" valignment="top" leftline="true" rightline="true" width="0">
+<row topline="true" bottomline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Formulák
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+x:=3^-2-5!/(3!*2!)
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+f(x):=cosec^2(x-3)*atan(x-7)
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+4!!
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+cosech(x)
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+c:=igaz; a:=c
+\backslash 
+/hamis->c
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+c_4
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+sin(pí/3)
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+(x^2+3x^5-5x-27) mod (x^2-5)
+\end_inset 
+</cell>
+</row>
+<row topline="true" bottomline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+dzeta(z)
+\end_inset 
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset 
+
+
+\begin_inset  Tabular
+<lyxtabular version="3" rows="10" columns="1">
+<features>
+<column alignment="center" valignment="top" leftline="true" rightline="true" width="0">
+<row topline="true" bottomline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+MathML content
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+\end_inset 
+</cell>
+</row>
+<row topline="true" bottomline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+\end_inset 
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset 
+
+
+\layout Standard
+
+Megjegyzések:
+\layout Standard
+
+Érdekes viselkedések és 
+\begin_inset Quotes gld
+\end_inset 
+
+leleplezésük
+\begin_inset Quotes grd
+\end_inset 
+
+:
+\layout Standard
+\noindent 
+
+\begin_inset  Tabular
+<lyxtabular version="3" rows="10" columns="4">
+<features>
+<column alignment="center" valignment="top" leftline="true" width="0">
+<column alignment="center" valignment="top" leftline="true" width="0">
+<column alignment="center" valignment="top" leftline="true" width="0">
+<column alignment="center" valignment="top" leftline="true" rightline="true" width="0">
+<row topline="true" bottomline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Formulák
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Érdekes alak
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\begin_inset Quotes gld
+\end_inset 
+
+leleplezve
+\begin_inset Quotes grd
+\end_inset 
+
+
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Megjegyzés
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+(x(x-3))^2
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
+$x^{2}(x-3)$
+\end_inset 
+
+
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
+$x^{2}(x-3)$
+\end_inset 
+
+
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+Az elsõ x-et függvénynek tekinti\SpecialChar \@.
+
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+\end_inset 
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+\end_inset 
+</cell>
+</row>
+<row topline="true" bottomline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+\end_inset 
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\layout Standard
+
+\end_inset 
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset 
+
+
+\layout Section
+
+Programozói dokumentáció
+\begin_inset Foot
+collapsed true
+
+\layout Standard
+
+Talán valamikor elkészül.
+\end_inset 
+
+
+\layout Standard
+
+
+\begin_inset LatexCommand \label{sec:Programozói-dokumentáció}
+
+\end_inset 
+
+Tennivalók:
+\layout Standard
+
+Szóközök használatát beépíteni a nyelvtanba.
+\layout Standard
+
+<-, <=, <->, vagy <=> használatát hozzáadni a nyelvtanhoz, kimenetekhez.
+\layout Standard
+
+Konfigurációs állomány.
+\the_end

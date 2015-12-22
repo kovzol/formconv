@@ -1,0 +1,1 @@
+echo "(((9*x)-14)/(((9*(x^2))-(24*x))+16))" | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r

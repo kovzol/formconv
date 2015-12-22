@@ -1,0 +1,1 @@
+echo sinx^2 | $F -O maple

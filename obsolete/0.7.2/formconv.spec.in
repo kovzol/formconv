@@ -1,0 +1,30 @@
+Summary: A general formula converter.
+Name: formconv
+Version: @PACKAGE_VERSION@
+Release: 1
+Copyright: LGPL
+Group: Science/Math
+Source: http://prdownloads.sourceforge.net/formconv/formconv-@PACKAGE_VERSION@.tar.gz
+BuildRoot: /var/tmp/%{name}
+
+%description
+The formconv utility converts formulae from various input formats
+to another output formats. Supported formats are syntax used in
+computer algebra systems (Maple, MuPAD, Maxima etc.), MathML,
+LaTeX and other formats.
+
+%install
+rm -rf $RPM_BUILD_ROOT
+mkdir -p $RPM_BUILD_ROOT/usr/bin
+mkdir -p $RPM_BUILD_ROOT/usr/share/man/man1
+
+install -m 755 formconv $RPM_BUILD_ROOT/usr/bin
+install -m 644 formconv.1 $RPM_BUILD_ROOT/usr/share/man/man1
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%files
+%doc README formconv.lyx HISTORY ChangeLog
+/usr/bin/formconv
+/usr/share/man/man1/formconv.1.gz

@@ -1,0 +1,46 @@
+Formula Converter (formconv)
+----------------------------
+
+Copyright (C) 2003-2006 Zoltan Kovacs <kovzol@math.u-szeged.hu>
+Copyright (C) 2003-2006 Gabor Bakos <Bakos.Gabor.1@stud.u-szeged.hu>
+
+
+This tool converts formulae from one format to another. To compile it,
+type 
+
+$ ./configure
+$ make
+
+on the command line as normal user. Note that you should install PCCTS
+first in source from http://www.polhode.com/pccts.html; formconv is
+tested under version 1.33MR33 (please note that from gcc-3.3 you have to
+modify all sources to change "#include <varargs.h>" to "#include
+<stdarg.h>"). The locate utility must be also installed which is no
+longer a default package from SuSE Linux 8.0; to get this software
+please visit http://www.gnu.org/software/findutils (or you probably have
+a precompiled version on the installation CDs or so :-). IMPORTANT:
+After installing PCCTS, you should run "updatedb" before you start
+"./configure". This is needed, because the configure script will not
+realize that the PCCTS source is already installed.
+
+To finalize your installation, type
+
+# make install
+
+as root.
+
+To generate a hardcopy of the documentation (which is in a very starting
+state yet) you also need LyX and latex2html. The documentation can be
+(re)generated entering "make documentation". For more information please
+visit the formconv website on http://formconv.sf.net.
+
+In formconv currently only a few conversion types are supported, and
+they are not finished yet. See HISTORY file for details.
+
+
+
+Enjoy!
+
+This is a GNU LGPL distributed software.
+
+$Header: /cvsroot/formconv/formconv/obsolete/0.7.2/README,v 1.3 2006/07/26 06:03:32 kovzol Exp $

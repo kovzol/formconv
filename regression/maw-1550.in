@@ -1,0 +1,1 @@
+echo "1/(x^3-2*x^2+3*4+2006)" | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r

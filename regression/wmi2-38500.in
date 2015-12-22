@@ -1,0 +1,1 @@
+echo "sqrt(32/(81*x^(2/3))+x^2+1)" | $F -x aa,.. -x bb,$ -l simple -I intuitive -O maxima -r 

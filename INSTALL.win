@@ -1,0 +1,38 @@
+Windows specific installation instructions
+------------------------------------------
+
+ 0) Decide what you want
+  You may create a formconv, or you should create a dll from the converter.
+  You have an option to create a specific transformator (statically linked).
+  When you want to create a formconv, you should need TCLAP, else you do not need it.
+
+ 1) Some preparation
+  First download and install antlr from antlr.org.
+  Download and unzip ant from ant.apache.org.
+  Copy antlr.jar from your antlr installation to ant's lib directory.
+  Download TCLAP from tclap.sf.net (optional).
+
+ 2) Creating the proper sources
+  Run the ant with the following options:
+
+    ant generateSources
+
+ 3) Select the files you want to use
+  If you want a specific transformator, see the OVERVIEW file to select the needed files.
+  Else you should create a project containing the files from gensrc.
+  If you want a full formconv, you should add your project formconv.cpp too.
+  (If you have to specify the header files, then add formconv/src/cpp/h/*.h)
+
+ 4) Compile your project
+  Hope you are using an IDE to handle your project, so this will not be a hard step.
+  (Setting the antlr lib is not easy. I have not found precompiled lib, so you should
+compile it to yourself too.)
+  Else you should use nmake(?) after editing Makefile.in. (This is the harder way.)
+  (Compiling may take some minutes.)
+
+That's all. You are ready to use this tool.
+
+PS: In the next release some automation will be added to download the necessery
+tools, and to create the project. (Probably example Eclipse project, ant build.xml
+and Dev-Cpp project.)
+

@@ -1,0 +1,140 @@
+Frequently Asked Questions
+--------------------------
+
+Overview
+--------
+
+0) How recent is this document?
+1) How to use formconv_prepare, formconv_evaluate, formconv_free?
+2) What are templates?
+3) What are the planned features?
+4) Is there Java/C#/Python/... language interface?
+5) Do not you want to create ... features sooner?
+6) Where to report bugs?
+
+Answers
+-------
+
+0) How recent is this document?
+
+Here is the CVS header for this file:
+$Header: /cvsroot/formconv/formconv/FAQ,v 1.3 2009/01/01 19:19:59 kovzol Exp $
+
+1) How to use formconv_prepare, formconv_evaluate, formconv_free?
+
+First you have to choose a subset of numbers you want to use. Let us
+assume it is the set of complex numbers (with precision double).
+
+(Include your C++ program the following file:
+formconv/src/cpp/h/fastcomplexcompute.h)
+
+After this decision you must declare a formula like this:
+
+formula < FastComplexCompute < std::complex < double > > >*f;
+
+You must add a value to this pointer with the call like this:
+
+f = formconv_prepare<
+      FastComplexCompute<
+        std::complex<double> > >(myFormula);
+
+Here myFormula is an std::string, or a char *.
+
+Once you have successfully (have not thrown any exceptions) initialized
+f, you can evaluate your formula with
+
+formconv_evaluate<FastComplexCompute<std::complex<double> > >(f, c);
+
+Here c is an std::complex value. The result is an std::complex value.
+Hope you have not got any exceptions. If you got, or you do not want to
+use the formula *f further, then you should free the memory used by f.
+Free it like this:
+
+formconv_free<FastComplexCompute<std::complex<double> > >(f);
+
+That's all.
+
+There is only one remaining problem. You should cacth the exceptions
+from these codes. That is easy:
+
+try {
+	  ...
+    } catch (std::exception &e) //Unsupported operation in the formula
+        {
+	  ... //Do what you want
+        } catch (antlr::ANTLRException &e) //Parsing exception
+	    {
+	      ... // e.toString() returns some information about the problem
+	    } // If you used other than std::complex, 
+	      // then other exceptions may also occur.
+
+For an example code see:
+
+formconv/src/cpp/complex.cpp
+
+2) What are templates?
+
+This is a difficult question an example for this is in
+
+formconv/src/cpp/h/formconv.h
+
+But probably this is not enough for you. :-) So please take a look at
+the following book:
+
+Bjarne Stroustrup: The C++ Programming Language
+
+3) What are the planned features?
+
+- Trying to make this tool "interlingual", able to use it from Java, C#,
+Python natively.
+
+- Adding a little utility which handles the clipboard, and stay at system
+tray, so it is able to convert the clipboard's content to other format.
+
+- Better error messages.
+
+- Better MathML parsing. (Presentation, and mixed MathML too.)
+
+- Reimplement the functions used in formconv 0.7.
+
+- octave/MatLab input, output.
+
+- Natural language output for formulae.
+
+- Remove the unnecessary strings from the code to a config file.
+
+4) Is there a Java/C#/Python/... language interface?
+
+Sorry, actually not. :-( A similar implementation is available (but not
+public) in Java. It has not got every feature that is done in formconv.
+
+The native codes for Java, C#, Python are planned. Hopefully sometimes
+we will have time to implement these changes. For those programming
+platforms that are not supported by antlr, you should use a wrapper to
+our C++ code.
+
+5) Do not you want to create ... features sooner?
+
+It depends on the users... If you send us patches, it is likely that we
+will use it (if you licence it).
+
+If you need something, please tell us, hopefully we can help you. (We
+are developing this project in our free time, so it may take a little
+time to create it.)
+
+Please if you would like a feature, then help us in the testing phase.
+(No, we do not like testing.)
+
+6) Where to report bugs?
+
+If you have found a bug in the binary distribution, and you can not
+reproduce it compiled from the sources, then please send the bug report
+to Zoltan Kovacs:
+
+kovzol@math.u-szeged.hu
+
+Else you may send an e-mail to Gabor Bakos:
+
+baga@users.sourceforge.net
+
+(You may also CC it to Zoltan Kovacs.)

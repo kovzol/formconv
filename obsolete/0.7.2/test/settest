@@ -1,0 +1,5 @@
+{1, 2, 3} union {1,2,4} subset {1,2,3,4} == true
+x^2 in {1,{2,5},5} union {x,3} multiply {z} \/ A ni B
+minden x, y, z in Z: x^2<y^2<z^2
+{1, ..., N}
+1+4+...+n^2

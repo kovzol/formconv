@@ -1,0 +1,14 @@
+All libraries must be installed on your system by root
+(or you must extend your paths --- probably it will not work
+in some cases during the installation process). Alternatively,
+you should use the wrapper script bin/formconv_runme.
+
+Compiling dependencies are not completed yet. Sometimes a "make
+distclean" is needed for creating the executables properly!
+So if you want to be sure that you have a well working binary
+version, make sure that you re-run "make distclean;
+export CFLAGS=""; ./configure; make".
+
+The directory structure is not too clean yet.
+
+Documentation should be more detailed.

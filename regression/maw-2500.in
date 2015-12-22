@@ -1,0 +1,1 @@
+echo "sqrt(4x^2-4x+5)" | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r

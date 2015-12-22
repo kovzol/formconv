@@ -1,0 +1,1 @@
+echo "(3x+3)/(x^(2)+6x+13)" | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r 

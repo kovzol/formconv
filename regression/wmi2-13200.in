@@ -1,0 +1,1 @@
+echo "(2x+5a-1)/2a bb " | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r 

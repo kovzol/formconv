@@ -1,0 +1,1 @@
+echo "(5e^x)/(2-3e^x)" | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r

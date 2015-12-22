@@ -1,0 +1,73 @@
+#                                               -*- Autoconf -*-
+# Process this file with autoconf to produce a configure script.
+
+AC_PREREQ(2.57)
+AC_INIT(formconv-test, 0.1, kovzol@math.u-szeged.hu)
+AC_CONFIG_SRCDIR([complex.cpp])
+AC_LANG(C++)
+
+# Checks for programs.
+AC_PROG_CXX
+
+AC_PATH_PROG([ANTLR], [antlr], ,
+ [$PATH:../bin])
+AC_PATH_PROG([ANTLR_CONFIG], [antlr-config], ,
+ [$PATH:../bin])
+
+if test "$ac_cv_path_ANTLR" = ""; then
+ AC_MSG_ERROR([antlr is missing, download it from http://www.antlr.org])
+fi
+
+if test "$ac_cv_path_ANTLR_CONFIG" = ""; then
+ AC_MSG_ERROR([antlr-config is missing, check your antlr installation])
+fi
+
+# Checks for libraries.
+AC_DEFUN(PROG_LIB_FORMCONV,
+[AC_CACHE_CHECK(whether formconv library is installed, ac_lib_formconv,
+[echo '#include <h/formconv.h>
+int main()
+{
+  formula < ComplexCompute > *f;
+}
+' > conftest.cpp
+ac_lib_formconv=no
+${CXX} conftest.cpp -I /usr/include/formconv -I /usr/local/include/formconv `$ac_cv_path_ANTLR_CONFIG --cflags` -c -o conftest.o 2>/dev/null && ac_lib_formconv=yes
+rm -f conftest*
+])])
+
+
+# Checks for versions.
+AC_DEFUN(PROG_LIB_FORMCONV_VER,
+[AC_CACHE_CHECK(if formconv library version >= 0.8.1, ac_lib_formconv_ver,
+[echo '#include <h/formconv.h>
+int main()
+{
+#if FCVERSION < 80100
+#error formconv library is too old
+#endif
+}
+' > conftest.cpp
+ac_lib_formconv_ver=no
+${CXX} conftest.cpp -I /usr/include/formconv -I /usr/local/include/formconv `$ac_cv_path_ANTLR_CONFIG --cflags` -c -o conftest.o 2>/dev/null && ac_lib_formconv_ver=yes
+rm -f conftest*
+])])
+
+
+
+# Checks for header files.
+
+# Checks for typedefs, structures, and compiler characteristics.
+
+# Checks for library functions.
+PROG_LIB_FORMCONV
+if test "$ac_lib_formconv" = "no"; then
+ AC_MSG_ERROR([formconv library is missing, download it from http://formconv.sf.net])
+fi
+PROG_LIB_FORMCONV_VER
+if test "$ac_lib_formconv_ver" = "no"; then
+ AC_WARN([formconv library seems to be rather old, you are encouraged to download a newer version from http://formconv.sf.net])
+fi
+
+AC_CONFIG_FILES([Makefile])
+AC_OUTPUT

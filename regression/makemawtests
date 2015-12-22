@@ -1,0 +1,10 @@
+#!/bin/sh
+# Generates maw-*.in files from maw.ins.
+for i in `seq 10 10 2900`; do
+ f=maw-$i.in
+ head -$i maw.ins | tail -1 > $f
+ chmod 755 $f
+ ./makeregr $f
+ echo -n "$i "
+ done
+echo "done"

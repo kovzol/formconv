@@ -1,0 +1,1 @@
+echo "9+8888888888889999999999999999999999 bb " | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r 

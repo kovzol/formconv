@@ -1,0 +1,1 @@
+echo "1/(x*x^(1/4))" | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r

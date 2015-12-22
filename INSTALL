@@ -1,0 +1,111 @@
+BEFORE you start
+----------------
+
+1) Install the tclap library (http://tclap.sf.net). (On a modern Ubuntu
+   Linux, you need the libtclap-dev package.)
+
+2) Get ANTLR-2.7.7 (http://www.antlr.org) and a full Java developing
+   environment (Sun Java 2 SDK is suggested) and install it. See
+   the FAQ (at the bottom of this file) if you run into problems.
+   (On a modern Ubuntu Linux, you need the libantlr-dev package.)
+
+3) Get the boost library (http://www.boost.org). boost is needed
+   from version 0.8.8 and above. (On a modern Ubuntu Linux, you need
+   the libboost-dev package.)
+
+4) Get the gmp library (http://gmplib.org). GMP is needed from version
+   0.9.2 and above. (On a modern Linux, you need libgmpxx4ldbl,
+   libgmp-dev and their dependencies.)
+
+
+INSTALLING the formula converter library
+----------------------------------------
+
+1) Configure the library ("./configure").
+
+2) Compile it ("make"). See the FAQ if you encounter problems.
+
+3) Install it ("make install", as root, if you have root access).
+
+
+TRYING OUT the library
+----------------------
+
+Go to the bin/ directory and enter "complex" or
+
+$ echo "x^2-sinxcosx" | bin/c
+
+to see some examples.
+
+
+NOTES about the Makefile (for advanced users)
+---------------------------------------------
+
+To compile the shared library, you may have to edit the Makefile in this
+directory. (Normally it is already done for you, but probably you are
+interested in modifying the sources.) You must set the ANTLR,
+ANTLR_FLAGS variables. (The ANTLR should be the following:
+
+{the path to the antlr} -o $(GEN_SRC)
+
+The ANTLR_FLAGS should be the following:
+
+-I {path to the antlr's lib/cpp/antlr}.)
+
+Note: The antlr of the PCCTS will not work for this version of formconv!
+
+After you have edited the Makefile, you should type in the formconv's
+directory:
+
+$ make libformconv.a # This creates the static object.
+
+or
+
+$ make libformconv.so.0 # This creates the shared object.
+
+Note: to use the shared objects you have to use the LD_LIBRARY_PATH
+variable, or you have to install the shared library to one of the
+/usr/local/lib or /usr/lib directories. (You should have to be root for
+this.) The examples packed with this distribution use the shared and
+static libraries, you may create your application based upon these
+examples.
+
+
+FAQ
+---
+
+1. After running bin/formconv, I got:
+
+$ bin/formconv
+bin/formconv: error while loading shared libraries: libformconv.so.0:
+cannot open shared object file: No such file or directory
+
+Why?
+
+You probably did not installed the library ("make install") as root. The
+same problem may occur with bin/complex. The reason is similar.
+
+If you installed formconv as root, probably the "/usr/local/lib" is
+missing from the /etc/ld.so.conf file (typical on Ubuntu Linux).
+Go ahead and modify that file for that (and re-run ldconfig).
+
+2. OK, but I do not have any root access on the machine I work!
+
+OK, you have to run bin/formconv like this:
+
+$ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:lib; bin/complex
+
+3. Compilation is extremely slow and eats up my resources!
+
+Try to omit "-O2" from your CFLAGS environmental variable. Try this:
+
+$ export CFLAGS=""; ./configure && make
+
+4. antlr gives errors during its compilation, I get errors during make.
+
+You should use Sun Java 2 SDK. Install it first, then add its bin/
+directory to your PATH. Check if CLASSPATH is properly set (to the root
+directory of antlr). Check if J2SDK is installed to such a directory
+which is allowed to run binary executables from (typical installation
+problem on many Linux systems). Finally, rerun ./configure and make (in
+your antlr source directory).

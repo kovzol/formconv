@@ -1,0 +1,1 @@
+echo "tan(x)^(1/2)/(3x^(1/2))" | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r

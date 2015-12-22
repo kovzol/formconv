@@ -1,0 +1,1 @@
+echo "cos^7(x)" | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r

@@ -1,0 +1,1 @@
+echo "(4*atan(2*x)+8*pi)/(2*atan(3*x)+pi),inf" | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r 

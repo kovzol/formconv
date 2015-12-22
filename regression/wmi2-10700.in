@@ -1,0 +1,1 @@
+echo "[[(-2)/(5),7/(5),1/(5)],[3/(10),(-13)/(10),1/(10)],[3, aa , aa ]]" | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r 

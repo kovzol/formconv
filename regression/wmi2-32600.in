@@ -1,0 +1,2 @@
+#!/bin/sh
+echo "K=56cm a=? b=? téglalapná bb " | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r 

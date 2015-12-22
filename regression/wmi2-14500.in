@@ -1,0 +1,1 @@
+echo "3300*10=000 bb " | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r 

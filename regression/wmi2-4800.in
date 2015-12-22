@@ -1,0 +1,1 @@
+echo "1 3a-2bx2=20 bb " | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r 

@@ -1,0 +1,1 @@
+echo "4*(8-x)**(-1/3)" | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r

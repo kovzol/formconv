@@ -1,0 +1,1 @@
+echo "7^(95) mod 191" | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r 

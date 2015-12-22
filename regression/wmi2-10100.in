@@ -1,0 +1,1 @@
+echo "[[-2,3,9],[0,1,2],[-2,,] bb " | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r 

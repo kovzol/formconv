@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+	Basic MathML tests
+	Tested on http://www.mathmlcentral.com/Tools/FromMathMLFile.jsp
+-->
+<math xmlns="http://www.w3.org/1998/Math/MathML">
+	<declare type="function">
+		<ci type="real">multiplier</ci>
+		<lambda>
+			<bvar>
+				<ci type="real">a</ci>
+			</bvar>
+			<bvar>
+				<ci type="real">b</ci>
+			</bvar>
+			<apply>
+				<times/><ci>a</ci><ci>b</ci>
+			</apply>
+		</lambda>
+	</declare>
+</math>
+
+<!-- 
+	The above is expected to generate the following C code:
+	
+float multiplier(float a, float b)
+{
+	return( a * b);
+}
+
+-->

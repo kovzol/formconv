@@ -1,0 +1,1 @@
+echo "(x+6)/(x^2-8x+25)^8" | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r

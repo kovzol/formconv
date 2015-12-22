@@ -1,0 +1,210 @@
+.TH FORMCONV "1" "22 April 2004" "Formula converter 0.7.1"
+.SH NAME
+formconv \- a general formula converter
+.SH SYNOPSIS
+.B formconv
+[\fIOPTIONS\fR]...
+.SH DESCRIPTION
+The `formconv' utility converts files between various formula formats.
+.SS "Listings:"
+.TP
+\fB\-I\fR, \fB\-\-input-format\fR=\fIFORMAT\fR
+use FORMAT for input (the default is `intuitive')
+.TP
+\fB\-O\fR, \fB\-\-output-format\fR=\fIFORMAT\fR
+use FORMAT for input (the default is `latex')
+.TP
+\fB\-i\fR, \fB\-\-input-file\fR=\fIFILE\fR
+read input from FILE
+.TP
+\fB\-o\fR, \fB\-\-output-file\fR=\fIFILE\fR
+write output to FILE
+.TP
+\fB\-h\fR, \fB\-\-help\fR
+display a brief help and exit
+.TP
+\fB\-v\fR, \fB\-\-version\fR
+output version information and exit
+.SS "Fine tuning:"
+.TP
+\fB\-d\fR, \fB\-\-no-dynamic-parentheses\fR
+for LaTeX output, use `(' and `)' instead of `\\left(' and `\\right)'
+.TP
+\fB\-c\fR, \fB\-\-no-cdots\fR
+for LaTeX output, use `\,' instead of `\\cdot' on multiplication
+.TP
+\fB\-b\fR, \fB\-\-beauty-parentheses\fR
+for LaTeX output, use brackets and/or "curly" braces instead of
+normal parentheses
+.TP
+\fB\-a\fR, \fB\-\-no-auto-simplify\fR
+formconv normally simplifies expressions, i.e. it will give the
+output `x' for the input `((((x))))' or similar expressions;
+this option disables the default behaviour
+.TP
+\fB\-P\fR, \fB\-\-C-precedence\fR
+formconv normally uses (like most of CASes) the precedence order
+of Pascal. This switch changes it to C-style.
+I.e., in Pascal style inputs: false\\/true=false is equivalent to
+(false\\/true)=false, while in C-style it is equivalent to
+false\\/(true=false). It takes effect only in the case of
+boolean-expression or set-expression input content.
+.TP
+\fB\-t\fR, \fB\-\-type-check\fR
+formconv normally does not check the type of the expressions.
+.br
+This switch turns on a bit more type checking. I.e.: 1.4!, or 1.3 mod 3.2
+will stop parsing. (Very experimental.)
+.TP
+\fB\-f\fR, \fB\-\-allow-functions\fR
+formconv normally does not think that a letter followed by ( is
+a function's begin. It assumes that it is a multiplication.
+.br
+This switch turns on that feature, which allows expressions like 
+n(n+1). BUT this does not mean n*(n+1), this means function n is used on (n+1).
+.TP
+\fB\-H\fR, \fB\-\-header\fR=\fITEXT\fR
+insert TEXT before the first line of output
+
+.TP
+\fB\-F\fR, \fB\-\-footer\fR=\fITEXT\fR
+add TEXT after the last line of output
+.TP
+\fB\-p\fR, \fB\-\-prefix\fR=\fITEXT\fR
+insert TEXT before each line of output
+.TP
+\fB\-s\fR, \fB\-\-suffix\fR=\fITEXT\fR
+add TEXT after the each line of output
+.TP
+\fB\-C\fR, \fB\-\-input-content\fR=\fICONTENT\fR
+input will be parsed due to the given CONTENT which
+may be \fIexpression\fR, \fIequation\fR, \fIboolean-expression\fR, or 
+\fIset-expression\fR.
+.br
+If input content is `expression', then only relations, arithmetic opeartors and 
+functions are allowed in formulae and no boolean constants or operators are 
+allowed.
+E.g., `1', `2=e', `5<4' are correct inputs, while `true', `3>=4=false'
+are not correct.
+.br
+If input-content is `equation', then the formula must be an equation without
+boolean constants or relations.
+E.g., `a=b'; `5=2.4e2', `c=pi' are correct, while `3<4', `true',
+`\\sin x \\neq \\cos x' are not correct.
+.br
+If input-content is `boolean-expression', then you may create boolean variables,
+relations and you can use the boolean constants. The expressions that are valid
+in `expression' are also valid here.
+E.g., `a:=sin^2x-sin(x)^2==0', `a | false' are correct.
+.br
+If input-content is `set-expression', you can use the expressions from
+`boolean-expression', in addition you can use sets and second order logic.
+E.g., `forall u,v in {x^2|x in A} union {1,2,3,6, ...}: uv in A ni u-v'
+.TP
+\fB\-l\fR, \fB\-\-input-lang\fR=\fILANGUGE\fR
+input's numbers may be in \fILANGUAGE\fR's type (this switch has not got any effect yet)
+.TP
+\fB-L\fR, \fB\-\-output-lang\fR=\fILANGUAGE\fR
+number parts of the output, and other parts of it (e.g. names of functions)
+will be displayed in \fILANGUAGE\fR language (this overrides the \fIFC_OUTPUT_LANG\fR
+environment variable)
+.br
+\fILANGUAGE\fR is one of the following:
+.TP
+default: no change in numbers
+.TP
+hungarian: tg(3 330,555 6), IGAZ
+.TP
+english: tan(3,330.555,6), TRUE
+.TP
+french: tan(3 330,555 6), VRAI
+.TP
+(The German, Italian, Spanish and other languages should also be documented here.)
+
+.SS "Defaults:"
+If no option is given, formconv reads the standard input and
+writes its output to the standard output. This can be
+changed with the \fB-i\fR and \fB-o\fR options.
+.SS "Input/output formats:"
+.TP
+\fBc\fR - the standard C syntax
+.TP
+\fBccomplex\fR - the standard C syntax for complex arithmetics (using complex.h)
+.TP
+\fBlatex\fR - LaTeX format by Leslie Lamport
+.TP
+\fBmaple\fR - Maple(R) format by Waterloo Maple, Inc.
+.TP
+\fBmupad\fR - MuPAD format by SciFace GmbH., Paderborn, Germany
+.TP
+\fBmaxima\fR - the Macsyma format
+.TP
+\fBmathematica\fR - Mathematica(R) format by Wolfram Software
+.TP
+\fByacas\fR - YaCAS (Yet another Computer Algebra System)
+.TP
+\fBmathml\fR - MathML
+.TP
+\fBlisp\fR - LISP syntax
+.SS "Input only formats:"
+.TP
+\fBintuitive\fR - a mixture of a set of the input/output formats, designed to recognize any kind of formula, case-insensitive
+.SS "Output only formats:"
+.TP
+\fBhtml_valign\fR - TOP, MIDDLE or BOTTOM (for HTML vertical alignment of LaTeX/DVI formulae)
+.TP
+\fBverb_XX\fR - a spelled format for the XX language, currently only the Hungarian output (verb_hu) works
+.TP
+\fBgnuplot\fR - output for the gnuplot plotting utility
+.TP
+\fBparse\fR - a yes/no answer if the input is syntactically correct or not
+.TP
+\fBhtml\fR - a html formatted output
+.PP
+The current version of formconv will only permit to
+use just a very few possibilities of the format types.
+In the future all format will be supported according
+to the authors' plans.
+.SH AUTHORS
+The formconv project was started by Zoltan Kovacs <kovzol@math.u-szeged.hu>
+in 2003 as a subproject for the WebMathematics Interactive development.
+Gabor Bakos <Bakos.Gabor.1@stud.u-szeged.hu> continued his work
+and he wrote the bulk of the code.
+formconv is heavily based on the PCCTS tool written by Terence Parr and others.
+.SH "KNOWN BUGS"
+The prefixes of a token (like ab of abs) do not work. This is a feature
+of PCCTS. Once this will probably corrected.
+.br
+If the input contains too many parentheses, then the conversion
+process may become very slow. One should avoid using unneeded
+parentheses.
+.SH DOCUMENTATION
+Currently it is only available in Hungarian, however some information
+can be found in English as well.
+.br
+For more information about formconv please visit its web page,
+http://formconv.sf.net.
+.SH "REPORTING BUGS"
+Report bugs to <kovzol@math.u-szeged.hu>.
+.SH COPYRIGHT
+Copyright \(co 2003-2004 Zoltan Kovacs and Gabor Bakos.
+.br
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU Library or Lesser General Public License
+(LGPL) as published by the Free Software Foundation.
+There is NO warranty; not even for MERCHANTABILITY or 
+FITNESS FOR A PARTICULAR PURPOSE.
+.SH ACKNOWLEDGMENTS
+formconv is based on "Calculator Demo" published by Ferenc Havasi, 2000.
+Thanks to Tibor Gyimothy, Laszlo Vidacs, Ferenc Havasi
+and Robert Vajda for their support.
+.br
+formconv is a subproject of WebMathematics Interactive,
+http://wmi.sf.net, which is supported by the
+Hungarian Ministry of Information and Communication,
+ITEM K+F, 203/2003.
+.SH "SEE ALSO"
+.B
+recode(1), maxima(1), mupad(1), maple(1), latex(1), gnuplot(1),
+.B
+mathematica(1), yacas(1), gcl(1)

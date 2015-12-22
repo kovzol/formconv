@@ -1,0 +1,1 @@
+echo "5^(2)x^(3)cosx bb " | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r 

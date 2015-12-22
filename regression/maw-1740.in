@@ -1,0 +1,1 @@
+echo "2x/(9-(x^2))^(1/2)" | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r

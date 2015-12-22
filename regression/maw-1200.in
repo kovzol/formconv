@@ -1,0 +1,1 @@
+echo "-18((cosx)^3)sinx" | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r

@@ -1,0 +1,1 @@
+echo "e^(3x+1)/(4*e^(3x+1)+8) bb " | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r 

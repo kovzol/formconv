@@ -1,0 +1,1 @@
+echo "1+1+01+1+1+1+1+1 bb " | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r 

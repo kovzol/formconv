@@ -1,0 +1,1 @@
+echo "a*log(b*x**2+a*x+b+sqrt(a*x**2+b*x+a))" | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r

@@ -1,0 +1,1 @@
+echo "(sinx)^2(cosx)^4" | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r

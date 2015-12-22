@@ -1,0 +1,54 @@
+Regression tests
+----------------
+
+This test suite is created for automatizing intensive testing for
+formconv.
+
+To run all tests, just enter
+
+  ./runtests
+
+This should run all *.in files and compare their output with the
+pregenerated *.out files, respectively.
+
+If you want to create a new test, just create a new file with .in
+extension and set it executable. The output for this test can be
+generated using
+
+  ./makeregr testname.in
+
+This will create the file testname.out.
+
+The script "runtests" calls the script "runtest" as many times as many
+*.in files exist. If there is some difference between the pregenerated
+and the currently created output, then a .diff file is put down in the
+./tmp directory. Ouputs for errors are shown the same place in *.err
+files. You might want to use the
+
+  ./showdiffs
+  
+command to view all differences.
+
+The formconv executable should be abbreviated by $F in all tests.
+
+Tests from the WMI2 project
+---------------------------
+
+Since 2008-04-15 till 2008-08-15 we had lots of user inputs from the
+WMI2 project. We have a database of more than 47000 formulas which is a
+base of our regression tests. 1% of the formulas is used for testing.
+(As the formulas come from production usage, that's why some texts
+contain rude words or crazy formulas.)
+
+Tests from the MAW project
+--------------------------
+
+Between 2008-11-13 and 2008-12-13 Robert Marik collected about 3000
+tests from the MAW project (functions to be integrated). 10% of
+the formulas is used for testing.
+
+Warning
+-------
+
+In general it is not a good idea to regenerate the regression tests
+using a new datasource due to the changed alphabetic order of inputs.

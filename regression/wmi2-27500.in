@@ -1,0 +1,2 @@
+#!/bin/sh
+echo "A mateklap szervez%u0151je egy hülye gyerek , mert  olyan hülyén néz ki a feje meg lehet látni, hohy egy barom  az arcán úgy , hogy ennyit a bb " | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r 

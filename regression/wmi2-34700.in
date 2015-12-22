@@ -1,0 +1,1 @@
+echo "n^2+n+5) bb " | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r 

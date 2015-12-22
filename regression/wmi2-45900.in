@@ -1,0 +1,1 @@
+echo "x*sinx^3^lnx*lg23 bb " | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r 

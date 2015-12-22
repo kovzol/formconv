@@ -1,0 +1,2 @@
+# This should give exactly 3.
+$F --version | head -2 | tail -1 | wc -w

@@ -1,0 +1,1 @@
+echo "06302242413+06 bb " | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r 

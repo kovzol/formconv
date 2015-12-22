@@ -1,0 +1,7 @@
+complex.cpp - a demo program for libformconv
+--------------------------------------------
+
+This test program helps you to write your own application which uses
+libformconv. The configure.in file has a PROG_LIB_FORMCONV and a
+PROG_LIB_FORMCONV_VER function which detects if libformconv is available
+on your machine.

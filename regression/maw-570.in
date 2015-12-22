@@ -1,0 +1,1 @@
+echo "(3*x^2-4*x+3)/(x^3-2*x^2+3*x+2006)" | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r

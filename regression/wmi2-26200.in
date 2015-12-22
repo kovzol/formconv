@@ -1,0 +1,1 @@
+echo "(9*x+7)/(3*x-2)-4*x bb " | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r 

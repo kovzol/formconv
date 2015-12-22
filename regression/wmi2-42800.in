@@ -1,0 +1,1 @@
+echo "x/(2x^2+3)^5" | $F -x aa,.. -x bb,$ -l simple -I intuitive -O maxima -r 

@@ -1,0 +1,1 @@
+echo "2/(1-cos2x)*2/(1^cos2x) bb " | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r 

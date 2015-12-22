@@ -1,0 +1,5 @@
+#!/bin/sh
+# Creates all .out files from all .in files, assuming
+# that the current binary is correct.
+
+for i in *.in; do ./makeregr $i; done

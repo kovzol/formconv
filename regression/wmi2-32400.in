@@ -1,0 +1,1 @@
+echo " infinity" | $F -x aa,.. -x bb,$ -l simple -I intuitive -O maxima -r 

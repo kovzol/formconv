@@ -1,0 +1,1 @@
+echo "-(-1/8x)(4x-12/sqrt(x/3x))  bb " | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r 

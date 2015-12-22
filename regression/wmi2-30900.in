@@ -1,0 +1,2 @@
+#!/bin/sh
+echo "Egy körlapból kivágjuk a lehet%u0151 legnagyobb szabály bb " | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r 

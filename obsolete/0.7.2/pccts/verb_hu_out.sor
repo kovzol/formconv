@@ -1,0 +1,534 @@
+/**
+ * @Author: Gábor Bakos (Bakos.Gabor.1@stud.u-szeged.hu)
+ * Version: $Id: verb_hu_out.sor,v 1.2 2004/12/15 13:37:36 baga Exp $
+ */
+
+#header <<
+#include <iostream>
+#include <fstream>
+#include <memory>
+using namespace std;
+#include "tokens.h"
+#include "AST.h"
+typedef AST SORAST;
+#include "stringhu.h"
+
+>>
+
+class TreeParser_verb_hu_out {
+<<
+	ofstream cout;
+	string prefix, suffix, header, footer;
+	TreeParser_verb_hu_out(const char *fn, const char *iprefix, const char *isuffix, const char *iheader, const char *ifooter) : cout(fn), prefix(iprefix), suffix(isuffix), header(iheader), footer(ifooter)
+	{
+		cout << header;
+	}
+	~TreeParser_verb_hu_out()
+	{
+		cout << footer;
+	}
+        void szam(std::string &s)
+	{
+		int l=s.length();
+		int i=0;
+		while (s[i]=='0') ++i;
+		std::string tmp=s.substr(i, l);
+		l=tmp.length();
+		std::string result=(l==0)?"nulla":""; 
+		for (int j=0; j<l;++j)
+		{
+			if ((l-j-1)%6!=1 && (l-j-1)%6!=4)
+			{
+				switch (tmp[j])
+				{
+				case '0': if (l==1) result+="nulla"; break;
+				case '1': if (j!=0 || (l-1)%6==0) result+="egy"; break;
+				case '2': if (j==l-1) result+="kettõ"; else result+="két"; break;
+				case '3': result+="három"; break;
+				case '4': result+="négy"; break;
+				case '5': result+="öt"; break;
+				case '6': result+="hat"; break;
+				case '7': result+="hét"; break;
+				case '8': result+="nyolc"; break;
+				case '9': result+="kilenc"; break;
+				}
+				switch ((l-j-1)%6)
+				{
+				case 0:
+					if (l-j-1==6 && (tmp[j]!='0' || (j-1>=0 && tmp[j-1]!='0') || (j-2>=0 && tmp[j-2]!='0') || (j-3>=0 && tmp[j-3]!='0') || (j-4>=0 && tmp[j-4]!='0') || (j-5>=0 && tmp[j-5]!='0'))) result+="millió";
+					else if (l-j-1==12) result+="billió";
+					else if (l-j-1==18) result+="trillió";
+					else if (l-j-1==24) result+="kvadrillió";
+					else if (l-j-1==30) result+="kvintillió";
+					else if (l-j-1==36) result+="szextillió";
+					else if (l-j-1==42) result+="szeptillió";
+					else if (l-j-1==48) result+="oktillió";
+					else if (l-j-1==54) result+="nonillió";
+					else if (l-j-1==60) result+="decillió";
+					else if (l-j-1>65) result+=" olyan nagy szám, amit a programozó nem ismer ";
+					break;
+				case 2:
+				case 5: if (tmp[j]!='0') result+="száz"; break;
+				case 3: if (tmp[j]!='0' || (j-1>=0 && tmp[j-1]!='0') || (j-2>=0 && tmp[j-2]!='0')) result+="ezer"; break;
+				}
+			} else 
+			{
+				switch (tmp[j])
+				{
+					case '0': break;
+					case '1': if (tmp[j+1]=='0') result+="tíz"; else result+="tizen"; break;
+					case '2': if (tmp[j+1]=='0') result+="húsz"; else result+="huszon"; break;
+					case '3': result+="harminc"; break;
+					case '4': result+="negyven"; break;
+					case '5': result+="ötven"; break;
+					case '6': result+="hatvan"; break;
+					case '7': result+="hetven"; break;
+					case '8': result+="nyolcvan"; break;
+					case '9': result+="kilencven"; break;
+				}
+			}
+		}
+		s=result;
+	}
+	void zarojelez(stringhu &f)
+	{
+		f="("+f+")";
+	}
+	
+>>
+
+inp: <<stringhu *f;>>
+	( #(NL {log_expr>[f] <<cout << prefix << *f << suffix << "\n"; delete f;>>} inp)
+	| #(ASSIGN add_expr>[f] <<cout << prefix << *f << " legyen egyenlõ "; delete f;>> log_expr>[f] <<cout << *f << suffix << "\n"; delete f;>> inp)
+	|)
+	;
+
+log_expr>[stringhu *f]: <<stringhu *g=NULL;>>
+	( log_value>[f]
+	| #(AND log_expr>[f] log_expr>[g] <<*f=""+*f+" és "+*g+""; delete g;>>)
+	| #(NAND log_expr>[f] log_expr>[g] <<*f=" nem "+*f+" és "+*g+""; delete g;>>)
+	| #(OR log_expr>[f] log_expr>[g] <<*f=""+*f+" vagy "+*g+""; delete g;>>)
+	| #(NOR log_expr>[f] log_expr>[g] <<*f=" nem "+*f+" vagy "+*g+""; delete g;>>)
+	| #(XOR log_expr>[f] log_expr>[g] <<*f=" vagy "+*f+" vagy "+*g+""; delete g;>>)
+	| #(IMPLY log_expr>[f] log_expr>[g] <<*f=""+*f+" nyíl "+*g+")"; delete g;>>)
+	| #(NOT log_expr>[f] <<*f="nem "+*f+" ";>>)
+	)
+	;
+
+log_value>[stringhu *f]:
+	  set_expr>[f]
+	| #(True <<f=new stringhu(" igaz ");>>)
+	| #(False <<f=new stringhu(" hamis ");>>)
+	;
+set_expr>[stringhu *f]: <<stringhu *g;>>
+	( rel_expr>[f]
+	| #(IN log_expr>[f] log_expr>[g] <<*f+=" eleme "+*g; delete g;>>)
+	| #(NI log_expr>[f] log_expr>[g] <<*f+=" eleme "+*g; delete g;>>)
+	| #(SUPSET log_expr>[f] log_expr>[g] <<f->r=stringhu::NONE; *f+=" valódi részhalmaza "+*g; f->ragoz(stringhu::NAK); delete g;>>)
+	| #(SUPSETEQ log_expr>[f] log_expr>[g] <<f->r=stringhu::NONE; *f+=" részhalmaza "+*g; f->ragoz(stringhu::NAK); delete g;>>)
+	| #(SUBSET log_expr>[f] log_expr>[g] <<f->r=stringhu::NONE; f->ragoz(stringhu::NAK); *f+=" valódi részhalmaza "+*g; delete g;>>)
+	| #(SUBSETEQ log_expr>[f] log_expr>[g] <<f->r=stringhu::NONE; f->ragoz(stringhu::NAK); *f+=" részhalmaza "+*g; delete g;>>)
+	| #(UNION log_expr>[f] log_expr>[g] <<*f+=" unió "+*g; delete g;>>)
+	| #(INTERSECT log_expr>[f] log_expr>[g] <<*f+=" metszet "+*g; delete g;>>)
+	| #(EXCEPT log_expr>[f] log_expr>[g] <<*f+=" mínusz "+*g; delete g;>>)
+	| #(CROSS log_expr>[f] log_expr>[g] <<*f+=" Descartes szorzat "+*g; delete g;>>)
+	| #(FORALL log_expr>[f] log_expr>[g] <<f->r=stringhu::NONE; f->ragoz(stringhu::RA); *f=" minden "+*f+" "+*g; delete g;>>)
+	| #(EXISTS log_expr>[f] log_expr>[g] <<*f=" létezik olyan "+*f+" hogy "+*g; delete g;>>)
+	| #(SETDEF log_expr>[f] log_expr>[g] <<*f=" halmaza azon "+*f+" melyre "+*g+" halmazdefiníció vége "; delete g;>>)
+	)
+	;
+
+
+rel_expr>[stringhu *f]: <<stringhu *g=NULL;>>
+	( #(LESS log_expr>[f] log_expr>[g] <<*f=""+*f+" kisebb, mint "+*g+""; delete g;>>)
+	| #(LE log_expr>[f] log_expr>[g] <<*f=""+*f+" kisebb, vagy egyenlõ, mint "+*g+""; delete g;>>)
+	| #(EL log_expr>[f] log_expr>[g] <<*f=""+*f+" kisebb, vagy egyenlõ, mint "+*g+""; delete g;>>)
+	| #(GREATER log_expr>[f] log_expr>[g] <<*f=""+*f+" nagyobb, mint "+*g+""; delete g;>>)
+	| #(GE log_expr>[f] log_expr>[g] <<*f=""+*f+" nagyobb, vagy egyenlõ, mint "+*g+""; delete g;>>)
+	| #(EG log_expr>[f] log_expr>[g] <<*f=""+*f+" nagyobb, vagy egyenlõ, mint "+*g+""; delete g;>>)
+	| #(EQUAL log_expr>[f] log_expr>[g] <<*f=""+*f+" egyenlõ "+*g+""; delete g;>>)
+	| #(NEQ log_expr>[f] log_expr>[g] <<*f=""+*f+" nem egyenlõ "+*g+""; delete g;>>)
+	| add_expr>[f]
+	)
+	;
+
+add_expr>[stringhu *f]: <<stringhu *g=NULL;>>
+	( #(PLUS add_expr>[f] add_expr>[g] <<*f=""+*f+" meg "+*g+""; f->t=stringhu::OSSZETETT; delete g;>>)
+	| #(MINUS add_expr>[f] add_expr>[g]
+	<<
+	  f->r=stringhu::NONE;
+	  f->ragoz(stringhu::BOL);
+	  *f=""+*f+" "+*g+"";
+	  f->t=stringhu::OSSZETETT;
+	  delete g;
+	>>)
+	| neg_mult_expr>[f]
+	)
+	;
+neg_mult_expr>[stringhu *f]:
+	  #(NEG neg_mult_expr>[f] <<*f=" mínusz "+*f;>>)
+	| mult_expr>[f] 
+	;
+mult_expr>[stringhu *f]: <<stringhu *g=NULL;>>
+	( #(MULT add_expr>[f] add_expr>[g] 
+	<<
+	  f->r=stringhu::NONE;
+	  f->ragoz(stringhu::SZOR);
+	  *f=""+*f+" "+*g+""; delete g;
+	  f->t=stringhu::OSSZETETT;
+	>>)
+	| #(DIV add_expr>[f] add_expr>[g]
+	<<
+	  if (f->t==stringhu::OSSZETETT) zarojelez(*f);//*f=" zárójelben "+*f+"zárójel bezárva ";
+	  if (g->t==stringhu::OSSZETETT) zarojelez(*g); // *g=" zárójelben "+*g+"zárójel bezárva ";
+	  *f=""+*f+" per "+*g+""; delete g;
+	  f->t=stringhu::OSSZETETT;
+	>>)
+	| #(MULTNONE add_expr>[f] add_expr>[g]
+	<<
+	  f->r=stringhu::NONE;
+	  f->ragoz(stringhu::SZOR);
+	  *f=""+*f+" "+*g+""; delete g;
+	  f->t=stringhu::OSSZETETT;
+	>>)
+	| pow_expr>[f]
+	| #(DIVI add_expr>[f] add_expr>[g]
+	  <<
+	    g->r=stringhu::NONE;
+	    g->ragoz(stringhu::VAL);
+	    *f=""+*f+" osztva "+*g+""; delete g;
+	    f->t=stringhu::OSSZETETT;
+	  >>)
+	| #(MOD add_expr>[f] add_expr>[g] <<*f=""+*f+" moduló "+*g+""; delete g; f->t=stringhu::OSSZETETT;>>)
+	)
+	;
+pow_expr>[stringhu *f]: <<stringhu *g=NULL;>>
+	( #(CIRCUM add_expr>[f] add_expr>[g] 
+	<<
+	  g->r=stringhu::NONE;
+	  g->ne=stringhu::NINCS;
+	  g->ragoz(stringhu::DIKON);
+	  g->ragoz(stringhu::AZ);
+	  *f=""+*f+" "+*g+""; delete g;
+	>>)
+	| fact>[f]
+	)
+	;
+func>[stringhu *f]:
+	  #(SIN <<f=new stringhu("szinusz");>>)
+	| #(COS <<f=new stringhu("koszinusz");>>)
+	| #(SEC <<f=new stringhu("szekáns");>>)
+	| #(COSEC <<f=new stringhu("koszekáns");>>)
+	| #(TAN <<f=new stringhu("tangens");>>)
+	| #(COT <<f=new stringhu("kotangens");>>)
+	| #(SINH <<f=new stringhu("szinuszhiperbolikusz");>>)
+	| #(COSH <<f=new stringhu("koszinuszhiperbolikusz");>>)
+	| #(SECH <<f=new stringhu("szekánshiperbolikusz");>>)
+	| #(COSECH <<f=new stringhu("koszekánshiperbolikusz");>>)
+	| #(TANH <<f=new stringhu("tangenshiperbolikusz");>>)
+	| #(COTH <<f=new stringhu("kotangenshiperbolikusz");>>)
+	| #(ARCSIN <<f=new stringhu("árkuszszinusz");>>)
+	| #(ARCCOS <<f=new stringhu("árkuszkoszinusz");>>)
+	| #(ARCSEC <<f=new stringhu("árkuszszekáns");>>)
+	| #(ARCCOSEC <<f=new stringhu("árkuszkoszekáns");>>)
+	| #(ARCTAN <<f=new stringhu("árkusztangens");>>)
+	| #(ARCCOT <<f=new stringhu("árkuszkotangens");>>)
+	| #(ARCSINH <<f=new stringhu("áreaszinuszhiperbolikusz");>>)
+	| #(ARCCOSH <<f=new stringhu("áreakoszinuszhiperbolikusz");>>)
+	| #(ARCSECH <<f=new stringhu("áreaszekánshiperbolikusz");>>)
+	| #(ARCCOSECH <<f=new stringhu("áreakoszekánshiperbolikusz");>>)
+	| #(ARCTANH <<f=new stringhu("áreatangenshiperbolikusz");>>)
+	| #(ARCCOTH <<f=new stringhu("áreakotangenshiperbolikusz");>>)
+	| #(EXP <<f=new stringhu("é ad");>>)
+	| #(LOG <<f=new stringhu("logaritmus");>>)
+	| #(ARG <<f=new stringhu("argumentuma");>>)
+	| #(IM <<f=new stringhu("képzetes része");>>)
+	| #(RE <<f=new stringhu("valós része");>>)
+	| #(CONJUGATE <<f=new stringhu("konjugáltja");>>)
+	| #(SQRT <<f=new stringhu("négyzetgyöke");>>)
+	| #(LN <<f=new stringhu("természetes alapú logaritmusa");>>)
+	;
+
+gletter>[stringhu *f]:
+	  #(a:ALPHA <<if ((a->getText())[0]=='A') f=new stringhu("nagy alfa");
+	              else f=new stringhu("alfa");
+	            >>)
+	| #(b:BETA <<f=new stringhu("béta");>>)
+	| #(c:GAMMA <<if ((c->getText())[0]=='G') f=new stringhu("nagy gamma");
+	               else f=new stringhu("gamma");
+	             >>)
+	| #(d:DELTA <<if ((d->getText())[0]=='D') f=new stringhu("nagy delta");
+	              else f=new stringhu("delta");
+	            >>)
+	| #(e:EPSILON <<f=new stringhu("epszilon");>>)
+	| #(z:ZETA <<f=new stringhu("zéta");>>)
+	| #(et:ETA <<f=new stringhu("éta");>>)
+	| #(t:THETA <<if ((t->getText())[0]=='T') f=new stringhu("nagy teta");
+	              else f=new stringhu("teta");
+	            >>)
+	| #(i:IOTA <<f=new stringhu("jóta");>>)
+	| #(k:KAPPA <<f=new stringhu("kappa");>>)
+	| #(l:LAMBDA <<if ((l->getText())[0]=='L') f=new stringhu("nagy lambda");
+	               else f=new stringhu("lambda");
+	             >>)
+	| #(m:MU <<f=new stringhu("mû");>>)
+	| #(n:NU <<f=new stringhu("nû");>>)
+	| #(x:XI <<if ((x->getText())[0]=='X') f=new stringhu("nagy kszí");
+	           else f=new stringhu("kszí");
+	         >>)
+	| #(om:OMICRON <<f=new stringhu("omikron");>>)
+	| #(p:PI <<if ((p->getText())[0]=='P') f=new stringhu("nagy pí");
+	           else f=new stringhu("pí");
+	         >>)
+	| #(r:RHO <<f=new stringhu("ró");>>)
+	| #(s:SIGMA <<if ((s->getText())[0]=='S') f=new stringhu("nagy szigma");
+	              else f=new stringhu("szigma");
+	            >>)
+	| #(ta:TAU <<f=new stringhu("tau");>>)
+	| #(u:UPSILON <<if ((u->getText())[0]=='U') f=new stringhu("nagy üpszilon");
+	                else f=new stringhu("üpszilon");
+	              >>)
+	| #(ph:PHI <<if ((ph->getText())[0]=='P') f=new stringhu("nagy fí");
+	             else f=new stringhu("fí");
+	          >>)
+	| #(ch:CHI <<f=new stringhu("khí");>>)
+	| #(ps:PSI <<if ((ps->getText())[0]=='P') f=new stringhu("nagy pszi");
+	             else f=new stringhu("psi");
+	           >>)
+	| #(o:OMEGA <<if ((o->getText())[0]=='O') f=new stringhu("nagy omega");
+	              else f=new stringhu("omega");
+	            >>)
+	;
+
+fact>[stringhu *f]: <<stringhu *g=NULL,*h=NULL,*j=NULL;>>
+	( #(n:NUM
+	<<
+	  f=new stringhu(n->getText());
+	  std::string &s=f->str;
+	  int pos=s.find("e");
+	  int l=s.length();
+	  if (pos!=string::npos) s[pos]='E';
+	  pos=s.find("E");
+	  int pont=s.find(".");
+	  f->egeszresz=(s.substr(0, s.find("."))).substr(0, s.find("E"));
+	  if (pont!=string::npos)
+	  	if (pos!=string::npos) f->tortresz=s.substr(pont+1,pos-pont-1);
+		else f->tortresz=s.substr(pont+1,pos);
+	  else f->tortresz="";
+	  if (pos!=string::npos) f->kitevo=s.substr(pos+1, l);
+	  else f->kitevo="";
+	  int i=0;
+	  while (f->egeszresz[i]=='0') ++i;
+	  f->egeszresz=f->egeszresz.substr(i,f->egeszresz.length());
+	  
+	  std::string er=f->egeszresz;
+	  szam(er);
+	  f->str=er;
+	  std::string tr=f->tortresz;
+	  std::string ad="";
+	  if (tr!="")
+	  {
+	  	switch (tr.length())
+		{
+			case 1: ad="tized"; break;
+			case 2: ad="század"; break;
+			case 3: ad="ezred"; break;
+			case 4: ad="tízezred"; break;
+			case 5: ad="százezred"; break;
+			case 6: ad="milliomod"; break;
+			case 7: ad="tízmilliomod"; break;
+			case 8: ad="százmilliomod"; break;
+			case 9: ad="ezermilliomod"; break;
+			case 10: ad="tízezermilliomod"; break;
+			case 11: ad="százezermilliomod"; break;
+			case 12: ad="billiomod"; break;
+			case 13: ad="tízbilliomod"; break;
+			case 14: ad="százbilliomod"; break;
+			case 15: ad="ezerbilliomod"; break;
+			case 16: ad="tízezerbilliomod"; break;
+			case 17: ad="százezerbilliomod"; break;
+			case 18: ad="trilliomod"; break;
+			case 19: ad="tíztrilliomod"; break;
+			case 20: ad="száztrilliomod"; break;
+			case 21: ad="ezertrilliomod"; break;
+			case 22: ad="tízezertrilliomod"; break;
+			case 23: ad="százezertrilliomod"; break;
+			case 24: ad="kvadrilliomod"; break;
+			case 25: ad="tízkvadrilliomod"; break;
+			case 26: ad="százkvadrilliomod"; break;
+			case 27: ad="ezerkvadrilliomod"; break;
+			case 28: ad="tízezerkvadrilliomod"; break;
+			case 29: ad="százezerkadrilliomod"; break;
+			case 30: ad="kvintilliomod"; break;
+			case 31: ad="tízkvintilliomod"; break;
+			case 32: ad="százkvintilliomod"; break;
+			case 33: ad="ezerkvintilliomod"; break;
+			case 34: ad="tízezerkvintilliomod"; break;
+			case 35: ad="százezerkvintilliomod"; break;
+		}
+	  	szam(tr);
+		f->str+=" egész "+tr+" "+ad;
+	  }
+	  std::string kit=f->kitevo;
+	  f->t=stringhu::SZAM;
+	  if (kit!="")
+	  {
+		stringhu sd("");
+		if (kit[0]=='-')
+		{
+			sd.str="mínusz "+sd.str;
+			kit=kit.substr(1);
+		}
+	  	szam(kit);
+		sd.str+=kit;
+		sd.r=stringhu::NONE;
+		sd.ne=stringhu::NINCS;
+		sd.ragoz(stringhu::DIKON);
+		sd.ragoz(stringhu::AZ);
+		f->r=stringhu::NONE;
+		f->ragoz(stringhu::SZOR);
+		f->str+=" tíz "+sd.str;
+	  }
+	>>)
+	| #(x:VARIABLE
+	  <<
+	    f=new stringhu(x->getText());
+	    bool isup=isupper(*(x->getText()));
+	    switch (*(x->getText()))
+	    {
+	    case 'f':
+	    case 'F':
+	    f->str="ef"; break;
+	    case 'g':
+	    case 'G':
+	    f->str="gé"; break;
+	    case 'h':
+	    case 'H':
+	    f->str="há"; break;
+	    case 'j':
+	    case 'J':
+	    f->str="jé"; break;
+	    case 'k':
+	    case 'K':
+	    f->str="ká"; break;
+	    case 'l':
+	    case 'L':
+	    f->str="el"; break;
+	    case 'm':
+	    case 'M':
+	    f->str="em"; break;
+	    case 'n':
+	    case 'N':
+	    f->str="en"; break;
+	    case 'o':
+	    case 'O':
+	    f->str="ó"; break;
+	    case 'q':
+	    case 'Q':
+	    f->str="kú"; break;
+	    case 'r':
+	    case 'R':
+	    f->str="er"; break;
+	    case 's':
+	    case 'S':
+	    f->str="es"; break;
+	    case 't':
+	    case 'T':
+	    f->str="té"; break;
+	    case 'u':
+	    case 'U':
+	    f->str="ú"; break;
+	    case 'v':
+	    case 'V':
+	    f->str="vé"; break;
+	    case 'w':
+	    case 'W':
+	    f->str="duplavé"; break;
+	    case 'x':
+	    case 'X':
+	    f->str="iksz"; break;
+	    case 'y':
+	    case 'Y':
+	    f->str="ipszilon"; break;
+	    case 'z':
+	    case 'Z':
+	    f->str="zé"; break;
+	    }
+	    if (isup) f->str="nagy "+f->str;
+	  >>)
+	| #(c:CONST <<char *constant=c->getText();
+		bool isup=isupper(*constant);
+		switch (constant[0]) {
+			case 'E':
+			case 'e': f=new stringhu("e"); break;
+			case 'I':
+			case 'i': f=new stringhu("i"); break;
+			case 'a':
+			case 'A': f=new stringhu("á"); break;
+			case 'b':
+			case 'B': f=new stringhu("bé"); break;
+			case 'c':
+			case 'C': f=new stringhu("cé"); break;
+			case 'd':
+			case 'D': f=new stringhu("dé"); break;
+			case 'p':
+			case 'P': f=new stringhu("dé"); break;
+			default: f=new stringhu(constant); break;
+		}
+		if (isup) f->str="nagy "+f->str;
+	>>)
+	| INFTY <<f=new stringhu(" végtelen ");>>
+	| UNDEFINED <<f=new stringhu(" nem értelmezett ");>>
+	| gletter>[f]
+	| #(LBRACKET log_expr>[f] log_expr>[g]
+	  <<
+	    *f+=""+*g; delete g;
+	  >> {COMMA log_expr>[h] <<*f+=", "+*h; delete h;>>}
+	  <<*f+="";>> RBRACKET
+	  )
+	| #(UNDERSCORE log_expr>[f] log_expr>[g]
+	  <<
+	    *f+=""+*g; delete g;
+	  >> {COMMA log_expr>[h] <<*f+=", "+*h; delete h;>>}
+	  <<*f+="";>>
+	  )
+	| #(LPAREN log_expr>[f] RPAREN <<zarojelez(*f);>>)
+	| #(LBRACE log_expr>[f] <<*f=" halmaz ( "+*f+" ) ";>>)
+	| #(UFUNCTION log_expr>[f] << *f+=" "; >> log_expr>[g] (COMMA log_expr>[h]<<*g+=", "+*h; delete h;>>)* <<*f+=*g+" "; delete g;>>)
+	| #(FUNCTION func>[f]
+	      {UNDERSCORELOG add_expr>[j]} add_expr>[g]
+	       <<
+	         if (*f=="é ad" && g->t==stringhu::OSSZETETT)
+		 {
+		   zarojelez(*g);
+		   *f+=*g;
+		 }else *f=""+*f+" "+*g; delete g;>>
+	    { add_expr>[h]
+	      <<
+	        h->r=stringhu::NONE;
+		h->ragoz(stringhu::DIKON);
+		h->ne=stringhu::NINCS;
+		h->ragoz(stringhu::AZ);
+	        *f+=" "+*h; delete h;
+	      >>
+	    }
+	   )<<*f+="";if (j!=NULL) {*f=""+*j+" alapú "+*f+""; delete j;}>>
+	| #(ABS add_expr>[f] <<*f=" abszolútérték "+*f+")";>>)
+	| #(FLOOR add_expr>[f] <<*f=" alsó egészrész "+*f+"";>>)
+	| #(CEIL add_expr>[f] <<*f=" felsõ egészrész "+*f+"";>>)
+	| #(ROOT add_expr>[f] LPAREN add_expr>[g] RPAREN 
+	  <<
+	    f->r=stringhu::NONE;
+	    f->ragoz(stringhu::DIK);
+	    *f=""+*f+" gyök "+*g+""; delete g;
+	  >>)
+	| #(DFACTORIAL add_expr>[f] <<*f=""+*f+" dupla faktoriális "; throw(NOT_IMPLEMENTED);>>)
+	| #(FACTORIAL add_expr>[f] <<*f=""+*f+" faktoriális ";>>)
+	| #(ENUMERATE <<f=new stringhu("");>> (set_expr>[g] <<*f+=""+*g+" vesszõ "; delete g;>>)+ <<*f=f->str.substr(0, f->str.length()-7);>>)
+	| #(RBRACKET <<f=NULL;>> {add_expr>[f] <<*f=" lista kezdete "+*f+" lista vége ";>>} <<if (f==NULL) f=new stringhu(" üres lista ");>>)
+	| #(DOTS <<f=new stringhu(" pont, pont, pont ");>>)
+	| #(EMPTYSET <<f=new stringhu(" üres halmaz ");>>)
+	)
+	;
+}
+

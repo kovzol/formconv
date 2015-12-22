@@ -1,0 +1,1 @@
+echo "3*5^()+1 mod 5^(6) bb " | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r 

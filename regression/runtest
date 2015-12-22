@@ -1,0 +1,75 @@
+#!/bin/sh
+# Runs a test.
+# Example: ./runtest example1
+# This will run example1.in in directory tmp and compare the output tmp/example1.out by example1.out.
+# Return code is also important.
+
+test -x ./runtest || {
+ echo "$0 should be run within its directory, exiting"
+ exit 255
+ }
+
+F=../bin/formconv_runme
+test -x $F || {
+ echo "Binary $F is missing, exiting (please compile it first)"
+ exit 254
+ }
+
+mkdir -p tmp || {
+ echo "Cannot create tmp directory, exiting"
+ exit 253
+ }
+
+if [ $# -ne 1 ]; then
+ echo "Invalid number of parameters (1 is needed), exiting"
+ exit 252
+ fi
+
+T=$1
+test -x $T || {
+ echo "No test named $T, exiting"
+ exit 251
+ }
+
+ O=`basename $1 .in`.out
+test -r $O || {
+ echo "No output for test $T, exiting"
+ exit 250
+ }
+
+echo -n "testing $T..."
+F=../bin/formconv_runme bash $T > tmp/$O 2> tmp/$O.err
+
+R=$?
+OK=0
+RV=0
+
+diff -u $O tmp/$O > tmp/$O.diff && OK=1
+
+# Summary
+if [ $R = 0 ]; then
+ echo -n " runs ok, "
+ else
+  if [ $R = 126 ]; then
+   echo -n " exits with error code 126 (consider inserting #!/bin/sh), "
+   else
+    if [ $R = 134 ]; then
+     echo -n " exits with error code 134 (probably a formconv bug), "
+     else
+      if [ $R = 255 ]; then
+       echo -n " exits with error code 255/-1 (illegal input, ok), "
+       else
+        echo -n " exits with error code $R (non-standard), "
+       fi
+     fi
+   fi
+ fi
+
+if [ $OK = 1 ]; then
+ echo "outputs ok"
+ else
+ echo "outputs differ"
+ RV=1
+ fi
+
+exit $RV

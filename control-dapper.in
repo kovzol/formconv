@@ -1,0 +1,15 @@
+Package: formconv
+Version: @PACKAGE_VERSION@
+Section: math
+Priority: optional
+Architecture: i386
+Depends: libstdc++6 (>= 4.0.3), libc6 (>= 2.3.6), libgcc1 (>= 1:4.0.3), libgmpxx4ldbl (>= 2:4.3.2)
+Maintainer: Zoltan Kovacs <kovzol@matek.hu>
+Description: formula converter
+ formconv is a command line tool for formula conversion.
+ Formulas must be entered in an intuitive format, or contentMathML,
+ or LISP. It supports C style, LaTeX and CAS output formats, including
+ Maxima, Maple, Mathematica and gnuplot. In addition, HTML, MathML
+ and LISP output formats are also provided.
+ .
+ Homepage: http://formconv.sf.net/

@@ -1,0 +1,1 @@
+echo "f(x)=(x^2+0,03x-(907200/800000) bb " | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r 

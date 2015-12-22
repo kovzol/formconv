@@ -1,0 +1,319 @@
+/**
+ * @Author: Gábor Bakos (Bakos.Gabor.1@stud.u-szeged.hu)
+ * Version: $Id: mathml_out.sor,v 1.2 2004/12/15 13:37:36 baga Exp $
+ */
+
+#header <<
+#include <string>
+#include <iostream>
+#include <fstream>
+#include <memory>
+using namespace std;
+#include "tokens.h"
+#include "AST.h"
+typedef AST SORAST;
+
+>>
+
+class TreeParser_MathML_out {
+<<
+	ofstream cout;
+	string prefix, suffix, header, footer;
+	bool last_identifier_was_in_uppercase;
+	TreeParser_MathML_out(const char *fn, const char *iprefix, const char *isuffix, const char *iheader, const char *ifooter) : cout(fn), prefix(iprefix), suffix(isuffix), header(iheader), footer(ifooter)
+	{
+		cout << header;
+	}
+	~TreeParser_MathML_out()
+	{
+		cout << footer;
+	}
+>>
+
+inp: <<string *f;>>
+	( #(NL {log_expr>[f] <<cout << prefix << "<math xmlns=\"http://www.w3.org/1998/Math/MathML\">" << *f << "</math>" << suffix << "\n"; delete f;>>} inp)
+	| (#(ASSIGN UFUNCTION))? #(ASSIGN function[true]>[f] <<cout << prefix <<"<math xmlns=\"http://www.w3.org/1998/Math/MathML\"> " << *f; delete f;>> log_expr>[f] <<cout << *f << "</lambda> </declare> </math>" << suffix << "\n"; delete f;>> inp)
+	| #(ASSIGN add_expr>[f] <<cout << prefix <<"<math xmlns=\"http://www.w3.org/1998/Math/MathML\"> <declare> " << *f; delete f;>> log_expr>[f] <<cout << *f << "</declare> </math>" << suffix << "\n"; delete f;>> inp)
+	|)
+	;
+
+log_expr>[string *f]: <<string *g=NULL;>>
+	( log_value>[f]
+	| #(AND log_expr>[f] log_expr>[g] <<*f="<apply> <and/> "+*f+*g+"</apply> "; delete g;>>)
+	| #(NAND log_expr>[f] log_expr>[g] <<*f="<apply> <not/> <apply> <and/>"+*f+*g+"</apply> </apply>"; delete g;>>)
+	| #(OR log_expr>[f] log_expr>[g] <<*f="<apply> <or/> "+*f+*g+"</apply> "; delete g;>>)
+	| #(NOR log_expr>[f] log_expr>[g] <<*f="<apply> <not/> <apply> <or/>"+*f+*g+"</apply> </apply> "; delete g;>>)
+	| #(XOR log_expr>[f] log_expr>[g] <<*f="<apply> <xor/> "+*f+*g+"</apply> "; delete g;>>)
+	| #(IMPLY log_expr>[f] log_expr>[g] <<*f="<apply> <implies/> "+*f+*g+"</apply> "; delete g;>>)
+	| #(NOT log_expr>[f] <<*f="<apply> <not/> "+*f+"</apply> ";>>)
+	)
+	;
+
+
+
+log_value>[string *f]:
+	  set_expr>[f]
+	| #(True <<f=new string("<true/> ");>>)
+	| #(False <<f=new string("<false/> ");>>)
+	;
+
+set_expr>[string *f]: <<string *g;>>
+	( rel_expr>[f]
+	| #(IN log_expr>[f] log_expr>[g] <<*f="<apply> <in/> "+*f+*g+"</apply> ";>>)
+	| #(SUBSET log_expr>[f] log_expr>[g] <<*f="<apply> <prsubset/> "+*f+*g+"<apply> ";>>)
+	| #(SUPSET log_expr>[f] log_expr>[g] <<*f="<apply> <prsupset/> "+*f+*g+"<apply> ";>>)
+	| #(SUBSETEQ log_expr>[f] log_expr>[g] <<*f="<apply> <subset/> "+*f+*g+"<apply> ";>>)
+	| #(SUPSETEQ log_expr>[f] log_expr>[g] <<*f="<apply> <supset/> "+*f+*g+"<apply> ";>>)
+	| #(UNION  log_expr>[f] log_expr>[g] <<*f="<apply> <union/> "+*f+*g+"<apply> ";>>)
+	| #(INTERSECT  log_expr>[f] log_expr>[g] <<*f="<apply> <intersect/> "+*f+*g+"<apply> ";>>)
+	| #(EXCEPT  log_expr>[f] log_expr>[g] <<*f="<apply> <setdiff/> "+*f+*g+"<apply> ";>>)
+	| #(CROSS  log_expr>[f] log_expr>[g] <<*f="<apply> <cartesianproduct/> "+*f+*g+"<apply> ";>>)
+	| #(SETDEF log_expr>[f] log_expr>[g] <<*f="<apply> <set/> <bvar> "+*f+"</bvar> <condition> "+*g+"</condition> <apply> ";>>)
+	| #(FORALL log_expr>[f] log_expr>[g] <<*f="<apply> <forall/> <bvar> "+*f+"</bvar> <condition> "+*g+"</condition> <apply> ";>>)
+	| #(EXISTS log_expr>[f] log_expr>[g] <<*f="<apply> <exists/> <bvar> "+*f+"</bvar> <condition> "+*g+"</condition> <apply> ";>>)
+	)
+	;
+
+
+rel_expr>[string *f]: <<string *g=NULL;>>
+	( #(LESS add_expr>[f] add_expr>[g] <<*f="<apply> <lt/> "+*f+*g+"</apply> "; delete g;>>)
+	| #(LE add_expr>[f] add_expr>[g] <<*f="<apply> <leq/> "+*f+*g+"</apply> "; delete g;>>)
+	| #(EL add_expr>[f] add_expr>[g] <<*f="<apply> <leq/> "+*f+*g+"</apply> "; delete g;>>)
+	| #(GREATER add_expr>[f] add_expr>[g] <<*f="<apply> <gt/> "+*f+*g+"</apply> "; delete g;>>)
+	| #(GE add_expr>[f] add_expr>[g] <<*f="<apply> <geq/> "+*f+*g+"</apply> "; delete g;>>)
+	| #(EG add_expr>[f] add_expr>[g] <<*f="<apply> <geq/> "+*f+*g+"</apply> "; delete g;>>)
+	| #(EQUAL log_expr>[f] log_expr>[g] <<*f="<apply> <eq/> "+*f+*g+"</apply> "; delete g;>>)
+	| #(NEQ log_expr>[f] log_expr>[g] <<*f="<apply> <neq/> "+*f+*g+"</apply> "; delete g;>>)
+	| add_expr>[f]
+	)
+	;
+
+add_expr>[string *f]: <<string *g=NULL;>>
+	( #(PLUS add_expr>[f] add_expr>[g] <<*f="<apply> <plus/> "+*f+*g+"</apply> "; delete g;>>)
+	| #(MINUS add_expr>[f] add_expr>[g] <<*f="<apply> <minus/> "+*f+*g+"</apply> "; delete g;>>)
+	| neg_mult_expr>[f]
+	)
+	;
+neg_mult_expr>[string *f]:
+	  #(NEG neg_mult_expr>[f] <<*f="<apply> <minus/> "+*f+"</apply> ";>>)
+	| mult_expr>[f] 
+	;
+mult_expr>[string *f]: <<string *g=NULL;>>
+	( #(MULT mult_expr>[f] neg_mult_expr>[g] <<*f="<apply> <times/> "+*f+*g+"</apply> "; delete g;>>)
+	| #(DIV mult_expr>[f] neg_mult_expr>[g] <<*f="<apply> <divide/> "+*f+*g+"</apply> "; delete g;>>)
+	| #(MULTNONE mult_expr>[f] neg_mult_expr>[g] <<*f="<apply> <times/> "+*f+*g+"</apply> "; delete g;>>)
+	| pow_expr>[f]
+	| #(DIVI mult_expr>[f] neg_mult_expr>[g] <<*f="<apply> <quotient/> "+*f+*g+"</apply> "; delete g;>>)
+	| #(MOD mult_expr>[f] neg_mult_expr>[g] <<*f="<apply> <rem/> "+*f+*g+"</apply> "; delete g;>>)
+	)
+	;
+pow_expr>[string *f]: <<string *g=NULL;>>
+	( #(CIRCUM fact>[f] neg_mult_expr>[g] <<*f="<apply> <power/> "+*f+*g+"</apply> "; delete g;>>)
+	| fact>[f]
+	)
+	;
+func>[string *f]:
+	  #(SIN <<f=new string("<sin/> ");>>)
+	| #(COS <<f=new string("<cos/> ");>>)
+	| #(SEC <<f=new string("<sec/> ");>>)
+	| #(COSEC <<f=new string("<csc/> ");>>)
+	| #(TAN <<f=new string("<tan/> ");>>)
+	| #(COT <<f=new string("<cot/> ");>>)
+	| #(SINH <<f=new string("<sinh/> ");>>)
+	| #(COSH <<f=new string("<cosh/> ");>>)
+	| #(SECH <<f=new string("<sech/> ");>>)
+	| #(COSECH <<f=new string("<csch/> ");>>)
+	| #(TANH <<f=new string("<tanh/> ");>>)
+	| #(COTH <<f=new string("<coth/> ");>>)
+	| #(ARCSIN <<f=new string("<arcsin/> ");>>)
+	| #(ARCCOS <<f=new string("<arccos/> ");>>)
+	| #(ARCSEC <<f=new string("<arcsec/> ");>>)
+	| #(ARCCOSEC <<f=new string("<arccsc/> ");>>)
+	| #(ARCTAN <<f=new string("<arctan/> ");>>)
+	| #(ARCCOT <<f=new string("<arccot/> ");>>)
+	| #(ARCSINH <<f=new string("<arcsinh/> ");>>)
+	| #(ARCCOSH <<f=new string("<arccosh/> ");>>)
+	| #(ARCSECH <<f=new string("<arcsech/> ");>>)
+	| #(ARCCOSECH <<f=new string("<arccsch/> ");>>)
+	| #(ARCTANH <<f=new string("<arctanh/> ");>>)
+	| #(ARCCOTH <<f=new string("<arccoth/> ");>>)
+	| #(EXP <<f=new string("<exp/> ");>>)
+	| #(LOG <<f=new string("<log/> ");>>)
+	| #(ARG <<f=new string("<arg/> ");>>)
+	| #(IM <<f=new string("<imaginary/> ");>>)
+	| #(RE <<f=new string("<real/> ");>>)
+	| #(CONJUGATE <<f=new string("<conjugate/> ");>>)
+	| #(SQRT <<f=new string("<sqrt/> ");>>)
+	| #(LN <<f=new string("<ln/> ");>>)
+	| #(COMPLEMENTER <<throw(NOT_IMPLEMENTED);>>)
+	| #(TRANSPONATE <<throw(NOT_IMPLEMENTED);>>)
+	;
+
+gletter>[string *f]:
+	  #(a:ALPHA <<if ((a->getText())[0]=='A') f=new string("&Alpha;");
+	              else f=new string("&alpha;");
+	            >>)
+	| #(b:BETA <<f=new string("&beta;");>>)
+	| #(c:GAMMA <<if ((c->getText())[0]=='G') f=new string("&Gamma;");
+	               else f=new string("&gamma;");
+	             >>)
+	| #(d:DELTA <<if ((d->getText())[0]=='D') f=new string("&Delta;");
+	              else f=new string("&delta;");
+	            >>)
+	| #(e:EPSILON <<f=new string("&epsilon;");>>)
+	| #(z:ZETA <<f=new string("&zeta;");>>)
+	| #(et:ETA <<f=new string("&eta;");>>)
+	| #(t:THETA <<if ((t->getText())[0]=='T') f=new string("&Theta;");
+	              else f=new string("&theta;");
+	            >>)
+	| #(i:IOTA <<f=new string("&iota;");>>)
+	| #(k:KAPPA <<f=new string("&kappa;");>>)
+	| #(l:LAMBDA <<if ((l->getText())[0]=='L') f=new string("&Lambda;");
+	               else f=new string("&lambda;");
+	             >>)
+	| #(m:MU <<f=new string("&mu;");>>)
+	| #(n:NU <<f=new string("&nu;");>>)
+	| #(x:XI <<if ((x->getText())[0]=='X') f=new string("&Xi;");
+	           else f=new string("&xi;");
+	         >>)
+	| #(om:OMICRON <<f=new string("&omicron;");>>)
+	| #(p:PI <<if ((p->getText())[0]=='P') f=new string("&Pi;");
+	           else f=new string("&pi;");
+	         >>)
+	| #(r:RHO <<f=new string("&rho;");>>)
+	| #(s:SIGMA <<if ((s->getText())[0]=='S') f=new string("&Sigma;");
+	              else f=new string("&sigma;");
+	            >>)
+	| #(ta:TAU <<f=new string("&tau;");>>)
+	| #(u:UPSILON <<if ((u->getText())[0]=='U') f=new string("&Upsilon;");
+	                else f=new string("&upsilon;");
+	              >>)
+	| #(ph:PHI <<if ((ph->getText())[0]=='P') f=new string("&Phi;");
+	             else f=new string("&phi;");
+	          >>)
+	| #(ch:CHI <<f=new string("&chi;");>>)
+	| #(ps:PSI <<if ((ps->getText())[0]=='P') f=new string("&Psi&");
+	             else f=new string("&psi;");
+	           >>)
+	| #(o:OMEGA <<if ((o->getText())[0]=='O') f=new string("&Omega;");
+	              else f=new string("&omega;");
+	            >>)
+	;
+
+function[bool assign]>[string *f]: <<string *g=NULL, *h=NULL;>>
+	  #(UFUNCTION log_expr>[f] << if (assign) *f="<declare type=\"fn\"> "+*f+"<lambda> "; else *f="<apply> <fn> "+*f+"</fn> "; >> log_expr>[g] <<if (assign) *g="<bvar> "+*g+"</bvar> ";>> (COMMA log_expr>[h]<<if (assign) *g+="<bvar>"+*h+"</bvar>"; else *g+=*h; delete h;>>)* <<if (assign) *f+=*g; else *f+=*g+"</apply> "; delete g;>>)
+	;
+
+fact>[string *f]: <<string *g=NULL,*h=NULL,*j=NULL;>>
+	( #(n:NUM <<f=new string(n->getText()); if (f->find("e")==string::npos && f->find("E")==string::npos) *f="<cn> "+*f+" </cn> "; else {string::size_type n=f->find("e"); if (n==string::npos) n=f->find("E"); f->replace(n,1," <sep/> "); *f="<cn type=\"e-notation\"> "+*f+" </cn> ";}>>)
+	| #(x:VARIABLE <<f=new string(x->getText()); *f="<ci> "+*f+" </ci> ";>>)
+	| #(c:CONST <<char *constant=c->getText();
+		switch (constant[0]) {
+			case 'E': last_identifier_was_in_uppercase=true; f=new string("<exponentiale/> "); break;
+			case 'e': last_identifier_was_in_uppercase=false; f=new string("<exponentiale/> "); break;
+			case 'I': last_identifier_was_in_uppercase=true; f=new string("<imaginaryi/> "); break;
+			case 'i': last_identifier_was_in_uppercase=false; f=new string("<imaginaryi/> "); break;
+			default: f=new string(constant); break;
+		}
+		if ((*f)[0]!='<') *f="<ci> "+*f+" </ci> ";
+	        >>)
+	| gletter>[f]
+	  <<
+	    *f="<ci> "+*f+" </ci> ";
+	    if (f->at(6)=='p' && f->at(7)=='i') //pi
+	    {
+	      delete f;
+	      f=new string("<pi/> ");
+	    }
+	  >>
+	| #(INFTY <<f=new string("<infinity/> ");>>)
+	| #(UNDEFINED <<f=new string("<undefined/> ");>>)
+	| #(LBRACKET fact>[f] add_expr>[g] {COMMA add_expr>[h]} RBRACKET 
+	  <<
+	    if (f->at(1)!='c') //it must be exponentiale, imaginaryi or pi (or eulergamma, but it is not supported (yet?))
+	    {
+	      if (f->at(1)=='p') //f is pi
+	      {
+	        delete f;
+	        f=new string("&pi;");
+	      } else { //f is exponentiale or imaginaryi
+	        char c[2]; c[0]=f->at(1); c[1]=0;
+	        delete f;
+	        if (last_identifier_was_in_uppercase)
+	          if (c[0]=='e') c[0]='E';
+	          else c[0]='I'; //It must be I
+	        f=new string(c);
+	      }
+	    } else if (f->at(5)!='&') { //OK it is not greek letter, nor e, i, pi
+	      char c[2]; c[0]=f->at(5); c[1]=0;
+	      delete f;
+	      f=new string(c);
+	    } else { //this is greek letter
+	      *f=f->substr(5,f->find(';',0)-4);
+	    }
+	    if (h==NULL) 
+	      *f="<apply> <selector/> <ci type=\"vector\"> "+*f+" </ci> "+*g+"</apply> ";
+	     else
+	     {
+	       *f="<apply> <selector/> <ci type=\"matrix\"> "+*f+" </ci> "+*g+"</apply> ";
+	       delete h;
+	     }
+	    delete g;
+	  >>)
+	| #(UNDERSCORE log_expr>[f] log_expr>[g] {COMMA log_expr>[h]}
+	  <<
+	    if (f->at(1)!='c') //it must be exponentiale, imaginaryi or pi (or eulergamma, but it is not supported (yet?))
+	    {
+	      if (f->at(1)=='p') //f is pi
+	      {
+	        delete f;
+	        f=new string("&pi;");
+	      } else { //f is exponentiale or imaginaryi
+	        char c[2]; c[0]=f->at(1); c[1]=0;
+	        delete f;
+	        if (last_identifier_was_in_uppercase)
+	          if (c[0]=='e') c[0]='E';
+	          else c[0]='I'; //It must be I
+	        f=new string(c);
+	      }
+	    } else if (f->at(5)!='&') { //OK it is not greek letter, nor e, i, pi
+	      char c[2]; c[0]=f->at(5); c[1]=0;
+	      delete f;
+	      f=new string(c);
+	    } else { //this is greek letter
+	      *f=f->substr(5,f->find(';',0)-4);
+	    }
+	    if (h==NULL) *f="<apply> <selector/> <ci type=\"vector\"> "+*f+" </ci> "+*g+"</apply> ";
+	    else {
+	      *f="<apply> <selector/> <ci type=\"matrix\"> "+*f+" </ci> "+*g+*h+"</apply>";
+	      delete h;
+	    }
+	    delete g;
+	  >>)
+	| #(LPAREN log_expr>[f] RPAREN)
+	| function[false]>[f]
+	| #(FUNCTION func>[f] 
+	    {UNDERSCORELOG add_expr>[j] <<*f+="<logbase> "+*j+"</logbase> "; delete j;>>}
+	    add_expr>[g] <<*f="<apply> "+*f+*g+"</apply> "; delete g;>>
+	    { add_expr>[h] <<*f="<apply> <power/> "+*f+*h+"</apply> "; delete h;>>
+	    }
+	   )
+	| #(ABS add_expr>[f] <<*f="<apply> <abs/> "+*f+"</apply> ";>>)
+	| #(FLOOR add_expr>[f] <<*f="<apply> <floor/> "+*f+"</apply> ";>>)
+	| #(CEIL add_expr>[f] <<*f="<apply> <ceil/> "+*f+"</apply> ";>>)
+	| #(ROOT add_expr>[f] LPAREN add_expr>[g] RPAREN <<*f="<apply> <root/> <degree> "+*f+"</degree> "+*g+"</apply> "; delete g;>>)
+	| #(FACTORIAL add_expr>[f] <<*f="<apply> <factorial/> "+*f+"</apply>";>>)
+	| #(DFACTORIAL add_expr>[f] <<*f="<apply> <factorial/> "+*f+"</apply>"; throw(NOT_IMPLEMENTED);>>) //Not supported by MathML
+	| #(ENUMERATE (set_expr>[g] <<*f+=*g;>>)+)
+	| #(RBRACKET <<f=NULL;>> {add_expr>[f] <<*f="<list> "+*f+"</list>";>>} <<if (f==NULL) f=new string("<list/>");>>)
+	| #(LBRACE log_expr>[f]
+	<<
+	  if (f->substr(0, 7)=="<list> ") *f="<set> "+f->substr(7, f->length()-14)+"</set> ";
+	  else *f="<set> "+*f+"</set> ";
+	>>)
+	| #(DOTS <<throw(NOT_IMPLEMENTED);>>)
+	| #(EMPTYSET <<f=new string("<emptyset/> ");>>)
+	)
+	;
+}
+

@@ -1,0 +1,1 @@
+echo "3*(ln((sin((3x^2+5x)^5)))^2))^4 bb " | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r 

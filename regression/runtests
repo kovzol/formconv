@@ -1,0 +1,24 @@
+#!/bin/sh
+# Runs all tests.
+# Example: ./runtests
+
+test -x ./runtests || {
+ echo "$0 should be run within its directory, exiting"
+ exit 255
+ }
+
+N=0
+G=0
+B=0
+for i in *.in; do
+ ./runtest $i
+ if [ $? = 0 ]; then
+  G=`expr $G + 1`
+ else
+  B=`expr $B + 1`
+  fi
+ N=`expr $N + 1`
+ done
+
+echo "
+Summary: $G good and $B bad from $N tests"

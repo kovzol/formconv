@@ -1,0 +1,1 @@
+echo "124/(107x+100) bb " | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r 

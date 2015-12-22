@@ -1,0 +1,19 @@
+#!/bin/sh
+# Wrapper script for formconv.
+# Assumes that the .so library is given in the current directory.
+
+BIN=.
+LIB=../lib
+
+DN=`dirname $0`
+test -x $DN/$BIN/formconv || {
+ echo "ERROR:formconvExecutableMissing"
+ exit 1
+ }
+
+test -r $DN/$LIB/libformconv.so.0.1.0 || {
+ echo "ERROR:formconvLibraryMissing"
+ exit 1
+ }
+
+LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$DN/$LIB $DN/$BIN/formconv $*

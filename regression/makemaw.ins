@@ -1,0 +1,3 @@
+#!/bin/sh
+cat integral-original.log | sed s/+//g | ./makemaw.ins.pl | sort -u > maw.ins
+echo "Now you may want to run ./makemawtests."

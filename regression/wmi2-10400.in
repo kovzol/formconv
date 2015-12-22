@@ -1,0 +1,1 @@
+echo "-25*0.66*1.312*180/0.05* aa " | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r 

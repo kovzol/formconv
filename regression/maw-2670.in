@@ -1,0 +1,1 @@
+echo "x*sin**2(x)" | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r

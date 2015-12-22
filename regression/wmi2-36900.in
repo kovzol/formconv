@@ -1,0 +1,1 @@
+echo "sin(tan(cos(sin(ln(tan(ln(sqrt(sin(cos(tan(pi)))))))))))" | $F -x aa,.. -x bb,$ -l simple -I intuitive -O gnuplot -r 

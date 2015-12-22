@@ -1,0 +1,1 @@
+echo "(tan((tan( aa ))^(1/3)))^(1/3)" | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r 

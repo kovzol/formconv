@@ -1,0 +1,1 @@
+echo "(e^3*cos(2x))/2" | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r

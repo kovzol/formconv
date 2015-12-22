@@ -1,0 +1,1 @@
+echo "(12x+29)/((2x+5)*(3x+7))" | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r

@@ -1,0 +1,1 @@
+echo "sinx*sqrt(1-cosx)" | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r

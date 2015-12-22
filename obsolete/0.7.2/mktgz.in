@@ -1,0 +1,15 @@
+#!/bin/sh
+package=formconv
+currentdir=`pwd`
+version=@PACKAGE_VERSION@
+rm -f $package-$version.tar.gz
+rm -f -R /tmp/$package-$version
+mkdir /tmp/$package-$version
+cp -R * /tmp/$package-$version
+cd /tmp/$package-$version
+make distclean
+rm -R `find . -name CVS | xargs`
+rm -R autom4te.cache
+cd /tmp
+tar czvf $currentdir/$package-$version.tar.gz $package-$version
+rm -f -R /tmp/$package-$version

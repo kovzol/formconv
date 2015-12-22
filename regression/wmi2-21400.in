@@ -1,0 +1,1 @@
+echo "64*x^4-96*x^3+52*x^2-12*x+1= bb " | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r 

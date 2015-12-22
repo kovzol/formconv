@@ -1,0 +1,5 @@
+// Version related definitions:
+#undef FCVERSION_STRING
+#undef FCVERSION
+#undef BROKEN_GCC
+

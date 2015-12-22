@@ -1,0 +1,1 @@
+echo "16*x^2-9*y^(2-32*x)) bb " | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r 

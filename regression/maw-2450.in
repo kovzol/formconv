@@ -1,0 +1,1 @@
+echo "sqrt((3x+4)/4)" | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r

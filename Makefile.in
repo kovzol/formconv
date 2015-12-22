@@ -1,0 +1,419 @@
+###############################################################################
+# Author: Gabor Bakos (baga@users.sourceforge.net)
+# Based upon the example Makefile in the antlr distribution.
+# $Id: Makefile.in,v 1.47 2012/05/26 22:15:51 baga Exp $
+###############################################################################
+
+# Dependencies:
+#	antlr - antlr.org
+#	TCLAP - tclap.sourceforge.net
+
+prefix = @prefix@
+exec_prefix = @exec_prefix@
+bindir = @bindir@
+mandir = @mandir@
+libdir = @libdir@
+includedir = @includedir@
+@SET_MAKE@
+
+OBJ_DIR = obj
+SRC_DIR = gen_src
+BIN_DIR = bin
+LIB_DIR = lib
+GRM_DIR = src/grm
+CPP_DIR = src/cpp
+
+ANTLR := @ANTLR@ -o $(SRC_DIR)
+ANTLR_LIB=`@ANTLR_CONFIG@ --libs`
+ANTLR_FLAGS=`@ANTLR_CONFIG@ --cflags`
+
+#CXX:=g++
+
+CFLAGS = -I $(CPP_DIR) $(ANTLR_FLAGS) -lgmpxx -lgmp @CFLAGS@
+LDFLAGS = @LDFLAGS@
+
+G_FILES := $(GRM_DIR)/intuitive.g
+ContMathMLIn_G_FILES := $(GRM_DIR)/contmathmlin.g
+
+Intuitive_g_FILES := \
+	$(SRC_DIR)/IntuitiveLexer.cpp  $(SRC_DIR)/IntuitiveParser.cpp  $(SRC_DIR)/IntuitiveTokenTypes.hpp \
+	$(SRC_DIR)/IntuitiveLexer.hpp  $(SRC_DIR)/IntuitiveParser.hpp  $(SRC_DIR)/IntuitiveTokenTypes.txt
+
+ContMathMLIn_g_FILES := \
+	$(SRC_DIR)/ContMathMLInLexer.cpp  $(SRC_DIR)/ContMathMLInParser.cpp  $(SRC_DIR)/ContMathMLInTokenTypes.hpp \
+	$(SRC_DIR)/ContMathMLInLexer.hpp  $(SRC_DIR)/ContMathMLInParser.hpp  $(SRC_DIR)/ContMathMLInTokenTypes.txt
+
+ContMathMLToIntuitiveTransform_g_FILES := \
+	$(SRC_DIR)/ContMathMLToIntuitiveTransform.cpp  $(SRC_DIR)/ContMathMLToIntuitiveTransform.hpp \
+	$(SRC_DIR)/ContMathMLTokenTypes.hpp $(SRC_DIR)/MathMLInTokenTypes.txt
+
+ContentTransform_g_FILES := $(SRC_DIR)/ContentTransform.cpp	$(SRC_DIR)/ContentTransform.hpp \
+	$(SRC_DIR)/ContentTransformTokenTypes.hpp	$(SRC_DIR)/ContentTransformTokenTypes.txt
+
+ContentTransform2_g_FILES := $(SRC_DIR)/ContentTransform2.cpp	$(SRC_DIR)/ContentTransform2.hpp \
+	$(SRC_DIR)/ContentTransform2TokenTypes.hpp	$(SRC_DIR)/ContentTransform2TokenTypes.txt
+
+ConstantTransform_g_FILES := $(SRC_DIR)/ConstantTransform.cpp	$(SRC_DIR)/ConstantTransform.hpp \
+	$(SRC_DIR)/ConstantTransformTokenTypes.hpp	$(SRC_DIR)/ConstantTransformTokenTypes.txt
+
+ComplexComputeBoost_g_FILES := $(SRC_DIR)/ComplexComputeBoost.cpp	$(SRC_DIR)/ComplexComputeBoost.hpp \
+	$(SRC_DIR)/ComplexComputeBoostTokenTypes.hpp	$(SRC_DIR)/ComplexComputeBoostTokenTypes.txt
+
+PresentationTransform_g_FILES := $(SRC_DIR)/PresentationTransform.cpp	$(SRC_DIR)/PresentationTransform.hpp \
+	$(SRC_DIR)/PresentationTransformTokenTypes.hpp	$(SRC_DIR)/PresentationTransformTokenTypes.txt
+
+Transform_g_FILES := $(SRC_DIR)/Transform.cpp	$(SRC_DIR)/Transform.hpp \
+	$(SRC_DIR)/TransformTokenTypes.hpp	$(SRC_DIR)/TransformTokenTypes.txt
+
+Java_g_FILES :=	$(SRC_DIR)/JavaOutput.cpp	$(SRC_DIR)/JavaOutput.hpp	$(SRC_DIR)/JavaOutputTokenTypes.hpp \
+	$(SRC_DIR)/JavaOutputTokenTypes.txt
+
+C_g_FILES :=	$(SRC_DIR)/COutput.cpp	$(SRC_DIR)/COutput.hpp	$(SRC_DIR)/COutputTokenTypes.hpp \
+	$(SRC_DIR)/COutputTokenTypes.txt
+
+CComplex_g_FILES :=	$(SRC_DIR)/CComplexOutput.cpp	$(SRC_DIR)/CComplexOutput.hpp	$(SRC_DIR)/CComplexOutputTokenTypes.hpp \
+	$(SRC_DIR)/CComplexOutputTokenTypes.txt
+
+ComplexCompute_g_FILES :=	$(SRC_DIR)/ComplexCompute.cpp	$(SRC_DIR)/ComplexCompute.hpp	$(SRC_DIR)/ComplexComputeTokenTypes.hpp \
+	$(SRC_DIR)/ComplexComputeTokenTypes.txt
+
+LaTeX_g_FILES := $(SRC_DIR)/LaTeXOutput.cpp $(SRC_DIR)/LaTeXOutput.hpp  $(SRC_DIR)/LaTeXOutputTokenTypes.hpp \
+	$(SRC_DIR)/LaTeXOutputTokenTypes.txt
+
+MathML_g_FILES :=	$(SRC_DIR)/MathMLOutput.cpp	$(SRC_DIR)/MathMLOutput.hpp	$(SRC_DIR)/MathMLOutputTokenTypes.hpp \
+	$(SRC_DIR)/MathMLOutputTokenTypes.txt
+
+Lisp_output_g_FILES :=	$(SRC_DIR)/LispOutput.cpp	$(SRC_DIR)/LispOutput.hpp	$(SRC_DIR)/LispOutputTokenTypes.hpp \
+	$(SRC_DIR)/LispOutputTokenTypes.txt
+
+Mathematica_g_FILES :=	$(SRC_DIR)/MathematicaOutput.cpp	$(SRC_DIR)/MathematicaOutput.hpp	$(SRC_DIR)/MathematicaOutputTokenTypes.hpp \
+	$(SRC_DIR)/MathematicaOutputTokenTypes.txt
+
+Lisp_input_g_FILES :=	$(SRC_DIR)/LispParser.cpp $(SRC_DIR)/LispParser.hpp \
+	$(SRC_DIR)/LispTokenTypes.hpp $(SRC_DIR)/LispTokenTypes.txt \
+	$(SRC_DIR)/LispLexer.cpp $(SRC_DIR)/LispLexer.hpp
+
+Maxima_g_FILES :=	$(SRC_DIR)/MaximaOutput.cpp	$(SRC_DIR)/MaximaOutput.hpp	$(SRC_DIR)/MaximaOutputTokenTypes.hpp \
+	$(SRC_DIR)/MaximaOutputTokenTypes.txt
+
+Maple_g_FILES :=	$(SRC_DIR)/MapleOutput.cpp	$(SRC_DIR)/MapleOutput.hpp	$(SRC_DIR)/MapleOutputTokenTypes.hpp \
+	$(SRC_DIR)/MapleOutputTokenTypes.txt
+
+Gnuplot_g_FILES :=	$(SRC_DIR)/GnuplotOutput.cpp	$(SRC_DIR)/GnuplotOutput.hpp	$(SRC_DIR)/GnuplotOutputTokenTypes.hpp \
+	$(SRC_DIR)/GnuplotOutputTokenTypes.txt
+
+Mupad_g_FILES :=	$(SRC_DIR)/MupadOutput.cpp	$(SRC_DIR)/MupadOutput.hpp	$(SRC_DIR)/MupadOutputTokenTypes.hpp \
+	$(SRC_DIR)/MupadOutputTokenTypes.txt
+
+HTML_g_FILES := $(SRC_DIR)/HTMLOutput.cpp $(SRC_DIR)/HTMLOutput.hpp  $(SRC_DIR)/HTMLOutputTokenTypes.hpp \
+	$(SRC_DIR)/HTMLOutputTokenTypes.txt
+
+B_NAME := $(BIN_DIR)/intuitive $(BIN_DIR)/java $(BIN_DIR)/latex $(BIN_DIR)/c \
+	$(BIN_DIR)/complex $(BIN_DIR)/mathml $(BIN_DIR)/mathematica \
+	$(BIN_DIR)/mathmlin $(BIN_DIR)/formconv
+B_OBJS := $(OBJ_DIR)/test.o $(OBJ_DIR)/IntuitiveLexer.o $(OBJ_DIR)/IntuitiveParser.o
+Static_OBJ := libformconv.a
+Shared_OBJ := libformconv.so.0
+Shared_OBJ_VERSIONED := $(Shared_OBJ).1.0
+ContMathMLIn_OBJS := $(OBJ_DIR)/mathmlintest.o $(OBJ_DIR)/ContMathMLInLexer.o $(OBJ_DIR)/ContMathMLInParser.o \
+	$(OBJ_DIR)/ContMathMLToIntuitiveTransform.o $(OBJ_DIR)/COutput.o
+Java_OBJS := $(OBJ_DIR)/IntuitiveLexer.o $(OBJ_DIR)/IntuitiveParser.o $(OBJ_DIR)/JavaOutput.o $(OBJ_DIR)/ContentTransform.o \
+	$(OBJ_DIR)/ContentTransform2.o $(OBJ_DIR)/java.o
+C_OBJS := $(OBJ_DIR)/IntuitiveLexer.o $(OBJ_DIR)/IntuitiveParser.o $(OBJ_DIR)/COutput.o $(OBJ_DIR)/ContentTransform.o \
+	$(OBJ_DIR)/ContentTransform2.o $(OBJ_DIR)/c.o
+CComplex_OBJS := $(OBJ_DIR)/IntuitiveLexer.o $(OBJ_DIR)/IntuitiveParser.o $(OBJ_DIR)/COutput.o $(OBJ_DIR)/ContentTransform.o \
+	$(OBJ_DIR)/ContentTransform2.o $(OBJ_DIR)/ccomplex.o
+Complex_OBJS := $(OBJ_DIR)/IntuitiveLexer.o $(OBJ_DIR)/IntuitiveParser.o $(OBJ_DIR)/ComplexCompute.o $(OBJ_DIR)/ContentTransform.o \
+	$(OBJ_DIR)/ComplexComputeBoost.o $(OBJ_DIR)/complex.o
+Latex_OBJS := $(OBJ_DIR)/IntuitiveLexer.o $(OBJ_DIR)/IntuitiveParser.o $(OBJ_DIR)/LaTeXOutput.o \
+	$(OBJ_DIR)/PresentationTransform.o $(OBJ_DIR)/latex.o
+MathML_OBJS := $(OBJ_DIR)/IntuitiveLexer.o $(OBJ_DIR)/IntuitiveParser.o $(OBJ_DIR)/MathMLOutput.o $(OBJ_DIR)/ContentTransform.o \
+	$(OBJ_DIR)/ContentTransform2.o $(OBJ_DIR)/mathml.o
+Mathematica_OBJS := $(OBJ_DIR)/IntuitiveLexer.o $(OBJ_DIR)/IntuitiveParser.o $(OBJ_DIR)/MathematicaOutput.o $(OBJ_DIR)/ContentTransform.o \
+	$(OBJ_DIR)/ContentTransform2.o $(OBJ_DIR)/mathematica.o
+#Lisp_input_OBJS := $(OBJ_DIR)/LispLexer.o $(OBJ_DIR)/LispParser.o
+FormConv_OBJS := $(OBJ_DIR)/formconv.o $(OBJ_DIR)/misc.o
+
+OBJS := $(OBJ_DIR)/IntuitiveLexer.o $(OBJ_DIR)/IntuitiveParser.o \
+	$(OBJ_DIR)/ContMathMLInLexer.o $(OBJ_DIR)/ContMathMLInParser.o \
+	$(OBJ_DIR)/ContMathMLToIntuitiveTransform.o \
+	$(OBJ_DIR)/JavaOutput.o $(OBJ_DIR)/COutput.o \
+	$(OBJ_DIR)/CComplexOutput.o $(OBJ_DIR)/Transform.o \
+	$(OBJ_DIR)/ComplexCompute.o $(OBJ_DIR)/ContentTransform.o \
+	$(OBJ_DIR)/ContentTransform2.o $(OBJ_DIR)/ConstantTransform.o \
+	$(OBJ_DIR)/ComplexComputeBoost.o \
+	$(OBJ_DIR)/PresentationTransform.o $(OBJ_DIR)/LaTeXOutput.o $(OBJ_DIR)/MathMLOutput.o \
+	$(OBJ_DIR)/MathematicaOutput.o $(OBJ_DIR)/LispLexer.o $(OBJ_DIR)/LispParser.o \
+	$(OBJ_DIR)/LispOutput.o $(OBJ_DIR)/MaximaOutput.o $(OBJ_DIR)/MapleOutput.o \
+	$(OBJ_DIR)/GnuplotOutput.o $(OBJ_DIR)/MupadOutput.o $(OBJ_DIR)/HTMLOutput.o
+
+C_TARGETS := $(Intuitive_g_FILES)
+
+# Antlr deps.
+EXTRA_LIBS := $(ANTLR_LIBS)
+EXTRA_CXXFLAGS := $(ANTLR_INCS)
+
+all: $(B_NAME)
+
+$(OBJ_DIR):
+	mkdir $(OBJ_DIR)
+
+$(SRC_DIR):
+	mkdir $(SRC_DIR)
+
+$(BIN_DIR):
+	mkdir $(BIN_DIR)
+
+$(LIB_DIR):
+	mkdir $(LIB_DIR)
+
+$(Intuitive_g_FILES): #$(G_FILES)
+	$(ANTLR) $(G_FILES)
+
+$(ContMathMLIn_g_FILES): $(ContMathMLIn_G_FILES)
+	$(ANTLR) $(ContMathMLIn_G_FILES)
+
+$(ContMathMLToIntuitiveTransform_g_FILES): $(ContMathMLToIntuitiveTransform_G_FILES)
+	$(ANTLR) $(GRM_DIR)/contmathmltointuitive.g
+
+$(Java_g_FILES): $(GRM_DIR)/java.g
+	$(ANTLR) $(GRM_DIR)/java.g
+
+$(C_g_FILES): $(GRM_DIR)/c.g
+	$(ANTLR) $(GRM_DIR)/c.g
+
+$(CComplex_g_FILES): $(GRM_DIR)/output/ccomplex.g
+	$(ANTLR) $(GRM_DIR)/output/ccomplex.g
+
+$(ComplexCompute_g_FILES): $(GRM_DIR)/complexcompute.g
+	$(ANTLR) $(GRM_DIR)/complexcompute.g
+
+$(ContentTransform_g_FILES): $(GRM_DIR)/contenttransform.g
+	$(ANTLR) $(GRM_DIR)/contenttransform.g
+
+$(ContentTransform2_g_FILES): $(GRM_DIR)/contenttransform2.g
+	$(ANTLR) $(GRM_DIR)/contenttransform2.g
+
+$(ConstantTransform_g_FILES): $(GRM_DIR)/transform/constanttransform.g
+	$(ANTLR) $(GRM_DIR)/transform/constanttransform.g
+
+$(ComplexComputeBoost_g_FILES): $(GRM_DIR)/complexcomputeboost.g
+	$(ANTLR) $(GRM_DIR)/complexcomputeboost.g
+
+$(LaTeX_g_FILES): $(GRM_DIR)/latex.g
+	$(ANTLR) $(GRM_DIR)/latex.g
+
+$(PresentationTransform_g_FILES): $(GRM_DIR)/presentationtransform.g
+	$(ANTLR) $(GRM_DIR)/presentationtransform.g
+
+$(Transform_g_FILES): $(GRM_DIR)/transform.g
+	$(ANTLR) $(GRM_DIR)/transform.g
+
+$(MathML_g_FILES): $(GRM_DIR)/mathml.g
+	$(ANTLR) $(GRM_DIR)/mathml.g
+
+$(Mathematica_g_FILES): $(GRM_DIR)/mathematica.g
+	$(ANTLR) $(GRM_DIR)/mathematica.g
+
+$(Lisp_output_g_FILES): $(GRM_DIR)/output/lisp.g
+	$(ANTLR) $(GRM_DIR)/output/lisp.g
+
+$(Lisp_input_g_FILES): $(GRM_DIR)/input/lisp.g
+	$(ANTLR) $(GRM_DIR)/input/lisp.g
+
+$(Maxima_g_FILES): $(GRM_DIR)/output/maxima.g
+	$(ANTLR) $(GRM_DIR)/output/maxima.g
+
+$(Maple_g_FILES): $(GRM_DIR)/output/maple.g
+	$(ANTLR) $(GRM_DIR)/output/maple.g
+
+$(Gnuplot_g_FILES): $(GRM_DIR)/output/gnuplot.g
+	$(ANTLR) $(GRM_DIR)/output/gnuplot.g
+
+$(Mupad_g_FILES): $(GRM_DIR)/output/mupad.g
+	$(ANTLR) $(GRM_DIR)/output/mupad.g
+
+$(HTML_g_FILES): $(GRM_DIR)/output/html.g
+	$(ANTLR) $(GRM_DIR)/output/html.g
+
+$(OBJ_DIR)/IntuitiveLexer.o: $(Intuitive_g_FILES)
+	$(CXX) $(CFLAGS) -fpic -c -o $(OBJ_DIR)/IntuitiveLexer.o $(SRC_DIR)/IntuitiveLexer.cpp
+$(OBJ_DIR)/IntuitiveParser.o: $(Intuitive_g_FILES)
+	$(CXX) $(CFLAGS) -fpic -c -o $(OBJ_DIR)/IntuitiveParser.o $(SRC_DIR)/IntuitiveParser.cpp
+$(OBJ_DIR)/test.o: $(CPP_DIR)/test.cpp $(Intuitive_g_FILES)
+	$(CXX) $(CFLAGS) -c -o $(OBJ_DIR)/test.o -I $(SRC_DIR) $(CPP_DIR)/test.cpp
+$(OBJ_DIR)/ContMathMLInLexer.o: $(ContMathMLIn_g_FILES)
+	$(CXX) $(CFLAGS) -fpic -c -o $(OBJ_DIR)/ContMathMLInLexer.o $(SRC_DIR)/ContMathMLInLexer.cpp
+$(OBJ_DIR)/ContMathMLInParser.o: $(ContMathMLIn_g_FILES)
+	$(CXX) $(CFLAGS) -fpic -c -o $(OBJ_DIR)/ContMathMLInParser.o $(SRC_DIR)/ContMathMLInParser.cpp
+$(OBJ_DIR)/mathmlintest.o: $(CPP_DIR)/mathmlintest.cpp $(ContMathMLIn_g_FILES)
+	$(CXX) $(CFLAGS) -c -o $(OBJ_DIR)/mathmlintest.o -I $(SRC_DIR) $(CPP_DIR)/mathmlintest.cpp
+$(OBJ_DIR)/ContMathMLToIntuitiveTransform.o: $(ContMathMLToIntuitiveTransform_g_FILES)
+	$(CXX) $(CFLAGS) -fpic -c -o $(OBJ_DIR)/ContMathMLToIntuitiveTransform.o $(SRC_DIR)/ContMathMLToIntuitiveTransform.cpp
+$(OBJ_DIR)/JavaOutput.o: $(Java_g_FILES)
+	$(CXX) $(CFLAGS) -fpic -c -o $(OBJ_DIR)/JavaOutput.o $(SRC_DIR)/JavaOutput.cpp
+$(OBJ_DIR)/COutput.o: $(C_g_FILES)
+	$(CXX) $(CFLAGS) -fpic -c -o $(OBJ_DIR)/COutput.o $(SRC_DIR)/COutput.cpp
+$(OBJ_DIR)/CComplexOutput.o: $(CComplex_g_FILES)
+	$(CXX) $(CFLAGS) -fpic -c -o $(OBJ_DIR)/CComplexOutput.o $(SRC_DIR)/CComplexOutput.cpp
+$(OBJ_DIR)/ComplexCompute.o: $(ComplexCompute_g_FILES)
+	$(CXX) $(CFLAGS) -fpic -c -o $(OBJ_DIR)/ComplexCompute.o $(SRC_DIR)/ComplexCompute.cpp
+$(OBJ_DIR)/ContentTransform.o: $(ContentTransform_g_FILES)
+	$(CXX) $(CFLAGS) -fpic -c -o $(OBJ_DIR)/ContentTransform.o $(SRC_DIR)/ContentTransform.cpp
+$(OBJ_DIR)/ContentTransform2.o: $(ContentTransform2_g_FILES)
+	$(CXX) $(CFLAGS) -fpic -c -o $(OBJ_DIR)/ContentTransform2.o $(SRC_DIR)/ContentTransform2.cpp
+$(OBJ_DIR)/ConstantTransform.o: $(ConstantTransform_g_FILES)
+	$(CXX) $(CFLAGS) -fpic -c -o $(OBJ_DIR)/ConstantTransform.o $(SRC_DIR)/ConstantTransform.cpp
+$(OBJ_DIR)/ComplexComputeBoost.o: $(ComplexComputeBoost_g_FILES)
+	$(CXX) $(CFLAGS) -fpic -c -o $(OBJ_DIR)/ComplexComputeBoost.o $(SRC_DIR)/ComplexComputeBoost.cpp
+$(OBJ_DIR)/java.o: $(CPP_DIR)/java.cpp
+	$(CXX) $(CFLAGS) -c -o $(OBJ_DIR)/java.o -I $(SRC_DIR) $(CPP_DIR)/java.cpp
+$(OBJ_DIR)/c.o: $(CPP_DIR)/c.cpp
+	$(CXX) $(CFLAGS) -c -o $(OBJ_DIR)/c.o -I $(SRC_DIR) $(CPP_DIR)/c.cpp
+$(CPP_DIR)/complex.cpp:
+	cp test/complex.cpp $(CPP_DIR)
+$(OBJ_DIR)/complex.o: $(CPP_DIR)/complex.cpp
+	$(CXX) $(CFLAGS) -c -o $(OBJ_DIR)/complex.o -I $(SRC_DIR) $(CPP_DIR)/complex.cpp
+$(OBJ_DIR)/LaTeXOutput.o: $(LaTeX_g_FILES)
+	$(CXX) $(CFLAGS) -fpic -c -o $(OBJ_DIR)/LaTeXOutput.o $(SRC_DIR)/LaTeXOutput.cpp
+$(OBJ_DIR)/latex.o: $(CPP_DIR)/latex.cpp
+	$(CXX) $(CFLAGS) -c -o $(OBJ_DIR)/latex.o -I $(SRC_DIR) $(CPP_DIR)/latex.cpp
+$(OBJ_DIR)/PresentationTransform.o: $(PresentationTransform_g_FILES)
+	$(CXX) $(CFLAGS) -fpic -c -o $(OBJ_DIR)/PresentationTransform.o $(SRC_DIR)/PresentationTransform.cpp
+$(OBJ_DIR)/Transform.o: $(Transform_g_FILES)
+	$(CXX) $(CFLAGS) -fpic -c -o $(OBJ_DIR)/Transform.o $(SRC_DIR)/Transform.cpp
+$(OBJ_DIR)/MathMLOutput.o: $(MathML_g_FILES)
+	$(CXX) $(CFLAGS) -fpic -c -o $(OBJ_DIR)/MathMLOutput.o $(SRC_DIR)/MathMLOutput.cpp
+$(OBJ_DIR)/mathml.o: $(CPP_DIR)/mathml.cpp
+	$(CXX) $(CFLAGS) -c -o $(OBJ_DIR)/mathml.o -I $(SRC_DIR) $(CPP_DIR)/mathml.cpp
+$(OBJ_DIR)/MathematicaOutput.o: $(Mathematica_g_FILES)
+	$(CXX) $(CFLAGS) -fpic -c -o $(OBJ_DIR)/MathematicaOutput.o $(SRC_DIR)/MathematicaOutput.cpp
+$(OBJ_DIR)/mathematica.o: $(CPP_DIR)/mathematica.cpp
+	$(CXX) $(CFLAGS) -c -o $(OBJ_DIR)/mathematica.o -I $(SRC_DIR) $(CPP_DIR)/mathematica.cpp
+$(OBJ_DIR)/LispOutput.o: $(Lisp_output_g_FILES)
+	$(CXX) $(CFLAGS) -fpic -c -o $(OBJ_DIR)/LispOutput.o $(SRC_DIR)/LispOutput.cpp
+$(OBJ_DIR)/formconv.o: $(CPP_DIR)/formconv.cpp
+	$(CXX) $(CFLAGS) -c -o $(OBJ_DIR)/formconv.o -I $(SRC_DIR) $(TCLAP_INCLUDE) $(CPP_DIR)/formconv.cpp
+$(OBJ_DIR)/misc.o: $(CPP_DIR)/misc.cpp $(CPP_DIR)/h/misc.h
+	$(CXX) $(CFLAGS) -c -o $(OBJ_DIR)/misc.o -I $(SRC_DIR) $(CPP_DIR)/misc.cpp
+$(OBJ_DIR)/LispLexer.o: $(Lisp_input_g_FILES)
+	$(CXX) $(CFLAGS) -fpic -c -o $(OBJ_DIR)/LispLexer.o $(SRC_DIR)/LispLexer.cpp
+$(OBJ_DIR)/LispParser.o: $(Lisp_input_g_FILES)
+	$(CXX) $(CFLAGS) -fpic -c -o $(OBJ_DIR)/LispParser.o $(SRC_DIR)/LispParser.cpp
+$(OBJ_DIR)/MaximaOutput.o: $(Maxima_g_FILES)
+	$(CXX) $(CFLAGS) -fpic -c -o $(OBJ_DIR)/MaximaOutput.o $(SRC_DIR)/MaximaOutput.cpp
+$(OBJ_DIR)/MapleOutput.o: $(Maple_g_FILES)
+	$(CXX) $(CFLAGS) -fpic -c -o $(OBJ_DIR)/MapleOutput.o $(SRC_DIR)/MapleOutput.cpp
+$(OBJ_DIR)/GnuplotOutput.o: $(Gnuplot_g_FILES)
+	$(CXX) $(CFLAGS) -fpic -c -o $(OBJ_DIR)/GnuplotOutput.o $(SRC_DIR)/GnuplotOutput.cpp
+$(OBJ_DIR)/MupadOutput.o: $(Mupad_g_FILES)
+	$(CXX) $(CFLAGS) -fpic -c -o $(OBJ_DIR)/MupadOutput.o $(SRC_DIR)/MupadOutput.cpp
+$(OBJ_DIR)/HTMLOutput.o: $(HTML_g_FILES)
+	$(CXX) $(CFLAGS) -fpic -c -o $(OBJ_DIR)/HTMLOutput.o $(SRC_DIR)/HTMLOutput.cpp
+
+$(BIN_DIR)/intuitive: $(BIN_DIR) $(SRC_DIR) $(OBJ_DIR) $(B_OBJS)
+	$(CXX) $(CFLAGS) -o $(BIN_DIR)/intuitive $(B_OBJS) $(ANTLR_LIB) -lgmpxx
+
+$(BIN_DIR)/mathmlin: $(BIN_DIR) $(SRC_DIR) $(OBJ_DIR) $(ContMathMLIn_OBJS)
+	$(CXX) $(CFLAGS) -o $(BIN_DIR)/mathmlin $(ContMathMLIn_OBJS) $(ANTLR_LIB) -lgmpxx
+
+$(BIN_DIR)/java:  $(BIN_DIR) $(SRC_DIR) $(OBJ_DIR) $(Java_OBJS) #$(Static_OBJ)
+	$(CXX) $(CFLAGS) -o $(BIN_DIR)/java $(Java_OBJS) $(ANTLR_LIB) -lgmpxx
+#	$(CXX) $(CFLAGS) -o $(BIN_DIR)/java $(OBJ_DIR)/java.o -L$(ANTLR_LIB) -L$(LIB_DIR) -lformconv -lantlr
+
+$(BIN_DIR)/c:  $(BIN_DIR) $(SRC_DIR) $(OBJ_DIR) $(C_OBJS) $(Static_OBJ) $(Shared_OBJ)
+#	$(CXX) $(CFLAGS) -o $(BIN_DIR)/c $(C_OBJS) $(ANTLR_LIB)
+	$(CXX) $(CFLAGS) -o $(BIN_DIR)/c $(OBJ_DIR)/c.o -L$(LIB_DIR) $(LDFLAGS) -L. -lformconv $(ANTLR_LIB) -lgmpxx
+
+$(BIN_DIR)/complex:  $(BIN_DIR) $(SRC_DIR) $(OBJ_DIR) $(Complex_OBJS) $(Shared_OBJ)
+#	$(CXX) $(CFLAGS) -o $(BIN_DIR)/complex $(Complex_OBJS) $(ANTLR_LIB)
+	$(CXX) $(CFLAGS) -o $(BIN_DIR)/complex $(OBJ_DIR)/complex.o -L$(LIB_DIR) $(LDFLAGS) -L. -lformconv $(ANTLR_LIB) -lgmpxx
+
+$(BIN_DIR)/latex: $(BIN_DIR) $(SRC_DIR) $(OBJ_DIR) $(Latex_OBJS) $(Static_OBJ) $(Shared_OBJ)
+#	$(CXX) $(CFLAGS) -o $(BIN_DIR)/latex $(Latex_OBJS) $(ANTLR_LIB)
+	$(CXX) $(CFLAGS) -o $(BIN_DIR)/latex $(OBJ_DIR)/latex.o -L$(LIB_DIR) $(LDFLAGS) -L. -lformconv $(ANTLR_LIB) -lgmpxx
+
+$(BIN_DIR)/mathml:  $(BIN_DIR) $(SRC_DIR) $(OBJ_DIR) $(MathML_OBJS) #$(Static_OBJ)
+	$(CXX) $(CFLAGS) -o $(BIN_DIR)/mathml $(MathML_OBJS) $(ANTLR_LIB) -lgmpxx
+#	$(CXX) $(CFLAGS) -o $(BIN_DIR)/mathml $(OBJ_DIR)/mathml.o -L$(ANTLR_LIB) -L$(LIB_DIR) -lformconv -lantlr
+
+$(BIN_DIR)/mathematica:  $(BIN_DIR) $(SRC_DIR) $(OBJ_DIR) $(Mathematica_OBJS) #$(Static_OBJ)
+	$(CXX) $(CFLAGS) -o $(BIN_DIR)/mathematica $(Mathematica_OBJS) $(ANTLR_LIB) -lgmpxx
+#	$(CXX) $(CFLAGS) -o $(BIN_DIR)/mathematica $(OBJ_DIR)/mathematica.o -L$(ANTLR_LIB) -L$(LIB_DIR) -lformconv -lantlr
+
+$(BIN_DIR)/formconv: $(BIN_DIR) $(SRC_DIR) $(OBJ_DIR) $(FormConv_OBJS) $(Shared_OBJ)
+	$(CXX) $(CFLAGS) -o $(BIN_DIR)/formconv $(FormConv_OBJS) -L$(LIB_DIR) $(LDFLAGS) -L. -lformconv $(ANTLR_LIB) -lgmpxx
+
+$(Static_OBJ): $(SRC_DIR) $(OBJ_DIR) $(LIB_DIR) $(OBJS)
+	ar rcs $(Static_OBJ) $(OBJS)
+	rm -f $(LIB_DIR)/$(Static_OBJ)
+	ln $(Static_OBJ) $(LIB_DIR)
+
+$(Shared_OBJ): $(SRC_DIR) $(OBJ_DIR) $(LIB_DIR) $(OBJS)
+	rm -f  $(LIB_DIR)/libformconv.so $(LIB_DIR)/$(Shared_OBJ) $(LIB_DIR)/$(Shared_OBJ_VERSIONED) $(Shared_OBJ) $(Shared_OBJ_VERSIONED)
+	$(CXX) $(CFLAGS) -shared -Wl,-soname,$(Shared_OBJ) -o $(Shared_OBJ_VERSIONED) $(OBJS) -lgmpxx -lgmp
+	ln $(Shared_OBJ).1.0 $(LIB_DIR)
+	cd $(LIB_DIR); ln -s $(Shared_OBJ_VERSIONED) $(Shared_OBJ)
+	cd $(LIB_DIR); ln -s $(Shared_OBJ_VERSIONED) libformconv.so
+
+clean:
+	test -x $(BIN_DIR)/formconv_runme && cp $(BIN_DIR)/formconv_runme .
+	rm -rf $(OBJ_DIR) $(BIN_DIR) $(LIB_DIR) $(Static_OBJ) $(Shared_OBJ)
+	rm -rf $(Shared_OBJ_VERSIONED)
+	test -x ./formconv_runme && mkdir -p $(BIN_DIR) && mv formconv_runme $(BIN_DIR)
+
+distclean: clean
+	rm -rf $(SRC_DIR) Makefile config.log config.status control-dapper control-etch control-feisty
+
+test:
+	cd test && $(MAKE) all
+
+install:
+	strip $(B_NAME)
+	@INSTALL@ -d $(bindir)
+	@INSTALL@ bin/formconv $(bindir)/formconv
+	@INSTALL@ -d $(libdir)
+	@INSTALL@ -m 644 $(LIB_DIR)/$(Shared_OBJ_VERSIONED) $(libdir)
+	cd $(libdir); rm -f $(Shared_OBJ); ln -s $(Shared_OBJ_VERSIONED) $(Shared_OBJ)
+	cd $(libdir); rm -f libformconv.so; ln -s $(Shared_OBJ_VERSIONED) libformconv.so
+	if [ `id -u` = 0 ]; then /sbin/ldconfig; fi
+	
+	@INSTALL@ -d $(includedir)/formconv
+	@INSTALL@ -d $(includedir)/formconv/h
+	@INSTALL@ -m 644 $(CPP_DIR)/h/*.h $(includedir)/formconv/h
+	@INSTALL@ -m 644 $(SRC_DIR)/*.cpp $(SRC_DIR)/*.hpp $(SRC_DIR)/*.txt $(includedir)/formconv
+	@INSTALL@ -d $(mandir)/man1
+	@INSTALL@ -m 644 doc/formconv.1 $(mandir)/man1/formconv.1
+
+deb:
+	rm -fR debfs
+	mkdir -p debfs/usr/bin debfs/usr/lib debfs/usr/include/formconv/h debfs/usr/share/doc/formconv
+	mkdir -p debfs/usr/share/man/man1
+	cp bin/formconv debfs/usr/bin
+	strip debfs/usr/bin/formconv
+	cp libformconv.so.0.1.0 debfs/usr/lib
+	strip debfs/usr/lib/libformconv.so.0.1.0
+	cp doc/overview.* doc/help.txt doc/webinfo.txt debfs/usr/share/doc/formconv
+	cp doc/formconv.1 debfs/usr/share/man/man1
+	cd debfs/usr/lib; rm -f libformconv.so; ln -s libformconv.so.0.1.0 libformconv.so
+	cd debfs/usr/lib; rm -f libformconv.so.0; ln -s libformconv.so.0.1.0 libformconv.so.0
+	cp src/cpp/h/*.h debfs/usr/include/formconv/h
+	cp gen_src/* debfs/usr/include/formconv
+	mkdir -p debfs/DEBIAN
+	cp postinst postrm shlibs debfs/DEBIAN
+
+dapper: deb
+	cp control-dapper debfs/DEBIAN/control
+	fakeroot dpkg -b debfs formconv_@PACKAGE_VERSION@-dapper_i386.deb
+
+feisty: deb
+	cp control-feisty debfs/DEBIAN/control
+	fakeroot dpkg -b debfs formconv_@PACKAGE_VERSION@-feisty_i386.deb
+
+etch: deb
+	cp control-etch debfs/DEBIAN/control
+	fakeroot dpkg -b debfs formconv_@PACKAGE_VERSION@-etch_i386.deb
+
+debs: dapper feisty etch
+
+.PHONY:	test distclean

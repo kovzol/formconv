@@ -1,0 +1,9 @@
+
+<apply>
+  <sin/>
+  <apply>
+    <power/>
+    <ci>x</ci>
+    <cn>2</cn>
+  </apply>
+</apply>

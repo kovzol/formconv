@@ -1,0 +1,50 @@
+Version 0.7.2.1 (2006-07-25)
+
+  Fixed CAS output by G. Bakos (for wmi).
+
+
+
+Version 0.7.1 (2004-04-22)
+
+
+  Updated manual page.
+  
+  New output format: c.
+  
+  
+
+Version 0.7.0 (2004-04-20)
+
+
+  Support for many additional mathematical structures and symbols.
+  
+  New output formats: verb_hu, html, ccomplex.
+  
+  Output language support.
+  
+
+
+Version 0.6.1 (2003-12-18)
+
+
+  Added .rpm and enhanced .tar.gz packaging support.
+  
+  Improved bug checking.
+  
+  Java support.
+  
+  Hungarian documentation has been started.
+
+
+
+Version 0.6.0 (2003-07-30)
+
+
+  The HISTORY file has been changed.
+ 
+  Currently `intuitive' input and `latex', `maple', `maxima',
+  `mupad', `gnuplot', `mathml', `html_valign' and `gnuplot'
+  output formats are available.
+  
+  Manual (formconv.1) is available.
+  

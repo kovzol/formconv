@@ -1,0 +1,1 @@
+echo "(16)^((5^(4))) mod 5^() bb " | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r 

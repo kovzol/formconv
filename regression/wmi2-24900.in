@@ -1,0 +1,1 @@
+echo "9+5=sin(014458 bb )" | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r 

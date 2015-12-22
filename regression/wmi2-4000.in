@@ -1,0 +1,1 @@
+echo "1/2-8/4-6/ aa " | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r 

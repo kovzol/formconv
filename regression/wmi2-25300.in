@@ -1,0 +1,1 @@
+echo "985=9*x" | $F -x aa,.. -x bb,$ -l simple -I intuitive -O maxima -r 

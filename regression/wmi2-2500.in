@@ -1,0 +1,1 @@
+echo ",(((1,16)/((1,07x+1)*(1,07x+1)*(1,07x+1)*(x)))) bb " | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r 

@@ -1,0 +1,1 @@
+echo "sin(x)*cos(x)/(sin(x)^2+1)" | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r

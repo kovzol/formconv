@@ -1,0 +1,10 @@
+#!/bin/sh
+# Generates wmi2-*.in files from formconv.ins.
+for i in `seq 100 100 47000`; do
+ f=wmi2-$i.in
+ head -$i wmi2.ins | tail -1 > $f
+ chmod 755 $f
+ ./makeregr $f
+ echo -n "$i "
+ done
+echo "done"

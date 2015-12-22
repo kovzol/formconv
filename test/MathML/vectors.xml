@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+	Basic MathML tests
+	Tested on http://www.mathmlcentral.com/Tools/FromMathMLFile.jsp
+-->
+<math xmlns="http://www.w3.org/1998/Math/MathML">
+	<apply>
+		<plus/>
+		<ci>a</ci>
+		<apply>
+			<selector/>
+			<ci type="vector">Y</ci>
+			<cn>8</cn>
+		</apply>
+		<apply>
+			<selector/>
+			<ci type="matrix">Z</ci>
+			<cn>4</cn>
+			<cn>3</cn>
+		</apply>
+		<apply>
+			<selector/>
+			<ci type="matrix">Z</ci>
+			<cn>5</cn>
+			<cn>6</cn>
+			<cn>8</cn>
+		</apply>
+	</apply>
+</math>
+

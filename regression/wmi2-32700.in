@@ -1,0 +1,2 @@
+#!/bin/sh
+echo "kis kacsa fürdik fekete  bb " | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r 

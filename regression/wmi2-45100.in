@@ -1,0 +1,1 @@
+echo "xarctan(1/x),-pi/2x,pi/2 bb " | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r 

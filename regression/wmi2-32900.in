@@ -1,0 +1,1 @@
+echo "lim(0,inf,((3x^2+7x-9)/(-2x^2-6x+12))) bb " | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r 

@@ -1,0 +1,2 @@
+#!/bin/sh
+echo "hatszöget. Hány százaléka a hulladék területe a körlap területének? bb " | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r 

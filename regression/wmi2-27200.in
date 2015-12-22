@@ -1,0 +1,1 @@
+echo "abs(x)+abs(x-6)=6 bb " | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r 

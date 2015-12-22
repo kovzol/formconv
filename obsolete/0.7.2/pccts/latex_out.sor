@@ -1,0 +1,612 @@
+/**
+ * @Author: Gábor Bakos (Bakos.Gabor.1@stud.u-szeged.hu)
+ * Version: $Id: latex_out.sor,v 1.2 2004/12/15 13:37:36 baga Exp $
+ */
+
+#header <<
+#include <string>
+#include <queue>
+#include <stack>
+#include <memory>
+#include <iostream>
+#include <fstream>
+using namespace std;
+#include "tokens.h"
+#include "AST.h"
+#include "utility.h"
+typedef AST SORAST;
+
+>>
+
+class TreeParser_LaTeX_out {
+<<
+private:
+	bool cdots;
+	bool dynamic_parentheses;
+	bool beauty_parentheses;
+	language lang;
+	ofstream cout;
+	string prefix, suffix, header, footer;
+	char max(char a, char b)
+	{
+		return (a<b)?b:a;
+	}
+	
+public:
+	TreeParser_LaTeX_out(const char *fn, const char *iprefix, const char *isuffix, const char *iheader, const char *ifooter, const language ilang=DEFAULT, const bool is_cdots=true, const bool is_dynamic_parentheses=true, const bool is_beauty_parentheses=false) : cout(fn), cdots(is_cdots), dynamic_parentheses(is_dynamic_parentheses), beauty_parentheses(is_beauty_parentheses), prefix(iprefix), suffix(isuffix), header(iheader), footer(ifooter), lang(ilang)
+	{
+		cout << header;
+	}
+	~TreeParser_LaTeX_out()
+	{
+		cout << footer;
+	}
+>>
+
+inp: <<data *f=NULL, *g=NULL;>>
+	( #(NL <<cout << prefix;>> {set_expr>[f] <<cout << *(f->s); delete f;>>} <<cout << suffix << endl;>> inp)
+	| #(ASSIGN set_expr>[f] <<cout << prefix << *(f->s) << ":="; delete f;>> set_expr>[f] <<cout << *(f->s) << suffix << endl; delete f;>> inp)
+	|)
+	;
+
+set_expr>[data *f]: <<data *g;>>
+	( log_expr>[f]
+	| #(IN set_expr>[f] set_expr>[g] <<*(f->s)+="\\in "+*(g->s); delete g;>>)
+	| #(NI set_expr>[f] set_expr>[g] <<*(f->s)+="\\ni "+*(g->s); delete g;>>)
+	| #(SUPSET set_expr>[f] set_expr>[g] <<*(f->s)+="\\supset "+*(g->s); delete g;>>)
+	| #(SUPSETEQ set_expr>[f] set_expr>[g] <<*(f->s)+="\\supseteq "+*(g->s); delete g;>>)
+	| #(SUBSET set_expr>[f] set_expr>[g] <<*(f->s)+="\\subset "+*(g->s); delete g;>>)
+	| #(SUBSETEQ set_expr>[f] set_expr>[g] <<*(f->s)+="\\subseteq "+*(g->s); delete g;>>)
+	| #(UNION set_expr>[f] set_expr>[g] <<*(f->s)+="\\cup "+*(g->s); delete g;>>)
+	| #(INTERSECT set_expr>[f] set_expr>[g] <<*(f->s)+="\\cap "+*(g->s); delete g;>>)
+	| #(EXCEPT set_expr>[f] set_expr>[g] <<*(f->s)+="\\setminus "+*(g->s); delete g;>>)
+	| #(CROSS set_expr>[f] set_expr>[g] <<*(f->s)+="\\times "+*(g->s); delete g;>>)
+	| #(FORALL set_expr>[f] set_expr>[g] <<*(f->s)="\\forall "+*(f->s)+": "+*(g->s); delete g;>>)
+	| #(EXISTS set_expr>[f] set_expr>[g] <<*(f->s)="\\exists "+*(f->s)+": "+*(g->s); delete g;>>)
+	| #(SETDEF set_expr>[f] set_expr>[g] <<*(f->s)="\\left\\{ "+*(f->s)+"| "+*(g->s)+"\\right\\} "; delete g;>>)
+	)
+	;
+
+log_expr>[data *f]: <<data *g;>>
+	( log_value>[f]
+	| #(AND set_expr>[f] set_expr>[g] <<*(f->s)+="\\wedge "+*(g->s); delete g;>>)
+	| #(NAND set_expr>[f] set_expr>[g] <<*(f->s)+="\\mathrm{NAND} "+*(g->s); delete g;>>)
+	| #(OR set_expr>[f] set_expr>[g] <<*(f->s)+="\\vee "+*(g->s); delete g;>>)
+	| #(NOR set_expr>[f] set_expr>[g] <<*(f->s)+="\\mathrm{NOR} "+*(g->s); delete g;>>)
+	| #(XOR set_expr>[f] set_expr>[g] <<*(f->s)+="\\mathrm{XOR} "+*(g->s); delete g;>>)
+	| #(IMPLY set_expr>[f] set_expr>[g] <<*(f->s)+="\\rightarrow "+*(g->s); delete g;>>)
+	| #(NOT set_expr>[f] <<*(f->s)="\\neg "+*(f->s);>>)
+	)
+	;
+
+log_value>[data *f]:
+	  rel_expr>[f]
+	| #(True
+	  <<
+	    	switch (lang)
+		{
+	    		case DEFAULT:
+			case ENGLISH:
+			case SPANISH:
+			case CHINESE:
+				f=new data("\\mathrm{TRUE} "); break;
+			case HUNGARIAN:
+				f=new data("\\mathrm{IGAZ} "); break;
+			case FRENCH:
+				f=new data("\\mathrm{VRAI} "); break;
+			case GERMAN:
+				f=new data("\\mathrm{WAHR} "); break;
+			case ITALIAN:
+				f=new data("\\mathrm{VERO} "); break;
+			default:
+				f=new data("\\mathrm{TRUE} "); break;
+		}
+	  >>)
+	| #(False 
+	  <<
+	    	switch (lang)
+		{
+	    		case DEFAULT:
+			case ENGLISH:
+			case SPANISH:
+			case CHINESE:
+				f=new data("\\mathrm{FALSE} "); break;
+			case HUNGARIAN:
+				f=new data("\\mathrm{HAMIS} "); break;
+			case FRENCH:
+				f=new data("\\mathrm{FAUX} "); break;
+			case GERMAN:
+				f=new data("\\mathrm{FALSCH} "); break;
+			case ITALIAN:
+				f=new data("\\mathrm{FALSO} "); break;
+			default:
+				f=new data("\\mathrm{FALSE} "); break;
+		}
+	  >>)
+	;
+
+rel_expr>[data *f]: <<data *g=NULL;>>
+	( #(LESS set_expr>[f] set_expr>[g] <<*(f->s)+="<"+*(g->s); delete g;>>)
+	| #(LE set_expr>[f] set_expr>[g] <<*(f->s)+="\\leq "+*(g->s); delete g;>>)
+	| #(EL set_expr>[f] set_expr>[g] <<*(f->s)+="\\leq "+*(g->s); delete g;>>)
+	| #(GREATER set_expr>[f] set_expr>[g] <<*(f->s)+=">"+*(g->s); delete g;>>)
+	| #(GE set_expr>[f] set_expr>[g] <<*(f->s)+="\\geq "+*(g->s); delete g;>>)
+	| #(EG set_expr>[f] set_expr>[g] <<*(f->s)+="\\geq "+*(g->s); delete g;>>)
+	| #(EQUAL set_expr>[f] set_expr>[g] <<*(f->s)+="="+*(g->s); delete g;>>)
+	| #(NEQ set_expr>[f] set_expr>[g] <<*(f->s)+="\\neq "+*(g->s); delete g;>>)
+	| add_expr>[f]
+	)
+	;
+
+add_expr>[data *f]: <<data *g=NULL;>>
+	  #(PLUS add_expr>[f] add_expr>[g]<<*(f->s)+="+"+*(g->s); f->depth=max(f->depth,g->depth); delete g;>>)
+	| <<data *g;>>
+	  #(MINUS add_expr>[f] add_expr>[g]<<*(f->s)+="-"+*(g->s); f->depth=max(f->depth,g->depth); delete g;>>)
+	| neg_mult_expr>[f]
+	;
+
+neg_mult_expr>[data *f]:
+	  #(NEG add_expr>[f] <<*(f->s)="-"+*(f->s);>>)
+	| mult_expr>[f]
+	;
+
+mult_expr>[data *f]: <<data *g=NULL;>>
+	( #(MULT mult_expr>[f] neg_mult_expr>[g] <<if (cdots) *(f->s)+="\\cdot "+*(g->s); else *(f->s)+="\\,"+*(g->s); f->depth=max(f->depth,g->depth); delete g;>>)
+	| #(DIV add_expr>[f] add_expr>[g] <<*(f->s)="\\frac{"+*(f->s)+"}{"+*(g->s)+"}"; f->depth=max(f->depth,g->depth); delete g;>>)
+	| #(DIVI add_expr>[f] add_expr>[g] <<*(f->s)+=":"+*(g->s); f->depth=max(f->depth, g->depth); delete g;>>)
+	| #(MOD add_expr>[f] add_expr>[g] <<*(f->s)+=" \\mathrm{mod} "+*(g->s); f->depth=max(f->depth, g->depth); delete g;>>)
+	| #(MULTNONE mult_expr>[f] neg_mult_expr>[g]<<if (cdots) *(f->s)+="\\cdot "+*(g->s); else *(f->s)+="\\,"+*(g->s); f->depth=max(f->depth,g->depth); delete g;>>)
+	| pow_expr>[f]
+	)
+	;
+
+pow_expr>[data *f]: <<data *g;>>
+	  #(CIRCUM add_expr>[f] add_expr>[g] <<*(f->s)+="^{"+*(g->s)+ "}"; delete g;>>)
+	| fact>[f]
+	;
+
+neg_fact>[data *f]: #(NEG neg_fact>[f] <<*(f->s)="-"+*(f->s);>>) 
+	| fact>[f]
+	;
+
+func>[data *f]:
+	  #(SIN <<f=new data("\\sin ");>>)
+	| #(COS <<f=new data("\\cos ");>>)
+	| #(SEC <<f=new data("\\sec ");>>)
+	| #(COSEC 
+	  <<
+	    	switch (lang)
+		{
+	    		case DEFAULT:
+			case ENGLISH:
+			case SPANISH:
+			case CHINESE:
+			case FRENCH:
+			case GERMAN:
+			case ITALIAN:
+				f=new data("\\csc "); break;
+			case HUNGARIAN:
+				f=new data("\\mathrm{cosec} "); break;
+			default:
+				f=new data("\\csc "); break;
+		}
+	  >>)
+	| #(TAN
+	  <<
+	    	switch (lang)
+		{
+	    		case DEFAULT:
+			case ENGLISH:
+			case SPANISH:
+			case CHINESE:
+			case FRENCH:
+			case GERMAN:
+			case ITALIAN:
+				f=new data("\\tan "); break;
+			case HUNGARIAN:
+				f=new data("\\mathrm{tg} "); break;
+			default:
+				f=new data("\\tan "); break;
+		}
+	  >>)
+	| #(COT
+	  <<
+	    	switch (lang)
+		{
+	    		case DEFAULT:
+			case ENGLISH:
+			case SPANISH:
+			case CHINESE:
+			case FRENCH:
+			case GERMAN:
+			case ITALIAN:
+				f=new data("\\cot "); break;
+			case HUNGARIAN:
+				f=new data("\\mathrm{ctg} "); break;
+			default:
+				f=new data("\\cot "); break;
+		}
+	  >>)
+	| #(SINH
+	  <<
+	    	switch (lang)
+		{
+	    		case DEFAULT:
+			case ENGLISH:
+			case SPANISH:
+			case CHINESE:
+			case FRENCH:
+			case GERMAN:
+			case ITALIAN:
+				f=new data("\\sinh "); break;
+			case HUNGARIAN:
+				f=new data("\\mathrm{sh} "); break;
+			default:
+				f=new data("\\sinh "); break;
+		}
+	  >>)
+	| #(COSH
+	  <<
+	    	switch (lang)
+		{
+	    		case DEFAULT:
+			case ENGLISH:
+			case SPANISH:
+			case CHINESE:
+			case FRENCH:
+			case GERMAN:
+			case ITALIAN:
+				f=new data("\\cosh "); break;
+			case HUNGARIAN:
+				f=new data("\\mathrm{ch} "); break;
+			default:
+				f=new data("\\cosh "); break;
+		}
+	  >>)
+	| #(TANH
+	  <<
+	    	switch (lang)
+		{
+	    		case DEFAULT:
+			case ENGLISH:
+			case SPANISH:
+			case CHINESE:
+			case FRENCH:
+			case GERMAN:
+			case ITALIAN:
+				f=new data("\\tanh "); break;
+			case HUNGARIAN:
+				f=new data("\\mathrm{tgh} "); break;
+			default:
+				f=new data("\\tanh "); break;
+		}
+	  >>)
+	| #(COTH
+	  <<
+	    	switch (lang)
+		{
+	    		case DEFAULT:
+			case ENGLISH:
+			case SPANISH:
+			case CHINESE:
+			case FRENCH:
+			case GERMAN:
+			case ITALIAN:
+				f=new data("\\coth "); break;
+			case HUNGARIAN:
+				f=new data("\\mathrm{ctgh} "); break;
+			default:
+				f=new data("\\coth "); break;
+		}
+	  >>)
+	| #(ARCSIN <<f=new data("\\arcsin ");>>)
+	| #(ARCCOS <<f=new data("\\arccos ");>>)
+	| #(ARCSEC <<f=new data("\\mathrm{arcsec} ");>>)
+	| #(ARCCOSEC
+	  <<
+	    	switch (lang)
+		{
+	    		case DEFAULT:
+			case ENGLISH:
+			case SPANISH:
+			case CHINESE:
+			case FRENCH:
+			case GERMAN:
+			case ITALIAN:
+				f=new data("\\mathrm{arccsc} "); break;
+			case HUNGARIAN:
+				f=new data("\\mathrm{arccosec} "); break;
+			default:
+				f=new data("\\mathrm{arccsc} "); break;
+		}
+	  >>)
+	| #(ARCTAN
+	  <<
+	    	switch (lang)
+		{
+	    		case DEFAULT:
+			case ENGLISH:
+			case SPANISH:
+			case CHINESE:
+			case FRENCH:
+			case GERMAN:
+			case ITALIAN:
+				f=new data("\\arctan "); break;
+			case HUNGARIAN:
+				f=new data("\\mathrm{arctg} "); break;
+			default:
+				f=new data("\\arctan "); break;
+		}
+	  >>)
+	| #(ARCCOT
+	  <<
+	    	switch (lang)
+		{
+	    		case DEFAULT:
+			case ENGLISH:
+			case SPANISH:
+			case CHINESE:
+			case FRENCH:
+			case GERMAN:
+			case ITALIAN:
+				f=new data("\\mathrm{arccot} "); break;
+			case HUNGARIAN:
+				f=new data("\\mathrm{arcctg} "); break;
+			default:
+				f=new data("\\mathrm{arccot} "); break;
+		}
+	  >>)
+	| #(ARCSINH
+	  <<
+	    	switch (lang)
+		{
+	    		case DEFAULT:
+			case ENGLISH:
+			case SPANISH:
+			case CHINESE:
+			case FRENCH:
+			case GERMAN:
+			case ITALIAN:
+				f=new data("\\mathrm{arcsinh} "); break;
+			case HUNGARIAN:
+				f=new data("\\mathrm{arcsh} "); break;
+			default:
+				f=new data("\\mathrm{arcsinh} "); break;
+		}
+	  >>)
+	| #(ARCCOSH
+	  <<
+	    	switch (lang)
+		{
+	    		case DEFAULT:
+			case ENGLISH:
+			case SPANISH:
+			case CHINESE:
+			case FRENCH:
+			case GERMAN:
+			case ITALIAN:
+				f=new data("\\mathrm{arccosh} "); break;
+			case HUNGARIAN:
+				f=new data("\\mathrm{arcch} "); break;
+			default:
+				f=new data("\\mathrm{arccosh} "); break;
+		}
+	  >>)
+	| #(ARCSECH <<f=new data("\\mathrm{arcsech} ");>>)
+	| #(ARCCOSECH
+	  <<f=new data("\\mathrm{arccsch} ");
+	    	switch (lang)
+		{
+	    		case DEFAULT:
+			case ENGLISH:
+			case SPANISH:
+			case CHINESE:
+			case FRENCH:
+			case GERMAN:
+			case ITALIAN:
+				f=new data("\\mathrm{arccsch} "); break;
+			case HUNGARIAN:
+				f=new data("\\mathrm{arccosech} "); break;
+			default:
+				f=new data("\\mathrm{arccsch} "); break;
+		}
+	  >>)
+	| #(ARCTANH
+	  <<
+	    	switch (lang)
+		{
+	    		case DEFAULT:
+			case ENGLISH:
+			case SPANISH:
+			case CHINESE:
+			case FRENCH:
+			case GERMAN:
+			case ITALIAN:
+				f=new data("\\mathrm{arctanh} "); break;
+			case HUNGARIAN:
+				f=new data("\\mathrm{arctgh} "); break;
+			default:
+				f=new data("\\mathrm{arctanh} "); break;
+		}
+	  >>)
+	| #(ARCCOTH
+	  <<
+	    	switch (lang)
+		{
+	    		case DEFAULT:
+			case ENGLISH:
+			case SPANISH:
+			case CHINESE:
+			case FRENCH:
+			case GERMAN:
+			case ITALIAN:
+				f=new data("\\mathrm{arccoth} "); break;
+			case HUNGARIAN:
+				f=new data("\\mathrm{arcctgh} "); break;
+			default:
+				f=new data("\\mathrm{arccoth} "); break;
+		}
+	  >>)
+
+	| #(EXP <<f=new data("e^");>>)
+	| #(LOG <<f=new data("\\log ");>>)
+	| #(ARG <<f=new data("\\arg ");>>)
+	| #(IM <<f=new data("\\Im ");>>)
+	| #(RE <<f=new data("\\Re ");>>)
+	| #(CONJUGATE <<f=new data("\\overline ");>>)
+	| #(SQRT <<f=new data("\\sqrt ");>>)
+	| #(LN <<f=new data("\\ln ");>>)
+	| #(COMPLEMENTER <<f=new data("\\overline ");>>)
+	| #(TRANSPONATE <<f=new data("\\transponate");>>)
+	;
+
+gletter>[data *f]:
+	  #(a:ALPHA <<if ((a->getText())[0]=='A') f=new data("\\mathrm{A}");
+	              else f=new data("\\alpha");
+	            >>)
+	| #(b:BETA <<f=new data("\\beta");>>)
+	| #(c:GAMMA <<if ((c->getText())[0]=='G') f=new data("\\Gamma");
+	               else f=new data("\\gamma");
+	             >>)
+	| #(d:DELTA <<if ((d->getText())[0]=='D') f=new data("\\Delta");
+	              else f=new data("\\delta");
+	            >>)
+	| #(e:EPSILON <<f=new data("\\varepsilon");>>)
+	| #(z:ZETA <<f=new data("\\zeta");>>)
+	| #(et:ETA <<f=new data("\\eta");>>)
+	| #(t:THETA <<if ((t->getText())[0]=='T') f=new data("\\Theta");
+	              else f=new data("\\vartheta");
+	            >>)
+	| #(i:IOTA <<f=new data("\\iota");>>)
+	| #(k:KAPPA <<f=new data("\\kappa");>>)
+	| #(l:LAMBDA <<if ((l->getText())[0]=='L') f=new data("\\Lambda");
+	               else f=new data("\\lambda");
+	             >>)
+	| #(m:MU <<f=new data("\\mu");>>)
+	| #(n:NU <<f=new data("\\nu");>>)
+	| #(x:XI <<if ((x->getText())[0]=='X') f=new data("\\Xi");
+	           else f=new data("\\xi");
+	         >>)
+	| #(om:OMICRON <<f=new data("o");>>)
+	| #(p:PI <<if ((p->getText())[0]=='P') f=new data("\\Pi");
+	           else f=new data("\\pi");
+	         >>)
+	| #(r:RHO <<f=new data("\\varrho");>>)
+	| #(s:SIGMA <<if ((s->getText())[0]=='S') f=new data("\\Sigma");
+	              else f=new data("\\sigma");
+	            >>)
+	| #(ta:TAU <<f=new data("\\tau");>>)
+	| #(u:UPSILON <<if ((u->getText())[0]=='U') f=new data("\\Upsilon");
+	                else f=new data("\\upsilon");
+	              >>)
+	| #(ph:PHI <<if ((ph->getText())[0]=='P') f=new data("\\Phi");
+	             else f=new data("\\varphi");
+	          >>)
+	| #(ch:CHI <<f=new data("\\chi");>>)
+	| #(ps:PSI <<if ((ps->getText())[0]=='P') f=new data("\\Psi");
+	             else f=new data("\\psi");
+	           >>)
+	| #(o:OMEGA <<if ((o->getText())[0]=='O') f=new data("\\Omega");
+	              else f=new data("\\omega");
+	            >>)
+	;
+
+fact>[data *f]: <<data *g=NULL, *h=NULL, *j=NULL;>>
+	( #(n:NUM
+	  <<f=new data(n->getText());
+	    	char point='.', delimiter=',';
+	    	switch (lang)
+		{
+	    		case DEFAULT:
+			case ENGLISH:
+			case SPANISH:
+			case CHINESE:
+			case ITALIAN:
+				point='.'; delimiter=',';
+			break;
+			case HUNGARIAN:
+			case FRENCH:
+			case GERMAN:
+				point=','; delimiter=' ';
+			break;
+			default:
+				point='.'; delimiter=',';
+			break;
+		}
+		if (lang!=DEFAULT) numberchange(*(f->s), point, delimiter);
+	  >>)
+	| #(x:VARIABLE <<f=new data(x->getText());>>)
+	| gletter>[f]
+	| #(c:CONST
+	  <<char *constant=c->getText();
+	    if ((constant[0]=='e') || (constant[0]=='i')) constant[0]=(char) tolower(constant[0]);
+	    if (constant[0]!='%') f=new data(constant);
+	    else f=new data(++constant);
+	  >>)
+	| #(INFTY <<f=new data("\\infty");>>)
+	| #(UNDEFINED <<f=new data("\\not\\exists");>>)
+	| #(LBRACKET fact>[f] <<*(f->s)+="_{";>> log_expr>[g] <<*(f->s)+=*(g->s); delete g;>> {COMMA log_expr>[h] <<*(f->s)+=", "+*(h->s); delete h;>>} RBRACKET <<*(f->s)+="}";>>)
+	| #(UNDERSCORE fact>[f] <<*(f->s)+="_{";>> log_expr>[g] <<*(f->s)+=*(g->s); delete g;>> {COMMA log_expr>[h] <<*(f->s)+=", "+*(h->s); delete h;>>} <<*(f->s)+="}";>>)
+	| #(LPAREN log_expr>[f] RPAREN
+	  <<f->depth++;
+	    if (dynamic_parentheses)
+	      if (beauty_parentheses){
+	        switch (f->depth) {
+	          case 1:
+	            *(f->s)="\\left("+*(f->s)+"\\right)";
+	          break;
+	          case 2:
+	            *(f->s)="\\left["+*(f->s)+"\\right]";
+	          break;
+	          default:
+	            *(f->s)="\\left\\{"+*(f->s)+"\\right\\}";
+	          break;
+	        }
+	      } else { //dyn_par && !beauty_par
+	        *(f->s)="\\left("+*(f->s)+"\\right)";
+	      }
+	    else 
+	      if (beauty_parentheses){
+	        switch (f->depth) {
+	          case 1:
+	            *(f->s)="("+*(f->s)+")";
+	          break;
+	          case 2:
+	            *(f->s)="["+*(f->s)+"]";
+	          break;
+	          default:
+	            *(f->s)="\\{"+*(f->s)+"\\}";
+	          break;
+	        }
+	      } else *(f->s)="("+*(f->s)+")";
+	  >>)
+	| #(LBRACE set_expr>[f] <<*(f->s)="\\left\\{"+*(f->s)+"\\right\\} ";>>)
+	| #(UFUNCTION fact>[f] log_expr>[g] (COMMA log_expr>[h]<<*(g->s)+=", "+*(h->s); delete h;>>)* {log_expr>[j] <<*(f->s)+="^{"+*(j->s)+"}"; delete j;>>} <<*(f->s)+="("+*(g->s)+")"; delete g;>>)
+	| #(FUNCTION func>[f] {UNDERSCORELOG add_expr>[j] <<*(f->s)=*(f->s)+"_{"+*(j->s)+"}"; delete j;>>} add_expr>[g] {add_expr>[h]}
+	  <<if (h!=NULL)
+	    {
+	      if (*(f->s)=="\\overline ") *(f->s)=*(f->s)+"{"+*(g->s)+"}^{"+*(h->s)+"}";
+	      else if (*(f->s)=="\\transponate")
+	      *(f->s)="{"+*(g->s)+"^T}^{"+*(h->s)+"}";
+	      else
+	      *(f->s)=*(f->s)+"^{"+*(h->s)+"}"+"{"+*(g->s)+"}";
+	      delete h;
+	    } 
+	    else
+	      *(f->s)=*(f->s)+"{"+*(g->s)+"}";
+	    delete g;
+	  >>)
+	| #(ABS add_expr>[f] <<*(f->s)="|"+*(f->s)+"|";>>)
+	| #(FLOOR add_expr>[f] <<*(f->s)=" \\lfloor "+*(f->s)+" \\rfloor ";>>)
+	| #(CEIL add_expr>[f] <<*(f->s)=" \\lceil "+*(f->s)+" \\rceil ";>>)
+	| #(ROOT add_expr>[f] LPAREN add_expr>[g] RPAREN <<*(f->s)="\\sqrt["+*(f->s)+"]{"+*(g->s)+"}"; delete g;>>)
+	| #(FACTORIAL add_expr>[f] <<*(f->s)+="!";>>)
+	| #(DFACTORIAL add_expr>[f] <<*(f->s)+="!!";>>)
+	| #(ENUMERATE <<f=new data("");>> (set_expr>[g] <<*(f->s)+=*(g->s)+", ";>>)+ <<*(f->s)=(f->s)->substr(0,(f->s)->length()-2);>>)
+	| #(RBRACKET <<f=NULL;>>{add_expr>[f] <<*(f->s)="["+*(f->s)+"]";>>} <<if (f==NULL) f=new data("[]");>>)
+	| #(DOTS <<f=new data("\\ldots");>>)
+	| #(EMPTYSET <<f=new data("\\emptyset");>>)
+	)
+	;
+}
+

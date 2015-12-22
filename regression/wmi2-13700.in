@@ -1,0 +1,1 @@
+echo "(2xy-1)/(yx+1-(xy)^2) bb " | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r 

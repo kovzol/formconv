@@ -1,0 +1,1 @@
+echo "sqrt(1/4)-1/4*(-1)*(-8)-3sqrt((-2)*(-2))+sqrt((-2)*(1/4)*(-2))-sqrt((8)*(-1)*( bb " | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r 

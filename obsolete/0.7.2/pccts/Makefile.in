@@ -1,0 +1,277 @@
+#
+# PCCTS makefile for: formconv.g
+#
+# Created from: genmk -CC -class PP -project ../formconv -pccts_path /home/kovzol/wmi+pccts/pccts -trees formconv.g
+#
+###
+###  Updated by hand by Gábor Bakos.
+###  Modified for autoconf by Zoltán Kovács.
+###
+#
+# PCCTS release 1.33MR23
+# Project: ../formconv
+# C++ output
+# DLG scanner
+# ANTLR-defined token types
+#
+TOKENS = tokens.h
+#
+# The following filenames must be consistent with ANTLR/DLG flags
+DLG_FILE = $(SRCS)/parser.dlg
+ERR = err
+HDR_FILE =
+SCAN = DLGLexer
+PCCTS = @PCCTS_PATH@
+ANTLR_H = @ANTLR_HEADERS@
+SOR_H = @SORCERER_HEADERS@
+SOR_CPP = @SORCERER_CPPS@
+BIN = @PCCTS_BIN@
+ANTLR = $(BIN)/antlr
+DLG = $(BIN)/dlg
+SOR = $(BIN)/sor
+CFLAGS = -I. -I$(ANTLR_H) -I$(SOR_H) $(COTHER)
+AFLAGS = -CC -gt -mrhoist off $(AOTHER) -o $(SRCS)
+DFLAGS = -C2 -i -CC $(DOTHER) -o $(SRCS)
+OBJS = ../obj
+SRCS = ../src
+GRM = formconv.g
+SRC = $(SRCS)/formconv.cpp \
+	$(SRCS)/PP.cpp $(SOR_CPP)/STreeParser.cpp \
+	$(ANTLR_H)/AParser.cpp $(ANTLR_H)/DLexerBase.cpp \
+	$(ANTLR_H)/ASTBase.cpp $(ANTLR_H)/PCCTSAST.cpp \
+	$(ANTLR_H)/ATokenBuffer.cpp $(SRCS)/$(SCAN).cpp \
+	../formconv.c stringhu.cpp utility.cpp \
+	$(SRCS)/maple_out.cpp $(SRCS)/TreeParser_Maple_out.cpp \
+	$(SRCS)/latex_out.cpp $(SRCS)/TreeParser_LaTeX_out.cpp \
+	$(SRCS)/yacas_out.cpp $(SRCS)/TreeParser_yacas_out.cpp \
+	$(SRCS)/beautify.cpp $(SRCS)/TreeParser_Beautify.cpp \
+	$(SRCS)/maxima_out.cpp $(SRCS)/TreeParser_Maxima_out.cpp \
+	$(SRCS)/mathml_out.cpp $(SRCS)/TreeParser_MathML_out.cpp \
+	$(SRCS)/gnuplot_out.cpp $(SRCS)/TreeParser_gnuplot_out.cpp \
+	$(SRCS)/ccomplex_out.cpp $(SRCS)/TreeParser_ccomplex_out.cpp \
+	$(SRCS)/c_out.cpp $(SRCS)/TreeParser_c_out.cpp \
+	$(SRCS)/mupad_out.cpp $(SRCS)/TreeParser_MuPAD_out.cpp \
+	$(SRCS)/java_out.cpp $(SRCS)/TreeParser_Java_out.cpp \
+	$(SRCS)/html_out.cpp $(SRCS)/TreeParser_html_out.cpp \
+	$(SRCS)/verb_hu_out.cpp $(SRCS)/TreeParser_verb_hu_out.cpp \
+	$(SRCS)/expand.cpp $(SRCS)/TreeParser_Expand.cpp
+
+OBJ = $(OBJS)/formconv.o ../formconv.o \
+	$(OBJS)/PP.o $(OBJS)/STreeParser.o $(OBJS)/stringhu.o \
+	$(OBJS)/utility.o \
+	$(OBJS)/AParser.o $(OBJS)/DLexerBase.o \
+	$(OBJS)/ASTBase.o $(OBJS)/PCCTSAST.o \
+	 $(OBJS)/ATokenBuffer.o $(OBJS)/$(SCAN).o \
+	$(OBJS)/maple_out.o $(OBJS)/TreeParser_Maple_out.o \
+	$(OBJS)/latex_out.o $(OBJS)/TreeParser_LaTeX_out.o \
+	$(OBJS)/yacas_out.o $(OBJS)/TreeParser_yacas_out.o \
+	$(OBJS)/beautify.o $(OBJS)/TreeParser_Beautify.o \
+	$(OBJS)/maxima_out.o $(OBJS)/TreeParser_Maxima_out.o \
+	$(OBJS)/mathml_out.o $(OBJS)/TreeParser_MathML_out.o \
+	$(OBJS)/gnuplot_out.o $(OBJS)/TreeParser_gnuplot_out.o \
+	$(OBJS)/ccomplex_out.o $(OBJS)/TreeParser_ccomplex_out.o \
+	$(OBJS)/c_out.o $(OBJS)/TreeParser_c_out.o \
+	$(OBJS)/mupad_out.o $(OBJS)/TreeParser_MuPAD_out.o \
+	$(OBJS)/java_out.o $(OBJS)/TreeParser_Java_out.o \
+	$(OBJS)/html_out.o $(OBJS)/TreeParser_html_out.o \
+	$(OBJS)/verb_hu_out.o $(OBJS)/TreeParser_verb_hu_out.o \
+	$(OBJS)/expand.o $(OBJS)/TreeParser_Expand.o
+
+ANTLR_SPAWN = $(SRCS)/formconv.cpp $(SRCS)/PP.cpp \
+		$(SRCS)/PP.h $(DLG_FILE) $(SRCS)/$(TOKENS)
+
+DLG_SPAWN = $(SRCS)/$(SCAN).cpp $(SRCS)/$(SCAN).h
+ifdef CXX
+CCC = $(CXX)
+endif
+
+ifndef CCC
+CCC = CC
+endif
+
+
+../formconv : $(OBJS) $(SRCS) $(SRC) $(OBJ)
+	$(CCC) -o ../formconv $(CFLAGS) $(OBJ)
+
+../formconv.o : ../formconv.c $(SRCS)/$(TOKENS)
+	$(CCC) -c -o ../formconv.o $(CFLAGS) -x "c++" ../formconv.c
+
+$(OBJS) :
+	mkdir $(OBJS)
+
+$(SRCS) :
+	mkdir $(SRCS)
+
+$(OBJS)/formconv.o : $(SRCS)/$(TOKENS) $(SRCS)/$(SCAN).h $(SRCS)/formconv.cpp
+	$(CCC) -c $(CFLAGS) -o $(OBJS)/formconv.o $(SRCS)/formconv.cpp
+
+$(OBJS)/stringhu.o : stringhu.cpp
+	$(CCC) -c $(CFLAGS) -o $(OBJS)/stringhu.o stringhu.cpp
+
+$(OBJS)/utility.o : utility.cpp
+	$(CCC) -c $(CFLAGS) -o $(OBJS)/utility.o utility.cpp
+
+$(OBJS)/PP.o : $(SRCS)/$(TOKENS) $(SRCS)/$(SCAN).h $(SRCS)/PP.cpp $(SRCS)/PP.h
+	$(CCC) -c $(CFLAGS) -o $(OBJS)/PP.o $(SRCS)/PP.cpp
+
+$(OBJS)/$(SCAN).o : $(SRCS)/$(SCAN).cpp $(SRCS)/$(TOKENS)
+	$(CCC) -c $(CFLAGS) -o $(OBJS)/$(SCAN).o $(SRCS)/$(SCAN).cpp
+
+$(ANTLR_SPAWN) : $(GRM)
+	$(ANTLR) $(AFLAGS) $(GRM)
+
+$(DLG_SPAWN) : $(DLG_FILE)
+	$(DLG) $(DFLAGS) $(DLG_FILE)
+
+$(OBJS)/STreeParser.o : $(SOR_CPP)/STreeParser.cpp
+	$(CCC) -o $(OBJS)/STreeParser.o -c $(CFLAGS) $(SOR_CPP)/STreeParser.cpp
+
+$(OBJS)/AParser.o : $(ANTLR_H)/AParser.cpp
+	$(CCC) -c $(CFLAGS) -o $(OBJS)/AParser.o $(ANTLR_H)/AParser.cpp
+
+$(OBJS)/ATokenBuffer.o : $(ANTLR_H)/ATokenBuffer.cpp
+	$(CCC) -c $(CFLAGS) -o $(OBJS)/ATokenBuffer.o $(ANTLR_H)/ATokenBuffer.cpp
+
+$(OBJS)/DLexerBase.o : $(ANTLR_H)/DLexerBase.cpp
+	$(CCC) -c $(CFLAGS) -o $(OBJS)/DLexerBase.o $(ANTLR_H)/DLexerBase.cpp
+
+$(OBJS)/ASTBase.o : $(ANTLR_H)/ASTBase.cpp
+	$(CCC) -c $(CFLAGS) -o $(OBJS)/ASTBase.o $(ANTLR_H)/ASTBase.cpp
+
+$(OBJS)/PCCTSAST.o : $(ANTLR_H)/PCCTSAST.cpp
+	$(CCC) -c $(CFLAGS) -o $(OBJS)/PCCTSAST.o $(ANTLR_H)/PCCTSAST.cpp
+
+$(OBJS)/TreeParser_Maple_out.o:  $(SRCS)/TreeParser_Maple_out.cpp  $(SRCS)/TreeParser_Maple_out.h
+	$(CCC) -c $(CFLAGS) -o $(OBJS)/TreeParser_Maple_out.o  $(SRCS)/TreeParser_Maple_out.cpp
+
+$(OBJS)/maple_out.o: $(SRCS)/maple_out.cpp
+	$(CCC) -c $(CFLAGS) -o $(OBJS)/maple_out.o $(SRCS)/maple_out.cpp
+
+$(SRCS)/maple_out.cpp $(SRCS)/TreeParser_Maple_out.cpp $(SRCS)/TreeParser_Maple_out.h: maple_out.sor $(SRCS)/$(TOKENS)
+	$(SOR) -CPP -out-dir $(SRCS) maple_out.sor
+
+$(OBJS)/TreeParser_LaTeX_out.o:  $(SRCS)/TreeParser_LaTeX_out.cpp  $(SRCS)/TreeParser_LaTeX_out.h
+	$(CCC) -c $(CFLAGS) -o $(OBJS)/TreeParser_LaTeX_out.o  $(SRCS)/TreeParser_LaTeX_out.cpp
+
+$(OBJS)/latex_out.o: $(SRCS)/latex_out.cpp
+	$(CCC) -c $(CFLAGS) -o $(OBJS)/latex_out.o $(SRCS)/latex_out.cpp
+
+$(SRCS)/latex_out.cpp $(SRCS)/TreeParser_LaTeX_out.cpp $(SRCS)/TreeParser_LaTeX_out.h: latex_out.sor utility.h $(SRCS)/$(TOKENS)
+	$(SOR) -CPP -out-dir $(SRCS) latex_out.sor
+
+$(OBJS)/TreeParser_yacas_out.o:  $(SRCS)/TreeParser_yacas_out.cpp  $(SRCS)/TreeParser_yacas_out.h
+	$(CCC) -c $(CFLAGS) -o $(OBJS)/TreeParser_yacas_out.o  $(SRCS)/TreeParser_yacas_out.cpp
+
+$(OBJS)/yacas_out.o: $(SRCS)/yacas_out.cpp
+	$(CCC) -c $(CFLAGS) -o $(OBJS)/yacas_out.o $(SRCS)/yacas_out.cpp
+
+$(SRCS)/yacas_out.cpp $(SRCS)/TreeParser_yacas_out.cpp $(SRCS)/TreeParser_yacas_out.h: yacas_out.sor $(SRCS)/$(TOKENS)
+	$(SOR) -CPP -out-dir $(SRCS) yacas_out.sor
+
+$(OBJS)/TreeParser_Beautify.o:  $(SRCS)/TreeParser_Beautify.cpp  $(SRCS)/TreeParser_Beautify.h
+	$(CCC) -c $(CFLAGS) -o $(OBJS)/TreeParser_Beautify.o  $(SRCS)/TreeParser_Beautify.cpp
+
+$(OBJS)/beautify.o: $(SRCS)/beautify.cpp
+	$(CCC) -c $(CFLAGS) -o $(OBJS)/beautify.o $(SRCS)/beautify.cpp
+
+$(SRCS)/beautify.cpp $(SRCS)/TreeParser_Beautify.cpp $(SRCS)/TreeParser_Beautify.h: beautify.sor $(SRCS)/$(TOKENS)
+	$(SOR) -CPP -out-dir $(SRCS) -transform beautify.sor
+
+$(OBJS)/TreeParser_Expand.o:  $(SRCS)/TreeParser_Expand.cpp  $(SRCS)/TreeParser_Expand.h
+	$(CCC) -c $(CFLAGS) -o $(OBJS)/TreeParser_Expand.o  $(SRCS)/TreeParser_Expand.cpp
+
+$(OBJS)/expand.o: $(SRCS)/expand.cpp
+	$(CCC) -c $(CFLAGS) -o $(OBJS)/expand.o $(SRCS)/expand.cpp
+
+$(SRCS)/expand.cpp $(SRCS)/TreeParser_Expand.cpp $(SRCS)/TreeParser_Expand.h: expand.sor $(SRCS)/$(TOKENS)
+	$(SOR) -CPP -out-dir $(SRCS) -transform expand.sor
+
+$(OBJS)/TreeParser_Maxima_out.o:  $(SRCS)/TreeParser_Maxima_out.cpp  $(SRCS)/TreeParser_Maxima_out.h
+	$(CCC) -c $(CFLAGS) -o $(OBJS)/TreeParser_Maxima_out.o  $(SRCS)/TreeParser_Maxima_out.cpp
+
+$(OBJS)/maxima_out.o: $(SRCS)/maxima_out.cpp
+	$(CCC) -c $(CFLAGS) -o $(OBJS)/maxima_out.o $(SRCS)/maxima_out.cpp
+
+$(SRCS)/maxima_out.cpp $(SRCS)/TreeParser_Maxima_out.cpp $(SRCS)/TreeParser_Maxima_out.h: maxima_out.sor $(SRCS)/$(TOKENS)
+	$(SOR) -CPP -out-dir $(SRCS) maxima_out.sor
+
+$(OBJS)/TreeParser_MathML_out.o:  $(SRCS)/TreeParser_MathML_out.cpp  $(SRCS)/TreeParser_MathML_out.h
+	$(CCC) -c $(CFLAGS) -o $(OBJS)/TreeParser_MathML_out.o  $(SRCS)/TreeParser_MathML_out.cpp
+
+$(OBJS)/mathml_out.o: $(SRCS)/mathml_out.cpp
+	$(CCC) -c $(CFLAGS) -o $(OBJS)/mathml_out.o $(SRCS)/mathml_out.cpp
+
+$(SRCS)/mathml_out.cpp $(SRCS)/TreeParser_MathML_out.cpp $(SRCS)/TreeParser_MathML_out.h: mathml_out.sor $(SRCS)/$(TOKENS)
+	$(SOR) -CPP -out-dir $(SRCS) mathml_out.sor
+
+$(OBJS)/TreeParser_gnuplot_out.o:  $(SRCS)/TreeParser_gnuplot_out.cpp  $(SRCS)/TreeParser_gnuplot_out.h
+	$(CCC) -c $(CFLAGS) -o $(OBJS)/TreeParser_gnuplot_out.o  $(SRCS)/TreeParser_gnuplot_out.cpp
+
+$(OBJS)/TreeParser_ccomplex_out.o:  $(SRCS)/TreeParser_ccomplex_out.cpp  $(SRCS)/TreeParser_ccomplex_out.h
+	$(CCC) -c $(CFLAGS) -o $(OBJS)/TreeParser_ccomplex_out.o  $(SRCS)/TreeParser_ccomplex_out.cpp
+
+$(OBJS)/TreeParser_c_out.o:  $(SRCS)/TreeParser_c_out.cpp  $(SRCS)/TreeParser_c_out.h
+	$(CCC) -c $(CFLAGS) -o $(OBJS)/TreeParser_c_out.o  $(SRCS)/TreeParser_c_out.cpp
+
+$(OBJS)/gnuplot_out.o: $(SRCS)/gnuplot_out.cpp
+	$(CCC) -c $(CFLAGS) -o $(OBJS)/gnuplot_out.o $(SRCS)/gnuplot_out.cpp
+
+$(SRCS)/gnuplot_out.cpp $(SRCS)/TreeParser_gnuplot_out.cpp $(SRCS)/TreeParser_gnuplot_out.h: gnuplot_out.sor $(SRCS)/$(TOKENS)
+	$(SOR) -CPP -out-dir $(SRCS) gnuplot_out.sor
+
+$(OBJS)/ccomplex_out.o: $(SRCS)/ccomplex_out.cpp
+	$(CCC) -c $(CFLAGS) -o $(OBJS)/ccomplex_out.o $(SRCS)/ccomplex_out.cpp
+
+$(SRCS)/ccomplex_out.cpp $(SRCS)/TreeParser_ccomplex_out.cpp $(SRCS)/TreeParser_ccomplex_out.h: ccomplex_out.sor $(SRCS)/$(TOKENS)
+	$(SOR) -CPP -out-dir $(SRCS) ccomplex_out.sor
+
+$(OBJS)/c_out.o: $(SRCS)/c_out.cpp
+	$(CCC) -c $(CFLAGS) -o $(OBJS)/c_out.o $(SRCS)/c_out.cpp
+
+$(SRCS)/c_out.cpp $(SRCS)/TreeParser_c_out.cpp $(SRCS)/TreeParser_c_out.h: c_out.sor $(SRCS)/$(TOKENS)
+	$(SOR) -CPP -out-dir $(SRCS) c_out.sor
+
+$(OBJS)/TreeParser_MuPAD_out.o:  $(SRCS)/TreeParser_MuPAD_out.cpp  $(SRCS)/TreeParser_MuPAD_out.h
+	$(CCC) -c $(CFLAGS) -o $(OBJS)/TreeParser_MuPAD_out.o  $(SRCS)/TreeParser_MuPAD_out.cpp
+
+$(OBJS)/mupad_out.o: $(SRCS)/mupad_out.cpp
+	$(CCC) -c $(CFLAGS) -o $(OBJS)/mupad_out.o $(SRCS)/mupad_out.cpp
+
+$(SRCS)/mupad_out.cpp $(SRCS)/TreeParser_MuPAD_out.cpp $(SRCS)/TreeParser_MuPAD_out.h: mupad_out.sor $(SRCS)/$(TOKENS)
+	$(SOR) -CPP -out-dir $(SRCS) mupad_out.sor
+
+$(OBJS)/TreeParser_Java_out.o:  $(SRCS)/TreeParser_Java_out.cpp  $(SRCS)/TreeParser_Java_out.h
+	$(CCC) -c $(CFLAGS) -o $(OBJS)/TreeParser_Java_out.o  $(SRCS)/TreeParser_Java_out.cpp
+
+$(OBJS)/java_out.o: $(SRCS)/java_out.cpp
+	$(CCC) -c $(CFLAGS) -o $(OBJS)/java_out.o $(SRCS)/java_out.cpp
+
+$(SRCS)/java_out.cpp $(SRCS)/TreeParser_Java_out.cpp $(SRCS)/TreeParser_Java_out.h: java_out.sor $(SRCS)/$(TOKENS)
+	$(SOR) -CPP -out-dir $(SRCS) java_out.sor
+
+$(OBJS)/TreeParser_html_out.o:  $(SRCS)/TreeParser_html_out.cpp  $(SRCS)/TreeParser_html_out.h
+	$(CCC) -c $(CFLAGS) -o $(OBJS)/TreeParser_html_out.o  $(SRCS)/TreeParser_html_out.cpp
+
+$(OBJS)/html_out.o: $(SRCS)/html_out.cpp
+	$(CCC) -c $(CFLAGS) -o $(OBJS)/html_out.o $(SRCS)/html_out.cpp
+
+$(SRCS)/html_out.cpp $(SRCS)/TreeParser_html_out.cpp $(SRCS)/TreeParser_html_out.h: html_out.sor utility.h $(SRCS)/$(TOKENS)
+	$(SOR) -CPP -out-dir $(SRCS) html_out.sor
+
+$(OBJS)/TreeParser_verb_hu_out.o:  $(SRCS)/TreeParser_verb_hu_out.cpp  $(SRCS)/TreeParser_verb_hu_out.h
+	$(CCC) -c $(CFLAGS) -o $(OBJS)/TreeParser_verb_hu_out.o  $(SRCS)/TreeParser_verb_hu_out.cpp
+
+$(OBJS)/verb_hu_out.o: $(SRCS)/verb_hu_out.cpp
+	$(CCC) -c $(CFLAGS) -o $(OBJS)/verb_hu_out.o $(SRCS)/verb_hu_out.cpp
+
+$(SRCS)/verb_hu_out.cpp $(SRCS)/TreeParser_verb_hu_out.cpp $(SRCS)/TreeParser_verb_hu_out.h: verb_hu_out.sor $(SRCS)/$(TOKENS)
+	$(SOR) -CPP -out-dir $(SRCS) verb_hu_out.sor
+
+
+clean:
+	rm -f $(OBJS)/*.o core ../formconv.o ../formconv
+
+scrub: clean
+	rm -f $(ANTLR_SPAWN) $(DLG_SPAWN)
+	rm -rf $(SRCS) $(OBJS)
+

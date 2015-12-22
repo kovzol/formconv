@@ -1,0 +1,2 @@
+#!/bin/sh
+echo "Egy derékszög%u0171 háromszög gamma szöge 60 f bb " | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r 

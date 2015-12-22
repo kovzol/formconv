@@ -1,0 +1,1 @@
+echo "1617/5000*(5000/4809) bb " | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r 

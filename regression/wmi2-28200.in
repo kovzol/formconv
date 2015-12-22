@@ -1,0 +1,1 @@
+echo "atan(sqrt(2x)+1)+arc bb " | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r 

@@ -1,0 +1,1 @@
+echo "151 mod 8" | $F -x aa,.. -x bb,$ -l simple -I intuitive -O maxima -r 

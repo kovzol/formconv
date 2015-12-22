@@ -1,0 +1,1 @@
+echo "sin(2x+pi/3)" | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r

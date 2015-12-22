@@ -1,0 +1,1 @@
+echo "2,(x^2-7x+10)/(x^-5x+6 bb " | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r 

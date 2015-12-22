@@ -1,0 +1,108 @@
+Formula Converter Library
+=========================
+
+
+About this version
+------------------
+
+This is version 0.9 of the formconv formula converter which is a
+successor of the 0.8.x series. What's new in 0.9 is that it has a more
+unified documentation and development model --- we made some cleanups
+during the development of 0.8.x and finally we released 0.9.0. ;-)
+
+Version 0.8 was a completely rewritten version of 0.7.2 and was not
+fully compatible with it. 0.8 and above is a much better implementation
+of the formula conversion problem, and is higher configurable than the
+older versions. We continously work to add all features from 0.7.2 into
+0.8 and above, because some of them currently not yet available (e.g.
+"pronouncing" formulas)
+
+If you want to use WebMathematics Interactive 1.x, you may want to use
+version 0.7.2.1. In case of using 2.x, version >= 0.8.3 is suggested.
+
+The new version is implemented using ANTLR-2.7.x. (Use version 2.7.7
+or better for best results.)
+
+To use version 0.7.2, go to the obsolete/0.7.2/ directory and
+read the README file for details.
+
+
+How to use the library
+----------------------
+
+You can use this library to create an application, which may take
+transformations on formulae. There are 3 (useful) example
+transformations in this package:
+
+PresentationTransform - This is useful if you want to create for
+example LaTeX output, or MathML presentation.
+			
+ContentTransform, ContentTransform2 - These are responsible for creating
+the proper output for CAS-es, or a MathML content. These transformations
+simplify the structure of the formula and expand the contractions. The
+proper order of use is: parser, ContentTransform, ContentTransform2.
+
+To create another formula from the input you have to parse it. (See the
+src/cpp for the examples of use.) Currently just IntuitiveParser, 
+LispParser, and ContentMathMLInParser are ready to use. After the input
+is parsed, you can take transformations on them. After the transformations
+you can create an output from it.
+(Examples are in src/cpp.)
+
+You can also use the formconv library as a production quality shared
+library. A short example is provided in the test/ directory.
+
+Good work!
+
+
+How to use formconv
+-------------------
+
+After building the sources, you will find bin/formconv. This is a
+command line interface for the library.
+
+Example 1. You want to convert one of your formula in LaTeX to content
+MathML. The following command will create it for you.
+
+-------------------------------------8X-----------------------------------
+$ bin/formconv -O mathml --header "<?xml version=\"1.0" \
+  encoding="UTF-8" ?>" \
+  --prefix "<math xmlns=\"http://www.w3c.org/1998/Math/MathML\">" \
+  --suffix "</math>" -o myFirstMathML.xml
+  \sum_{j=2}^n{x^j}
+-------------------------------------8X-----------------------------------
+
+Note. After the last line please hit EOF: Ctrl-D (on UNIX) or
+Ctrl-Z (Windows/DOS).
+
+Example 2. You want to convert your MathML file to a C file. The
+following program will make it.
+
+-------------------------------------8X-----------------------------------
+$ bin/formconv -O c --header "#include <math.h>
+#include <stdio.h>
+#define FC_COMPLEX_TYPE myComplex
+#define FC_REAL_TYPE double
+#define FC_RATIONAL_TYPE myRational
+#define FC_INTEGER_TYPE long int
+#define FC_VAR_TYPE double
+" --prefix "
+int main(int arg, char **argv)
+{
+  printf(\"%g\\n\"," --suffix ")
+}" -o myFirstCProgram.c -i myFirstMathML.xml
+-------------------------------------8X-----------------------------------
+
+Note. The above is one command. If you want to compile, try it with 
+
+$ gcc -o myFirstCProgram myFirstCProgram.c
+
+To run it:
+
+$ ./myFirstCProgram
+
+The abilities of the program can be asked with:
+
+$ bin/formconv --help
+
+We hope you like this interface.

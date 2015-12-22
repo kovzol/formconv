@@ -1,0 +1,1 @@
+echo "(2x^3+7x^2+2x+10)/(2x+7)" | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r

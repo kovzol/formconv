@@ -1,0 +1,1 @@
+echo "1-(b+a-x)/sqrt(b^2+2a^2+2*b*a-2*b*x-2*a*x)" | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r

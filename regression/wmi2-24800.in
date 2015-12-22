@@ -1,0 +1,1 @@
+echo "9+5+5895,5+ aa " | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r 

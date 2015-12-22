@@ -1,0 +1,1 @@
+echo "[[13,1,(-24) bb ],[(-6),(-2),17]]" | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r 

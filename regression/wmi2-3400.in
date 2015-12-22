@@ -1,0 +1,1 @@
+echo "123143x=123x^2-1 bb " | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r 

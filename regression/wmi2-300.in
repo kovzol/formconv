@@ -1,0 +1,1 @@
+echo "0.5*ln( bb " | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r 

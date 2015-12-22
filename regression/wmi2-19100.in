@@ -1,0 +1,1 @@
+echo "5+3*log_10(00100 bb )" | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r 

@@ -1,0 +1,1 @@
+echo "pi*sqrt(78)+log_10(5+3*8) bb " | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r 

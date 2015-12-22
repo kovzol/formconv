@@ -1,0 +1,3 @@
+TMP="`echo "<math><apply><power/><cn type='complex-cartesian'>2<sep/>-16</cn><ci>n</ci></apply></math>" | $F -I contentMathML -O maxima`"
+TMP="$TMP `echo "<math><apply><power/><cn type='complex-polar'>2<sep/>-16</cn><ci>n</ci></apply></math>" | $F -I contentMathML -O maxima`"
+echo $TMP

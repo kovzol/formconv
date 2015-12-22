@@ -1,0 +1,1 @@
+echo "(1.16)/(2,5043s^(4)+3.21s^(3)+3.21s^(.) bb " | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r 

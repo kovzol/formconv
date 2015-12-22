@@ -1,0 +1,31 @@
+# Copyright 2004 Zoltan Kovacs (kovzol@math.u-szeged.hu)
+# Copyright 2004 Kalin Kozhuharov (kalin@thinrope.net)
+# Copyright 2004 Gabor Bakos (baga@users.sourceforge.net)
+# Created by Kalin Kozhuharov and Zoltan Kovacs
+# Modified by Gabor Bakos
+
+
+SRC_DIRS = C MathML
+
+LDFLAGS = @LDFLAGS@
+CXXFLAGS = @CXXFLAGS@
+
+all: complex
+	cd C && $(MAKE) $@
+	cd MathML && $(MAKE) $@
+
+complex: complex.o
+	@CXX@ -o complex complex.o -lformconv `@ANTLR_CONFIG@ --libs` $(LDFLAGS)
+
+complex.o: complex.cpp
+	@CXX@ complex.cpp -I /usr/local/include/formconv `@ANTLR_CONFIG@ --cflags` -c -o complex.o $(CXXFLAGS)
+
+clean:
+	rm -f complex complex.o
+
+distclean: clean
+	cd C && $(MAKE) $@
+	cd MathML && $(MAKE) $@
+	rm -f config.log config.status Makefile 
+
+.PHONY: distclean

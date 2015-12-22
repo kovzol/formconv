@@ -1,0 +1,1 @@
+echo "5.147-0 bb " | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r 

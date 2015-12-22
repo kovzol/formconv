@@ -1,0 +1,1 @@
+echo "1/(1-y)^2" | $F -x aa,.. -x bb,$ -l simple -I intuitive -O maxima -r 

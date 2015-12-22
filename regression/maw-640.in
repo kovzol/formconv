@@ -1,0 +1,1 @@
+echo "(4x^3-3x+19)/((x-5)(x^2+1))" | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r

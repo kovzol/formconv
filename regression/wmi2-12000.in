@@ -1,0 +1,1 @@
+echo "2/pi *sin(pi x)+2/(3pi) *sin(pi 3x)+2/(4pi) *sin(pi 4x)+2/(5pi) *sin(pi 5x)+ aa " | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r 

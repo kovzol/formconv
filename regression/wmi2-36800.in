@@ -1,0 +1,1 @@
+echo "sin(sin(sin(sin(cos(cos(cos(cos(tan(tan(tan(tan(tan(ln(ln( aa )))))))))))))))" | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r 

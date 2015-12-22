@@ -1,0 +1,1 @@
+echo "3*sqrt(pi)*erf(sqrt(c)*x)/(8*c^(5/2))-(2*c*x^3+3*x)*e^-(c*x^2)/(4*c^2)" | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r 

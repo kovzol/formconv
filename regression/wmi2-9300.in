@@ -1,0 +1,1 @@
+echo "[[2,1],[0,1]]^^2" | $F -x aa,.. -x bb,$ -l simple -I intuitive -O maxima -r 

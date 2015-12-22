@@ -1,0 +1,1 @@
+echo "(3*5*7*11*13*17*19*23*29)^(2)+4" | $F -x aa,.. -x bb,$ -l simple -I intuitive -O maxima -r 

@@ -1,0 +1,113 @@
+(This file is generated with `formconv -h'.)
+
+USAGE: 
+
+         formconv  [-V <string>] ...  [-x <string>] ...  [-L <hungarian
+                   |english|german|french|simple>] [-l <hungarian|english
+                   |german|french|simple>] [-r] [-s <string>] [-p <string>]
+                   [-F <string>] [-H <string>] [-A <string>] ...  [-f
+                   <string>] ...  [-n] [-D] [-a] [-b] [-t <space|automatic
+                   |cdot>] [-d] [-O <c|ccomplex|complexcompute|java|latex
+                   |mathematica|mathml|lisp|maxima|maple|gnuplot|mupad|html
+                   |debug|debugContent>] [-I <intuitive|contentMathML
+                   |lisp>] [-o <string>] [-i <string>] [--] [-v] [-h]
+
+
+Where: 
+
+   -V <string>,  --variable <string>  (accepted multiple times)
+     (value required)  Sets a variable in a computing output. (Ex.: -V x=4)
+     (Please do not use spaces in the expression.)
+
+   -x <string>,  --changename <string>  (accepted multiple times)
+     (value required)  Changes the names of the variables/parameters to the
+     given. (Ex.: -x x,x4 will change all x variable to x4) (Please use
+     just one comma per rule.)
+
+   -L <hungarian|english|german|french|simple>,  --outputlanguage
+      <hungarian|english|german|french|simple>
+     (value required)  Uses this language's specialties in the output.
+
+   -l <hungarian|english|german|french|simple>,  --inputlanguage <hungarian
+      |english|german|french|simple>
+     (value required)  Uses this language's specialties in the input.
+
+   -r,  --forceFloatDiv
+     Always selects the floating point division for the output of
+     applicable.
+
+   -s <string>,  --suffix <string>
+     (value required)  Prints this text after each formula.
+
+   -p <string>,  --prefix <string>
+     (value required)  Prints this text before each formula.
+
+   -F <string>,  --footer <string>
+     (value required)  Prints this text after the output.
+
+   -H <string>,  --header <string>
+     (value required)  Prints this text before the output.
+
+   -A <string>,  --allowedletters <string>  (accepted multiple times)
+     (value required)  Just these letters of accepted as variables or
+     parameters in the input.
+
+   -f <string>,  --functionnames <string>  (accepted multiple times)
+     (value required)  Use these names as user defined function names. (In
+     input you are/will able to define functions whith other names.)
+
+   -n,  --nolongvars
+     Forbids the use of variable/parameter names longer than 1 character.
+
+   -D,  --disallowcomputingfunctions
+     Forbids the use of functions like sum, prod, int, diff...
+
+   -a,  --autosimplify
+     Does not remove the unnecessary parentheses from the formulae.
+
+   -b,  --beautyparentheses
+     Uses in presentation outputs (, ), [, ], {, } instead of just (, ).
+
+   -t <space|automatic|cdot>,  --times <space|automatic|cdot>
+     (value required)  Prints space in presentation outputs instead of *,
+     or \cdot, depending on the value.
+
+   -d,  --dynamicparentheses
+     Uses in LaTeX output \left(, and \right), ...
+
+   -O <c|ccomplex|complexcompute|java|latex|mathematica|mathml|lisp|maxima
+      |maple|gnuplot|mupad|html|debug|debugContent>,  --ouputformat <c
+      |ccomplex|complexcompute|java|latex|mathematica|mathml|lisp|maxima
+      |maple|gnuplot|mupad|html|debug|debugContent>
+     (value required)  Specifies the format of the output.
+
+   -I <intuitive|contentMathML|lisp>,  --inputformat <intuitive
+      |contentMathML|lisp>
+     (value required)  Specifies the format of the input.
+
+   -o <string>,  --outputfile <string>
+     (value required)  Specifies the output filename. (Default: standard
+     output)
+
+   -i <string>,  --inputfile <string>
+     (value required)  Specifies the input filename. (Default: standard
+     input)
+
+   --,  --ignore_rest
+     Ignores the rest of the labeled arguments following this flag.
+
+   -v,  --version
+     Displays version information and exits.
+
+   -h,  --help
+     Displays usage information and exits.
+
+
+   Formula Converter (formconv)
+
+   Copyright (C) 2003-2010 Zoltan Kovacs
+   <kovzol@math.u-szeged.hu>
+
+   Copyright (C) 2003-2010 Gabor Bakos <baga@users.sourceforge.net>
+
+   This is free software with ABSOLUTELY NO WARRANTY.

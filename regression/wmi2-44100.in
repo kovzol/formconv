@@ -1,0 +1,1 @@
+echo "x^4+2x^3-2x^2-6x+7, -infinity bb " | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r 

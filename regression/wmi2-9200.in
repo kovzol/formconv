@@ -1,0 +1,1 @@
+echo "209715200000000000000000064/(176)" | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r 

@@ -1,0 +1,95 @@
+#                                               -*- Autoconf -*-
+# Process this file with autoconf to produce a configure script.
+
+AC_PREREQ(2.57)
+AC_INIT(formconv, 0.9.1, kovzol@math.u-szeged.hu)
+FCVERSION=`echo $PACKAGE_VERSION | awk -F . '{print $3*100+$2*10000+$1*1000000}'`
+AC_CONFIG_HEADER(src/cpp/h/fcversion.h)
+AC_DEFINE_UNQUOTED(FCVERSION_STRING, "$PACKAGE_VERSION")
+AC_DEFINE_UNQUOTED(FCVERSION, $FCVERSION)
+
+AC_LANG(C++)
+AC_CONFIG_SRCDIR([src/cpp/c.cpp])
+
+# Checks for programs.
+AC_PROG_CXX
+AC_PROG_CC
+AC_PROG_MAKE_SET
+AC_PROG_INSTALL
+AC_PROG_LN_S
+AC_PATH_PROGS([ANTLR], [antlr runantlr], ,
+ [$PATH:../bin])
+AC_PATH_PROG([ANTLR_CONFIG], [antlr-config], ,
+ [$PATH:../bin])
+
+if test "$ac_cv_path_ANTLR" = ""; then
+ AC_MSG_ERROR([antlr is missing, download it from http://www.antlr.org])
+fi
+
+if test "$ac_cv_path_ANTLR_CONFIG" = ""; then
+ AC_MSG_ERROR([antlr-config is missing, check your antlr installation])
+fi
+
+# Checks for libraries.
+
+# Checks for header files.
+AC_HEADER_STDC
+AC_CHECK_HEADERS([stdlib.h antlr/AST.hpp tclap/Arg.h boost/rational.hpp gmpxx.h])
+
+if test "$ac_cv_header_antlr_AST_hpp" = "no"; then
+ AC_MSG_ERROR([antlr library is missing, check your antlr installation])
+fi
+
+if test "$ac_cv_header_tclap_Arg_h" = "no"; then
+ AC_MSG_ERROR([tclap library is missing, download it from http://tclap.sf.net])
+fi
+
+if test "$ac_cv_header_boost_rational_hpp" = "no"; then
+ AC_MSG_ERROR([boost library is missing, download it from http://www.boost.org])
+fi
+
+if test "$ac_cv_header_gmpxx_h" = "no"; then
+ AC_MSG_ERROR([gmp library is missing, download it from http://gmplib.org])
+fi
+
+
+# Checks for typedefs, structures, and compiler characteristics.
+AC_HEADER_STDBOOL
+AC_C_CONST
+AC_C_INLINE
+
+# Checks for library functions.
+AC_FUNC_ERROR_AT_LINE
+AC_CHECK_FUNCS([pow sqrt])
+
+# Checks for versions.
+AC_DEFUN(PROG_BROKEN_GCC,
+[AC_CACHE_CHECK(if gcc is broken for formconv_prepare, ac_broken_gcc,
+[
+ac_broken_gcc=no
+gcc --version | head -1 | grep " 4\.0\.\| 3\.3\." >/dev/null 2>/dev/null && {
+ ac_broken_gcc=yes
+ AC_DEFINE(BROKEN_GCC)
+ }
+])])
+
+AC_DEFUN(PROG_BROKEN_ANTLR,
+[AC_CACHE_CHECK(if antlr is broken for the input "sqrtsqrtx", ac_broken_antlr,
+[
+ac_broken_antlr=no
+antlr-config --version | head -1 | grep 2.7.6 >/dev/null 2>/dev/null && {
+ ac_broken_antlr=yes
+ AC_DEFINE(BROKEN_ANTLR) # not used yet
+ }
+])])
+
+
+
+
+PROG_BROKEN_GCC
+PROG_BROKEN_ANTLR
+AC_MSG_WARN(antlr should be >= 2.7.7 to make some special formulas work)
+
+AC_CONFIG_FILES([Makefile control-dapper control-feisty control-etch])
+AC_OUTPUT
+

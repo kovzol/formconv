@@ -1,0 +1,1 @@
+echo "22492000*100" | $F -x aa,.. -x bb,$ -l simple -I intuitive -O maxima -r 

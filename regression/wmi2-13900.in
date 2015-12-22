@@ -1,0 +1,1 @@
+echo "(^(3)+112) mod 125 bb " | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r 

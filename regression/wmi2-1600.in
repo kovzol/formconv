@@ -1,0 +1,1 @@
+echo "10^(pi/(362229999955555 bb ))" | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r 

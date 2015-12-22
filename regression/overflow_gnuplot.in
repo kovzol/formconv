@@ -1,0 +1,3 @@
+TMP="`echo "<math><cn>6.123456789*10^-16</cn></math>" | $F -I contentMathML -O gnuplot`"
+TMP="$TMP `echo "<math><cn type='rational'>6123456789<sep/>10000000000000000000000000</cn></math>" | $F -I contentMathML -O gnuplot`"
+echo $TMP

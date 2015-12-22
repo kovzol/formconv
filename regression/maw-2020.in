@@ -1,0 +1,1 @@
+echo "cos(x)/(1+2sinx)" | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r

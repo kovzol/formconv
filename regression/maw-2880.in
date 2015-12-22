@@ -1,0 +1,1 @@
+echo "x^3*exp(x)^2" | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r

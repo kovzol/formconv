@@ -1,0 +1,1 @@
+echo "(1+(2/x)-(7/x^2))/((1/x)+(2/x^2)),-infini bb " | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r 

@@ -1,0 +1,1 @@
+echo "89999999999*888888 bb " | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r 

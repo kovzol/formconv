@@ -1,0 +1,1 @@
+echo "4*x^3+6*x^2-4*x-6,  bb " | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r 

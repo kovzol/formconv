@@ -1,0 +1,1 @@
+echo "17^() mod 19 bb " | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r 

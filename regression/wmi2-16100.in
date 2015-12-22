@@ -1,0 +1,1 @@
+echo "(3pi)/4-2/pi*cos(x)-sin(x)-sin( bb " | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r 

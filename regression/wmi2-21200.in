@@ -1,0 +1,1 @@
+echo "6,25*6,25-5* aa " | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r 

@@ -1,0 +1,20 @@
+#!/bin/sh
+package=formconv
+currentdir=`pwd`
+version=@PACKAGE_VERSION@
+machine=`uname -p`
+rm -f $package-$version-$machine.tar.gz
+rm -f -R /tmp/$package-$version-$machine.tar.gz
+mkdir /tmp/$package-$version/
+install -d /tmp/$package-$version/usr/bin/
+install -d /tmp/$package-$version/usr/share/man/man1/
+install -d /tmp/$package-$version/usr/share/doc/packages/formconv/
+cp formconv /tmp/$package-$version/usr/bin
+cd doc
+cp formconv.1 /tmp/$package-$version/usr/share/man/man1/
+cp formconv.lyx /tmp/$package-$version/usr/share/doc/packages/formconv
+cd ..
+cp README ChangeLog HISTORY /tmp/$package-$version/usr/share/doc/packages/formconv
+cd /tmp
+tar czvf $currentdir/$package-$version-$machine.tar.gz $package-$version
+rm -f -R /tmp/$package-$version

@@ -1,0 +1,1 @@
+echo "10+10+ aa " | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r 

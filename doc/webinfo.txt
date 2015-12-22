@@ -1,0 +1,83 @@
+formconv
+========
+
+This software is a general formula converter. Its development started in
+2003, primarily for a helper backend for formula conversion for
+WebMathematics Interactive. The first version was based on a Calculator
+Demo written by Ferenc Havasi in PCCTS as a tutorial for the lectures at
+University of Szeged, Department of Informatics, back in 2000. Later it
+was modified by Zoltán Kovács, primary author and former maintainer of
+the project. Even later the project has been forwarded to Gábor Bakos
+who wrote his master thesis about formula conversion theory and praxis.
+Now it is used in several projects like
+
+  * WMI1 and WMI2,
+  * Robert Mařík's mathematical assistant,
+  * Martin Dózsa's unimaxima,
+  * the Real-Time Zooming Math Engine
+  * and XaoS (currently it is not used in production).
+
+DOWNLOADS
+---------
+
+As usual, scientific software are free of charge. You can download the
+most recent and all earlier versions from SourceForge.
+
+It is important to know that there are two kinds of versions of
+formconv. Version 0.7 is used for WMI1 and version 0.8 (and above) is
+used for WMI2. 0.8+ is more stable and has many features which are not
+included in 0.7, however, WMI1 cannot use version 0.8 because
+incompatibility problems. (0.8 uses a new interface with different
+options.)
+
+The latest version is 0.9.1 (2010 February).
+
+Debian/Ubuntu users can harness advantages of installation from a
+repository. Just add this line to /etc/apt/sources.list:
+
+deb http://matek.hu/linux lucid main
+
+Then you can install the formconv package from command line (using
+apt-get update and apt-get install formconv) or Synaptic (or your
+favourite package manager).
+
+This should work on Ubuntu 10.04 Lucid Lynx (and below, the earliest
+supported Ubuntu version is Dapper). If you have a different kind of
+system version, you may try the repository karmic, jaunty, ..., dapper
+(or lenny or etch on Debian) instead of lucid.
+
+COMPILATION
+-----------
+
+If you go into trouble, consider installing from .deb packages (Ubuntu
+and Debian users have this kind of advance). If you are using a non-deb
+system (even a non-Linux), you must compile your executable from source.
+Please refer to the documentation on how to do this.
+
+USAGE
+-----
+
+Here is a verbatim copy of the current help text of formconv.
+
+FOUND A BUG?
+------------
+
+Nice. There are many. :-) However, we appreciate your feedback and you
+are welcome to contact us.
+
+FUTURE OF FORMCONV
+------------------
+
+Since (unfortunately) there is no exact definition for the intuitive
+input, we can never be sure that formconv reaches version 1.0 at all.
+
+CREDITS AND ACKNOWLEDGEMENTS
+----------------------------
+
+The primary authors (Zoltán and Gábor) would like to thank their effort
+and help their contribution, extensive testing and financial support to:
+
+  * Kalin Kozhuharov,
+  * Róbert Vajda,
+  * Robert Mařík,
+  * Hungarian Ministry of Informatics and Communications (ITEM K+F support, 203/2003).

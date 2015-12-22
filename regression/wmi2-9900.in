@@ -1,0 +1,2 @@
+#!/bin/sh
+echo "234178926124738294ö3948393ö293948392ö39483932ö3948 bb " | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r 

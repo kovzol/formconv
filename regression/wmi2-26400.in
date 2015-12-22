@@ -1,0 +1,1 @@
+echo "a+3-(5+7+a^b9+cmo bb " | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r 

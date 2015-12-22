@@ -1,0 +1,1 @@
+echo "(cos(x)/sqrt(2+cos(2*x)))" | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r

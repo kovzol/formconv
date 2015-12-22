@@ -1,0 +1,1 @@
+echo "7/(2-x)^4" | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r

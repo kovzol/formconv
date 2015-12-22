@@ -1,0 +1,1 @@
+echo "(1+(9*(x^2)))^2" | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r

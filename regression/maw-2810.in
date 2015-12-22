@@ -1,0 +1,1 @@
+echo "x^2*e^(-2x)" | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r

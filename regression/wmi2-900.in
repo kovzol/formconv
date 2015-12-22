@@ -1,0 +1,1 @@
+echo "[[1,0],[0,1]]^^( aa )" | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r 

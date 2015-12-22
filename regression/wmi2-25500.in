@@ -1,0 +1,1 @@
+echo "98*pi+36*pi" | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r 

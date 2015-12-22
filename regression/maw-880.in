@@ -1,0 +1,1 @@
+echo "(sqrt(x^2-4))^3" | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r

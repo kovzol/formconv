@@ -1,0 +1,21 @@
+DOC=formconv
+
+TEX_FILES = $(DOC:=.tex)
+LYX_FILES = $(DOC:=.lyx)
+
+all: $(DOC)
+
+$(TEX_FILES): $(LYX_FILES)
+	lyx -e latex $(@:.tex=.lyx)
+
+$(DOC): $(TEX_FILES) doc.sed
+	latex2html -split 0 -nonavigation -noinfo $@
+	for i in $@/*.html; do \
+	 cat $$i |\
+	  sed -f doc.sed > $$i.new; \
+	 mv $$i.new $$i; \
+	 done
+
+clean:
+	rm -f -R $(DOC) $(TEX_FILES) tmpfile.tex
+

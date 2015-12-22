@@ -1,0 +1,1 @@
+echo "sin sqrt  5*x   *cos sqrt  5*x   " | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r

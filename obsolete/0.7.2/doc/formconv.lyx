@@ -1,0 +1,429 @@
+#LyX 1.2 created this file. For more info see http://www.lyx.org/
+\lyxformat 220
+\textclass article
+\language english
+\inputencoding latin2
+\fontscheme default
+\graphics default
+\paperfontsize default
+\spacing single 
+\papersize Default
+\paperpackage a4
+\use_geometry 0
+\use_amsmath 0
+\use_natbib 0
+\use_numerical_citations 0
+\paperorientation portrait
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\defskip medskip
+\quotes_language english
+\quotes_times 2
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+
+\layout Title
+
+Formula Converter
+\layout Standard
+
+
+\begin_inset LatexCommand \tableofcontents{}
+
+\end_inset 
+
+
+\layout Section
+
+Introduction
+\layout Standard
+
+Formula Converter (formconv) is a general formula parser and converter.
+ It accepts various kind of input formats and can generate many types of
+ formats as well for output.
+\layout Section
+
+Supported formats
+\layout Subsection
+
+Input/output formats
+\layout Standard
+
+These type of formats are reversible in conversion.
+\layout Subsubsection
+
+C
+\layout Standard
+
+This format contains all numerical expressions which make sense using an
+ ANSI C compiler.
+\layout Standard
+
+Example: 
+\family typewriter 
+2*x*exp(x)/sin(x)-sqrt(1/(y*pow(a*b,c)))
+\family default 
+.
+\layout Subsubsection
+
+Maple
+\layout Standard
+
+This format contains all numerical expressions which make sense using the
+ Maple computer algebra system.
+\layout Standard
+
+Example: 
+\family typewriter 
+2*x*exp(x)/sin(x)-i*sqrt(1/(y*(a*b)^c))
+\family default 
+.
+\layout Subsubsection
+
+MuPAD
+\layout Standard
+
+Similar to Maple, but there are som differences.
+\layout Standard
+
+Example: 
+\family typewriter 
+2*x*exp(x)/sin(x)-I*sqrt(1/(y*(a*b)^c))
+\family default 
+.
+\layout Subsubsection
+
+Mathematica
+\layout Standard
+
+Similar to Maple, but some functions have to be typed using capital leading
+ characters.
+ Some parentheses also may be brackets.
+ Multiplication sign (asterisk) need not be appear in multiplication.
+\layout Standard
+
+Example: 
+\family typewriter 
+2x*E^x/Sin[x]-Sqrt[1/(y*(a b)^c)]
+\family default 
+.
+\layout Subsubsection
+
+YaCAS
+\layout Standard
+
+Similar to Mathematica.
+ The differences are not fully explored.
+\layout Standard
+
+Example: 
+\family typewriter 
+2*x*Exp(x)/Sin(x)-I*Sqrt(1/(y*(a*b)^c))
+\family default 
+.
+\layout Subsubsection
+
+Lisp
+\layout Standard
+
+
+\emph on 
+This output format is not described yet.
+\layout Subsubsection
+
+MathML
+\layout Standard
+
+
+\emph on 
+This output format is not described yet.
+\layout Subsubsection
+
+Maxima
+\layout Standard
+
+A bit similar to Maple, but there are some differences.
+ Unlike the previous formats, this one is case insensitive.
+\layout Standard
+
+Example: 
+\family typewriter 
+x*%E^x/sin(x)-%I*SQRT(1/(y*(a*b)^c))
+\family default 
+.
+\layout Subsection
+
+Input-only formats
+\layout Subsubsection
+
+Intuitive
+\layout Standard
+
+Used for converting the input given by a simple user.
+ Not really defined, what do we call intuitive format.
+ In a general sense, intuitive format covers all input/output formats, except
+ Lisp.
+ I.e., any combination of the above expressions should be parsed.
+\layout Standard
+
+Example: 
+\family typewriter 
+2x%E^x/Sin(x)-I*SQRT(1/(y*pow(a*b,c)))
+\family default 
+.
+\layout Subsection
+
+Output-only formats
+\layout Subsubsection
+
+LaTeX
+\layout Standard
+
+Standard conversion to a LaTeX formula.
+\layout Standard
+
+Example: 
+\family typewriter 
+x
+\backslash 
+cdot 
+\backslash 
+frac{e^x}{
+\backslash 
+sin x}-i
+\backslash 
+sqrt{
+\backslash 
+frac{1}{y
+\backslash 
+cdot a
+\backslash 
+cdot b^{c}}}
+\family default 
+.
+\layout Subsubsection
+
+verb_XX
+\layout Standard
+
+Conversion to pronouncable formula into a spoken XX language.
+\layout Standard
+
+Example (verb_en): 
+\family typewriter 
+x times exponential function to the power x divided by sine x, minus i times
+ square root one divided by y times the following: power of a times b to
+ c
+\family default 
+.
+\layout Standard
+
+Example (verb_hu): 
+\family typewriter 
+x-szer é ad x osztva szinusz x-szel, mínusz i-szer négyzetgyök alatt egy
+ per y-szor a következõ: a-szor b a c-edik hatványon
+\family default 
+.
+\layout Subsubsection
+
+Html Valign
+\layout Standard
+
+Used for aligning LaTeX formulae to a top, middle or bottom of the baseline
+ of the paragraph.
+\layout Standard
+
+Examples: 
+\family typewriter 
+x
+\family default 
+ should be aligned bottom.
+ 
+\family typewriter 
+x^2
+\family default 
+ should also be aligned bottom.
+ 
+\family typewriter 
+x/y
+\family default 
+ should be aligned middle.
+ 
+\family typewriter 
+e^x
+\family default 
+ should be aligned bottom.
+ 
+\family typewriter 
+e^x/2
+\family default 
+ should be aligned middle.
+\layout Subsubsection
+
+Parse
+\layout Standard
+
+Used to get a yes/no answer if the input is correct or not.
+\layout Section
+
+Options
+\layout Standard
+
+formconv is highly configurable.
+ It now understands some command line switches and planned to be able to
+ be fined tune similarly like 
+\emph on 
+latex2html
+\emph default 
+.
+ Current options:
+\layout Subsection
+
+General options
+\layout Standard
+
+These options should work for all input format:
+\layout Description
+
+--allowed-letters\SpecialChar ~
+letters The 
+\emph on 
+letters
+\emph default 
+ string contains all allowed letters (e.g.\SpecialChar ~
+
+\begin_inset Formula $x$
+\end_inset 
+
+, 
+\begin_inset Formula $y$
+\end_inset 
+
+, 
+\begin_inset Formula $i$
+\end_inset 
+
+).
+ Default is 
+\emph on 
+xyzabcpie
+\emph default 
+.
+\layout Description
+
+--input-content\SpecialChar ~
+type The 
+\emph on 
+type
+\emph default 
+ can be 
+\series bold 
+expression
+\series default 
+ or 
+\series bold 
+equation
+\series default 
+.
+\layout Subsection
+
+Output options
+\layout Subsubsection
+
+LaTeX options
+\layout Description
+
+--no-dynamic-parentheses Prevents converter to generate 
+\family typewriter 
+
+\backslash 
+left(
+\family default 
+ and 
+\family typewriter 
+
+\backslash 
+right)
+\family default 
+, it writes 
+\family typewriter 
+(
+\family default 
+ and 
+\family typewriter 
+)
+\family default 
+ instead.
+\layout Description
+
+--no-cdots Prevents writing 
+\family typewriter 
+
+\backslash 
+cdot
+\family default 
+, writing 
+\family typewriter 
+
+\backslash 
+,
+\family default 
+ instead.
+\layout Description
+
+--beautify-parentheses Outputs different kind of parentheses to ease divide
+ parts of the expression.
+\layout Description
+
+--no-auto-beautify Prevents removing extra parentheses, e.g.\SpecialChar ~
+
+\family typewriter 
+sin(((x)))
+\family default 
+ remains 
+\family typewriter 
+sin(((x)))
+\family default 
+ instead of 
+\family typewriter 
+sin(x)
+\family default 
+.
+\layout Section
+
+Download
+\layout Standard
+
+Go to 
+\emph on 
+http://sf.net/projects/formconv
+\emph default 
+ to download the latest version of this software.
+\layout Section
+
+Copyright
+\layout Standard
+
+formconv is started by Zoltán Kovács (kovzol@math.u-szeged.hu) as to support
+ the WebMathematics Interactive (
+\emph on 
+http://wmi.sf.net
+\emph default 
+) project.
+ Currently Gábor Bakos is working on implementing the specification which
+ has not been fixed yet fully (and probably will not ever be totally fixed
+ at all).
+ formconv is constantly tested by Róbert Vajda, the initial didactical leader
+ of the WebMathematics Interactive project.
+\layout Standard
+
+WebMathematics Interactive is supported by the Hungarian Ministry of Informatics
+ and Communications in 2003.
+\layout Standard
+
+formconv is copyrighted by Zoltán Kovács and Gábor Bakos in 2003.
+ formconv is a GNU LGPL copyrighted software.
+ For details, see http://formconv.sf.net.
+\the_end

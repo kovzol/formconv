@@ -1,0 +1,1 @@
+echo "1/e^(2x-3)" | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r

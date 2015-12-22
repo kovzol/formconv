@@ -1,0 +1,34 @@
+PCCTS_PATH = @PCCTS_PATH@
+prefix = @prefix@
+exec_prefix = @exec_prefix@
+bindir = @bindir@
+mandir = @mandir@
+@SET_MAKE@
+
+all: formconv
+
+formconv: pccts/Makefile pccts/formconv.g formconv.c pccts/AST.h \
+ pccts/beautify.sor pccts/latex_out.sor pccts/maple_out.sor \
+ pccts/maxima_out.sor pccts/yacas_out.sor pccts/mathml_out.sor
+	$(MAKE) -C pccts
+
+test: all
+	cd test; ./c2latex; cd ..
+
+documentation:
+	$(MAKE) -C doc
+
+install: all
+	@INSTALL@ -d $(bindir)
+	@INSTALL@ formconv $(bindir)
+	@INSTALL@ -d $(mandir)/man1
+	@INSTALL@ doc/formconv.1 $(mandir)/man1
+
+clean:
+	if [ -e pccts/Makefile ]; then $(MAKE) -C pccts scrub; fi
+	rm -f pccts/*_out.cpp pccts/*_out.h
+	rm -f pccts/TreeParser_Beautify.* pccts/beautify.cpp
+
+distclean: clean
+	rm -f config.status config.log Makefile doc/Makefile\
+	 pccts/Makefile formconv.spec config.h

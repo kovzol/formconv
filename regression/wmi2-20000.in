@@ -1,0 +1,1 @@
+echo "57120/(8 bb )" | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r 

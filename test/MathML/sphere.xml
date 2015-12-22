@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+	MathML description of a simple sphere model
+	Sum(i=0,n)(x[i]-0.5)^2
+-->
+<math xmlns="http://www.w3.org/1998/Math/MathML">
+	<apply>
+		<sum/>
+		<bvar>
+			<ci>i</ci>
+		</bvar>
+		<lowlimit>
+			<cn>0</cn>
+		</lowlimit>
+		<uplimit>
+			<ci>n</ci>
+		</uplimit>
+		<apply>
+			<power/>
+			<apply>
+				<minus/>
+				<ci>
+					<apply>
+						<selector/>
+						<ci type="vector">x</ci>
+						<ci>i</ci>
+					</apply>
+				</ci>
+				<cn>0.5</cn>
+			</apply>
+			<cn>2</cn> 
+		</apply>
+	</apply>
+</math>

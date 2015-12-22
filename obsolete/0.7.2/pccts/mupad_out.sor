@@ -1,0 +1,273 @@
+/**
+ * @Author: Gábor Bakos (Bakos.Gabor.1@stud.u-szeged.hu)
+ * Version: $Id: mupad_out.sor,v 1.2 2004/12/15 13:37:36 baga Exp $
+ */
+
+#header <<
+#include <string>
+#include <iostream>
+#include <fstream>
+#include <memory>
+using namespace std;
+#include "tokens.h"
+#include "AST.h"
+typedef AST SORAST;
+
+>>
+
+class TreeParser_MuPAD_out {
+<<
+	ofstream cout;
+	string prefix, suffix, header, footer;
+	bool last_identifier_was_in_uppercase;
+	TreeParser_MuPAD_out(const char *fn, const char *iprefix, const char *isuffix, const char *iheader, const char *ifooter) : cout(fn), prefix(iprefix), suffix(isuffix), header(iheader), footer(ifooter)
+	{
+		cout << header;
+	}
+	~TreeParser_MuPAD_out()
+	{
+		cout << footer;
+	}
+>>
+
+inp: <<string *f;>>
+	( #(NL {log_expr>[f] <<cout << prefix << *f << suffix << "\n"; delete f;>>} inp)
+	| #(ASSIGN add_expr>[f] <<cout << prefix << *f << ":="; delete f;>> log_expr>[f] <<cout << *f << suffix << "\n"; delete f;>> inp)
+	|)
+	;
+
+log_expr>[string *f]: <<string *g=NULL;>>
+	( log_value>[f]
+	| #(AND log_expr>[f] log_expr>[g] <<*f="("+*f+" and "+*g+")"; delete g;>>)
+	| #(NAND log_expr>[f] log_expr>[g] <<*f=" not ("+*f+" and "+*g+")"; delete g;>>)
+	| #(OR log_expr>[f] log_expr>[g] <<*f="("+*f+" or "+*g+")"; delete g;>>)
+	| #(NOR log_expr>[f] log_expr>[g] <<*f=" not ("+*f+" or "+*g+")"; delete g;>>)
+	| #(XOR log_expr>[f] log_expr>[g] <<*f="(("+*f+" and "+*g+") or (not ("+*f+") and not ("+*g+")))"; delete g;>>)
+	| #(IMPLY log_expr>[f] log_expr>[g] <<*f="(not ("+*f+") or ("+*g+"))"; delete g;>>)
+	| #(NOT log_expr>[f] <<*f=" not "+*f;>>)
+	)
+	;
+
+log_value>[string *f]:
+	  set_expr>[f]
+	| #(True <<f=new string("TRUE ");>>)
+	| #(False <<f=new string("FALSE ");>>)
+	;
+
+set_expr>[string *f]: <<string *g;>>
+	( rel_expr>[f]
+	| #(IN log_expr>[f] log_expr>[g] <<*f="("+*f+" in "+*g+")"; delete g;>>)
+	| #(SUBSET log_expr>[f] log_expr>[g] <<*f="("+*f+" subset "+*g+")"; delete g;>>)
+	| #(SUPSET log_expr>[f] log_expr>[g] <<*f="("+*g+" subset "+*f+")"; delete g;>>)
+	| #(SUBSETEQ log_expr>[f] log_expr>[g] <<*f="("+*f+" subset "+*g+")"; delete g;>>)
+	| #(SUPSETEQ log_expr>[f] log_expr>[g] <<*f="("+*g+" subset "+*f+")"; delete g;>>)
+	| #(UNION  log_expr>[f] log_expr>[g] <<*f="("+*f+" union "+*g+")"; delete g;>>)
+	| #(INTERSECT  log_expr>[f] log_expr>[g] <<*f="("+*f+" intersect "+*g+")"; delete g;>>)
+	| #(EXCEPT  log_expr>[f] log_expr>[g] <<*f="("+*f+" minus "+*g+")"; delete g;>>)
+	| #(CROSS  log_expr>[f] log_expr>[g] <<delete f; delete g; throw(NOT_IMPLEMENTED);>>)
+	| #(SETDEF log_expr>[f] log_expr>[g] <<delete f; delete g; throw(NOT_IMPLEMENTED);>>)
+	| #(FORALL log_expr>[f] log_expr>[g] <<delete f; delete g; throw(NOT_IMPLEMENTED);>>)
+	| #(EXISTS log_expr>[f] log_expr>[g] <<delete f; delete g; throw(NOT_IMPLEMENTED);>>)
+	)
+	;
+
+rel_expr>[string *f]: <<string *g=NULL;>>
+	( #(LESS add_expr>[f] add_expr>[g] <<*f="("+*f+"<"+*g+")"; delete g;>>)
+	| #(LE add_expr>[f] add_expr>[g] <<*f="("+*f+"<="+*g+")"; delete g;>>)
+	| #(EL add_expr>[f] add_expr>[g] <<*f="("+*f+"<="+*g+")"; delete g;>>)
+	| #(GREATER add_expr>[f] add_expr>[g] <<*f="("+*f+">"+*g+")"; delete g;>>)
+	| #(GE add_expr>[f] add_expr>[g] <<*f="("+*f+">="+*g+")"; delete g;>>)
+	| #(EG add_expr>[f] add_expr>[g] <<*f="("+*f+">="+*g+")"; delete g;>>)
+	| #(EQUAL log_expr>[f] log_expr>[g] <<*f="("+*f+"="+*g+")"; delete g;>>)
+	| #(NEQ log_expr>[f] log_expr>[g] <<*f="("+*f+"<>"+*g+")"; delete g;>>)
+	| add_expr>[f]
+	)
+	;
+
+add_expr>[string *f]: <<string *g=NULL;>>
+	( #(PLUS add_expr>[f] add_expr>[g] <<*f="("+*f+"+"+*g+")"; delete g;>>)
+	| #(MINUS add_expr>[f] add_expr>[g] <<*f="("+*f+"-"+*g+")"; delete g;>>)
+	| neg_mult_expr>[f]
+	)
+	;
+neg_mult_expr>[string *f]:
+	  #(NEG neg_mult_expr>[f] <<*f="-("+*f+")";>>)
+	| mult_expr>[f] 
+	;
+mult_expr>[string *f]: <<string *g=NULL;>>
+	( #(MULT mult_expr>[f] neg_mult_expr>[g] <<*f="(("+*f+")*("+*g+"))"; delete g;>>)
+	| #(DIV mult_expr>[f] neg_mult_expr>[g] <<*f="(("+*f+")/("+*g+"))"; delete g;>>)
+	| #(MULTNONE mult_expr>[f] neg_mult_expr>[g] <<*f="(("+*f+")*("+*g+"))"; delete g;>>)
+	| pow_expr>[f]
+	| #(DIVI add_expr>[f] add_expr>[g] <<*f="(("+*f+") div ("+*g+"))"; delete g;>>)
+	| #(MOD add_expr>[f] add_expr>[g] <<*f="(("+*f+") mod ("+*g+"))"; delete g;>>)
+	)
+	;
+pow_expr>[string *f]: <<string *g=NULL;>>
+	( #(CIRCUM fact>[f] neg_mult_expr>[g] <<*f="(("+*f+")^("+*g+"))"; delete g;>>)
+	| fact>[f]
+	)
+	;
+func>[string *f]:
+	  #(SIN <<f=new string("sin");>>)
+	| #(COS <<f=new string("cos");>>)
+	| #(SEC <<f=new string("sec");>>)
+	| #(COSEC <<f=new string("csc");>>)
+	| #(TAN <<f=new string("tan");>>)
+	| #(COT <<f=new string("cot");>>)
+	| #(SINH <<f=new string("sinh");>>)
+	| #(COSH <<f=new string("cosh");>>)
+	| #(SECH <<f=new string("sech");>>)
+	| #(COSECH <<f=new string("csch");>>)
+	| #(TANH <<f=new string("tanh");>>)
+	| #(COTH <<f=new string("coth");>>)
+	| #(ARCSIN <<f=new string("arcsin");>>)
+	| #(ARCCOS <<f=new string("arccos");>>)
+	| #(ARCSEC <<f=new string("arcsec");>>)
+	| #(ARCCOSEC <<f=new string("arccsc");>>)
+	| #(ARCTAN <<f=new string("arctan");>>)
+	| #(ARCCOT <<f=new string("arccot");>>)
+	| #(ARCSINH <<f=new string("arcsinh");>>)
+	| #(ARCCOSH <<f=new string("arccosh");>>)
+	| #(ARCSECH <<f=new string("arcsech");>>)
+	| #(ARCCOSECH <<f=new string("arccsch");>>)
+	| #(ARCTANH <<f=new string("arctanh");>>)
+	| #(ARCCOTH <<f=new string("arccoth");>>)
+	| #(EXP <<f=new string("exp");>>)
+	| #(LOG <<f=new string("ln");>>)
+	| #(ARG <<f=new string("arg");>>)
+	| #(IM <<f=new string("Im");>>)
+	| #(RE <<f=new string("Re");>>)
+	| #(CONJUGATE <<f=new string("conjugate");>>)
+	| #(SQRT <<f=new string("sqrt");>>)
+	| #(LN <<f=new string("ln");>>)
+	| #(COMPLEMENTER <<throw(NOT_IMPLEMENTED);>>)
+	| #(TRANSPONATE <<throw(NOT_IMPLEMENTED);>>)
+	;
+
+gletter>[string *f]:
+	  #(a:ALPHA <<if ((a->getText())[0]=='A') f=new string("Alpha");
+	              else f=new string("alpha");
+	            >>)
+	| #(b:BETA <<f=new string("beta");>>)
+	| #(c:GAMMA <<if ((c->getText())[0]=='G') f=new string("Gamma");
+	               else f=new string("gamma");
+	             >>)
+	| #(d:DELTA <<if ((d->getText())[0]=='D') f=new string("Delta");
+	              else f=new string("delta");
+	            >>)
+	| #(e:EPSILON <<f=new string("epsilon");>>)
+	| #(z:ZETA <<f=new string("zeta");>>)
+	| #(et:ETA <<f=new string("eta");>>)
+	| #(t:THETA <<if ((t->getText())[0]=='T') f=new string("Theta");
+	              else f=new string("theta");
+	            >>)
+	| #(i:IOTA <<f=new string("iota");>>)
+	| #(k:KAPPA <<f=new string("kappa");>>)
+	| #(l:LAMBDA <<if ((l->getText())[0]=='L') f=new string("Lambda");
+	               else f=new string("lambda");
+	             >>)
+	| #(m:MU <<f=new string("mu");>>)
+	| #(n:NU <<f=new string("nu");>>)
+	| #(x:XI <<if ((x->getText())[0]=='X') f=new string("Xi");
+	           else f=new string("xi");
+	         >>)
+	| #(om:OMICRON <<f=new string("omicron");>>)
+	| #(p:PI <<if ((p->getText())[0]=='P') f=new string("Pi");
+	           else f=new string("PI");
+	         >>)
+	| #(r:RHO <<f=new string("rho");>>)
+	| #(s:SIGMA <<if ((s->getText())[0]=='S') f=new string("Sigma");
+	              else f=new string("sigma");
+	            >>)
+	| #(ta:TAU <<f=new string("tau");>>)
+	| #(u:UPSILON <<if ((u->getText())[0]=='U') f=new string("Upsilon");
+	                else f=new string("upsilon");
+	              >>)
+	| #(ph:PHI <<if ((ph->getText())[0]=='P') f=new string("Phi");
+	             else f=new string("phi");
+	          >>)
+	| #(ch:CHI <<f=new string("chi");>>)
+	| #(ps:PSI <<if ((ps->getText())[0]=='P') f=new string("Psi");
+	             else f=new string("psi");
+	           >>)
+	| #(o:OMEGA <<if ((o->getText())[0]=='O') f=new string("Omega");
+	              else f=new string("omega");
+	            >>)
+	;
+
+fact>[string *f]: <<string *g=NULL,*h=NULL,*j=NULL;>>
+	( #(n:NUM <<f=new string(n->getText()); >>)
+	| #(x:VARIABLE <<f=new string(x->getText());>>)
+	| #(c:CONST 
+	  <<char *constant=c->getText();
+		switch (constant[0]) {
+			case 'E': last_identifier_was_in_uppercase=true; f=new string("(exp(1))"); break;
+			case 'e': last_identifier_was_in_uppercase=false; f=new string("(exp(1))"); break;
+			case 'I': last_identifier_was_in_uppercase=true; f=new string("I"); break;
+			case 'i': last_identifier_was_in_uppercase=false; f=new string("I"); break;
+			default: f=new string(constant); break;
+		}
+	  >>)
+	| gletter>[f]
+	| #(INFTY <<f=new string("infinity ");>>)
+	| #(UNDEFINED <<f=new string("undefined ");>>)
+	| #(LBRACKET log_expr>[f] log_expr>[g] {COMMA log_expr>[h] <<*g+=", "+*h; delete h;>>} RBRACKET
+	  <<
+	    if (*f=="(exp(1))")
+	    {
+	      delete f;
+	      if (last_identifier_was_in_uppercase) f=new string("E_letter"); //restore the identifier
+	      else f=new string("e");
+	    } else if (*f=="I")
+	    {
+	      delete f;
+	      if (last_identifier_was_in_uppercase) f=new string("I_letter"); //restore the identifier
+	      else f=new string("i");
+	    } else if (*f=="PI")
+	    {
+	      delete f;
+	      f=new string("pi");
+	    }
+	    *f+="["+*g+"]"; delete g;
+	  >>)
+	| #(UNDERSCORE log_expr>[f] log_expr>[g] {COMMA log_expr>[h] <<*g+=", "+*h; delete h;>>}
+	  <<
+	    if (*f=="(exp(1)")
+	    {
+	      delete f;
+	      if (last_identifier_was_in_uppercase) f=new string("E_letter"); //restore the identifier
+	      else f=new string("e");
+	    } else if (*f=="I")
+	    {
+	      delete f;
+	      if (last_identifier_was_in_uppercase) f=new string("I_letter"); //restore the identifier
+	      else f=new string("i");
+	    } else if (*f=="PI")
+	    {
+	      delete f;
+	      f=new string("pi");
+	    }
+	    *f+="["+*g+"]"; delete g;
+	  >>)
+	| #(LPAREN log_expr>[f] RPAREN <<*f="("+*f+")";>>)
+	| #(LBRACE log_expr>[f] <<*f="{"+ f->substr(1, f->length()-2)+"}";>>)
+	| #(UFUNCTION log_expr>[f] log_expr>[g] (COMMA log_expr>[h]<<*g+=", "+*h; delete h;>>)* <<*f+="("+*g+")"; delete g;>>)
+	| #(FUNCTION func>[f] {UNDERSCORELOG add_expr>[j]} add_expr>[g] <<*f="("+*f+"("+*g; delete g;>>
+	    { add_expr>[h] <<*f+=")^("+*h; delete h;>>
+	    }
+	   )<<*f+="))";if (j!=NULL) {*f="("+*f+"/log("+*j+"))"; delete j;}>>
+	| #(ABS add_expr>[f] <<*f="abs("+*f+")";>>)
+	| #(FLOOR add_expr>[f] <<*f="floor("+*f+") ";>>)
+	| #(CEIL add_expr>[f] <<*f=" ceil("+*f+") ";>>)
+	| #(ROOT add_expr>[f] LPAREN add_expr>[g] RPAREN <<*f="exp(1.0/("+*f+")*ln("+*g+"))"; delete g;>>)
+	| #(DFACTORIAL add_expr>[f] <<*f="Factorial("+*f+")";throw(NOT_IMPLEMENTED);>>)
+	| #(FACTORIAL add_expr>[f] <<*f="("+*f+")!";>>)
+	| #(ENUMERATE <<f=new string(""); >> (set_expr>[g] <<*f+=*g+", ";>>)+ <<*f=f->substr(0,f->length()-2);>>)
+	| #(RBRACKET <<f=NULL;>> {add_expr>[f] <<*f="["+*f+"]";>>} <<if (f==NULL) f=new string("[]");>>)
+	| #(DOTS <<throw(NOT_IMPLEMENTED);>>)
+	| #(EMPTYSET <<f=new string("{}");>>)
+	)
+	;
+}
+

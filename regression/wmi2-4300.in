@@ -1,0 +1,1 @@
+echo "12(n*(2^(n-1)+4^ aa " | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r 

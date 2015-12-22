@@ -1,0 +1,1 @@
+echo "sqrt(2)/(3*(x^2)+3)" | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r

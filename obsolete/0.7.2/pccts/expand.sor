@@ -1,0 +1,268 @@
+/**
+ * @Author: Gábor Bakos (Bakos.Gabor.1@stud.u-szeged.hu)
+ * Version: $Id: expand.sor,v 1.3 2006/07/23 14:03:17 baga Exp $
+ */
+
+#header <<
+#include <string>
+#include <iostream>
+#include <fstream>
+using namespace std;
+#include "tokens.h"
+#include "AST.h"
+typedef AST SORAST;
+>>
+
+class TreeParser_Expand {
+<<
+private:
+	bool simplify, log_equal; //simplify: contracts the same treenodes (Useful for MathML), log_equal: 1=2=3=4-> (1=2)=(3=4) the bool values, this is true, while 1=2 and 2=3 and 3=4 is false. 
+	ofstream cout;
+
+public:
+	TreeParser_Expand(const char *fn, bool _simplify, bool _log_equal = false): cout(fn), log_equal(_log_equal), simplify(_simplify)
+	{
+	}
+>>
+inp: {expr}
+	;
+expr:
+	 !#(n:NL {e:expr {f:expr} <<if (e != NULL && e->type()==ENUMERATE) #expr=#(n,#(#[RBRACKET,"]"],e),f); else #expr=#(n, e, f);>>})
+	|!#(a:ASSIGN e:expr f:expr {g:expr} <<if (f->type()==ENUMERATE) #expr=#(a,e,#(#[RBRACKET,"]"],f),g);>>)
+	| #(AND expr expr)
+	| #(NAND expr expr)
+	| #(OR expr expr)
+	| #(NOR expr expr)
+	| #(XOR expr expr)
+	| #(IMPLY expr expr)
+	| #(NOT expr)
+	| #(True)
+	| #(False)
+	|!#(e:LESS f:expr g:expr)
+	  <<
+	    if (f->type()==LESS || f->type()==LE || f->type()==GREATER || f->type()== GE || f->type()==EQUAL || f->type()==NEQ) {
+	      #expr=#(#[AND, "and"], f, #(e, f->down()->right()->deepCopy(), g));
+	    }
+	    else #expr=#(e,f,g);
+	  >>
+	|!#(e:LE f:expr g:expr)
+	  <<
+	    if (f->type()==LESS || f->type()==LE || f->type()==GREATER || f->type()== GE || f->type()==EQUAL || f->type()==NEQ) {
+	      #expr=#(#[AND, "and"], f, #(e, f->down()->right()->deepCopy(), g));
+	    }
+	    else #expr=#(e,f,g);
+	  >>
+	|!#(e:EL f:expr g:expr)
+	  <<
+	    if (f->type()==LESS || f->type()==LE || f->type()==GREATER || f->type()== GE || f->type()==EQUAL || f->type()==NEQ) {
+	      #expr=#(#[AND, "and"], f, #(e, f->down()->right()->deepCopy(), g));
+	    }
+	    else #expr=#(e,f,g);
+	  >>
+	|!#(e:GREATER f:expr g:expr)
+	  <<
+	    if (f->type()==LESS || f->type()==LE || f->type()==GREATER || f->type()== GE || f->type()==EQUAL || f->type()==NEQ) {
+	      #expr=#(#[AND, "and"], f, #(e, f->down()->right()->deepCopy(), g));
+	    }
+	    else #expr=#(e,f,g);
+	  >>
+	|!#(e:GE f:expr g:expr)
+	  <<
+	    if (f->type()==LESS || f->type()==LE || f->type()==GREATER || f->type()== GE || f->type()==EQUAL || f->type()==NEQ) {
+	      #expr=#(#[AND, "and"], f, #(e, f->down()->right()->deepCopy(), g));
+	    }
+	    else #expr=#(e,f,g);
+	  >>
+	|!#(e:EG f:expr g:expr)
+	  <<
+	    if (f->type()==LESS || f->type()==LE || f->type()==GREATER || f->type()== GE || f->type()==EQUAL || f->type()==NEQ) {
+	      #expr=#(#[AND, "and"], f, #(e, f->down()->right()->deepCopy(), g));
+	    }
+	    else #expr=#(e,f,g);
+	  >>
+	|!#(e:EQUAL f:expr g:expr)//Használni kellene a típus információkat...
+	  <<
+	    if ((f->type()==LESS || f->type()==LE || f->type()==GREATER || f->type()== GE || f->type()==EQUAL || f->type()==NEQ) && log_equal) {
+	      #expr=#(#[AND, "and"], f, #(e, f->down()->right()->deepCopy(), g));
+	    }
+	    else #expr=#(e,f,g);
+	  >>
+	|!#(e:NEQ f:expr g:expr)
+	  <<
+	    if ((f->type()==LESS || f->type()==LE || f->type()==GREATER || f->type()== GE || f->type()==EQUAL || f->type()==NEQ) && log_equal) {
+	      #expr=#(#[AND, "and"], f, #(e, f->down()->right()->deepCopy(), g));
+	    }
+	    else #expr=#(e,f,g);
+	  >>
+	|!#(i:IN f:expr g:expr)
+	  <<
+	    int t=g->type();
+	    if (f->type()==ENUMERATE)
+	      if (t==SUBSET || t==SUPSET || t==SUBSETEQ || t==SUPSETEQ || t==EQUAL || t==NEQ)
+	        #expr=#(#[AND,"/\\"],#(#[SUBSETEQ, "subseteq"], #(#[LBRACE, "{"],f), g->down()->deepCopy()), g);
+	      else
+	        #expr=#(#[SUBSETEQ, "subseteq"], #(#[LBRACE, "{"],f), g);
+	    else
+	      if (t==SUBSET || t==SUPSET || t==SUBSETEQ || t==SUPSETEQ || t==EQUAL || t==NEQ)
+	        #expr=#(#[AND, "/\\"], #(i, f, g->down()->deepCopy()), g);
+	      else
+	        #expr=#(i,f,g);
+	  >>
+	|!#(i:NI f:expr g:expr)
+	  <<
+	    int type=f->type();
+	    SORAST *rightmost=f;
+	    if (g->type()==ENUMERATE)
+	      if (type==SUBSET || type==SUPSET || type==SUBSETEQ || type==SUPSETEQ || type==EQUAL || type==NEQ || type==AND)
+	      {
+	        while (type==SUBSET || type==SUPSET || type==SUBSETEQ || type==SUPSETEQ || type==EQUAL || type==NEQ || type==AND)
+		{
+		  rightmost=(SORAST *)(rightmost->down()->right());
+		  type=rightmost->type();
+		}
+		#expr=#(#[AND, "/\\"], #(#[SUBSETEQ, "subseteq"], #(#[LBRACE, "{"],g), rightmost->deepCopy()), f);
+	      }
+	      else
+	        #expr=#(#[SUBSETEQ, "subseteq"], #(#[LBRACE, "{"],g), f);
+	    else
+	      if (type==SUBSET || type==SUPSET || type==SUBSETEQ || type==SUPSETEQ || type==EQUAL || type==NEQ || type==AND)
+	      {
+	        while (type==SUBSET || type==SUPSET || type==SUBSETEQ || type==SUPSETEQ || type==EQUAL || type==NEQ || type==AND)
+		{
+		  rightmost=(SORAST *)rightmost->down()->right();
+		  type=rightmost->type();
+		}
+		#expr=#(#[AND, "/\\"], #(#[IN, "in"], g, rightmost->deepCopy()), f);
+	      }
+	      else
+	        #expr=#(#[IN, "in"],g,f);
+	  >>
+	|!#(s:SUBSET f:expr g:expr)
+	  <<
+	    if (f->type()==SUBSET || f->type()==SUPSET || f->type()==SUBSETEQ || f->type()==SUPSETEQ || f->type()==EQUAL || f->type()==NEQ)
+	      #expr=#(#[AND, "and"], f, #(#[SUBSET, "subset"], f->down()->right()->deepCopy(), g));
+	      else #expr=#(s, f, g);
+	  >>
+	|!#(s:SUPSET f:expr g:expr)
+	  <<
+	    if (f->type()==SUBSET || f->type()==SUPSET || f->type()==SUBSETEQ || f->type()==SUPSETEQ || f->type()==EQUAL || f->type()==NEQ)
+	      #expr=#(#[AND, "and"], f, #(#[SUBSET, "subset"], f->down()->right()->deepCopy(), g));
+	      else #expr=#(s, f, g);   
+	  >>
+	|!#(s:SUPSETEQ f:expr g:expr)
+	  <<
+	    if (f->type()==SUBSET || f->type()==SUPSET || f->type()==SUBSETEQ || f->type()==SUPSETEQ || f->type()==EQUAL || f->type()==NEQ)
+	      #expr=#(#[AND, "and"], f, #(#[SUBSET, "subset"], f->down()->right()->deepCopy(), g));
+	      else #expr=#(s, f, g);   
+	  >>
+	|!#(s:SUBSETEQ f:expr g:expr)
+	  <<
+	    if (f->type()==SUBSET || f->type()==SUPSET || f->type()==SUBSETEQ || f->type()==SUPSETEQ || f->type()==EQUAL || f->type()==NEQ)
+	      #expr=#(#[AND, "and"], f, #(#[SUBSET, "subset"], f->down()->right()->deepCopy(), g));
+	      else #expr=#(s, f, g);   
+	  >>
+	| #(UNION expr expr)
+	| #(INTERSECT expr expr)
+	| #(EXCEPT expr expr)
+	| #(SETDEF expr expr)//Az elsõ kifejezésbõl ki kellene nyerni a változót.
+
+	| #(FORALL expr expr)//Az elsõ kifejezésbõl ki kellene nyerni a változót.
+	| #(EXISTS expr expr)//Az elsõ kifejezésbõl ki kellene nyerni a változót.
+	| #(CROSS expr expr)
+	
+	| #(PLUS expr expr)
+	| #(MINUS expr expr)
+	| #(NEG expr)
+	| #(MULT expr expr)
+	| #(DIV expr expr)
+	| #(DIVI expr expr)//This can be better. (Differentiate the polinomial, number, and the ring)
+	| #(MOD expr expr)//This can be better. (Differentiate the polinomial, number, and the ring)
+	| #(MULTNONE expr expr)
+	| #(CIRCUM expr expr)
+	| #(SIN)
+	| #(COS)
+	| #(SEC)
+	| #(COSEC)
+	| #(TAN)
+	| #(COT)
+	| #(SINH)
+	| #(COSH)
+	| #(SECH)
+	| #(COSECH)
+	| #(TANH)
+	| #(COTH)
+	| #(ARCSIN)
+	| #(ARCCOS)
+	| #(ARCSEC)
+	| #(ARCCOSEC)
+	| #(ARCTAN)
+	| #(ARCCOT)
+	| #(ARCSINH)
+	| #(ARCCOSH)
+	| #(ARCSECH)
+	| #(ARCCOSECH)
+	| #(ARCTANH)
+	| #(ARCCOTH)
+	| #(EXP)
+	| #(LOG)
+	| #(ARG)
+	| #(IM)
+	| #(RE)
+	| #(CONJUGATE)
+	| #(SQRT)
+	| #(LN)
+	| #(FLOOR expr)
+	| #(CEIL expr)
+	| #(COMPLEMENTER)
+	| #(TRANSPONATE)
+
+	| nvc
+	| #(LBRACKET expr expr {COMMA expr} RBRACKET)
+	| #(UNDERSCORE expr expr {COMMA expr})
+	| #(LPAREN expr RPAREN)
+	| #(LBRACE expr)
+	| #(RBRACKET {expr})
+	| #(UFUNCTION expr expr (COMMA expr)*)
+	| #(f:FUNCTION expr {UNDERSCORELOG expr} e:expr {ee:expr} <<if (ee!=NULL) {#expr=#(#[CIRCUM, "^"], f,ee); e->setRight(NULL);}>>)
+	| #(ABS expr)
+	| #(ROOT expr LPAREN expr RPAREN)
+	;
+
+nvc:
+	  #(NUM)
+	| #(VARIABLE)
+	| #(CONST)
+	| #(INFTY)
+	| #(UNDEFINED)
+	| #(ALPHA)
+	| #(BETA)
+	| #(GAMMA)
+	| #(DELTA)
+	| #(EPSILON)
+	| #(ZETA)
+	| #(ETA)
+	| #(THETA)
+	| #(IOTA)
+	| #(KAPPA)
+	| #(LAMBDA)
+	| #(MU)
+	| #(NU)
+	| #(XI)
+	| #(OMICRON)
+	| #(PI)
+	| #(RHO)
+	| #(SIGMA)
+	| #(TAU)
+	| #(UPSILON)
+	| #(PHI)
+	| #(CHI)
+	| #(PSI)
+	| #(OMEGA)
+	| #(DOTS)
+	| #(EMPTYSET)
+	| #(FACTORIAL expr)
+	| #(DFACTORIAL expr)
+	| #(ENUMERATE (expr)+)
+	;
+}
+

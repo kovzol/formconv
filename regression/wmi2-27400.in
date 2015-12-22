@@ -1,0 +1,1 @@
+echo "a matek lap szervez%u0151e eg bb " | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r 

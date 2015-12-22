@@ -1,0 +1,1 @@
+echo d | $F -A d -A a --times automatic

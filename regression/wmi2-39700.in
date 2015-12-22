@@ -1,0 +1,1 @@
+echo "tan^2(x)" | $F -x aa,.. -x bb,$ -l simple -I intuitive -O gnuplot -r 

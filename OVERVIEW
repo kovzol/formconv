@@ -1,0 +1,11 @@
+libformconv
+-----------
+
+The chart earlier here was is moved to doc/overview.*. It is about the
+currently valid constructs.
+
+You can use any stream as an input, the boundled examples use the cin.
+The examples use cout to create output, but you can use what you want.
+
+(It is easy to transform this C++ code to Java (a not public half
+solution was done in 1 day), or C#.)

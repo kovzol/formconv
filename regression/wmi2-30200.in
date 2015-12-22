@@ -1,0 +1,1 @@
+echo "e^(1/(x*x))" | $F -x aa,.. -x bb,$ -l simple -I intuitive -O gnuplot -r 

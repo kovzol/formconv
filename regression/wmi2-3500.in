@@ -1,0 +1,1 @@
+echo "12345678901234567898765432109876 bb " | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r 

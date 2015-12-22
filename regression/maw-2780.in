@@ -1,0 +1,1 @@
+echo "x^(1/6)*ln(x)" | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r

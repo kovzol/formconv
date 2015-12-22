@@ -1,0 +1,16 @@
+Version 0.8 (and above) of Formula Converter Library is written by Gabor
+Bakos <baga@users.sf.net>.
+
+Earlier versions (<=0.7.2) of formconv were mainly also his works,
+however others also contributed. See obsolete/0.7.2/doc/formconv.1 for
+details.
+
+Some minor changes and documentation improvements were added
+by Zoltan Kovacs <kovzol@math.u-szeged.hu>.
+
+Extended testing contributed by Robert Vajda (version 0.7) and
+Arpad Fekete (version 0.8). Robert Marik also helped to test
+version 0.8.x very intensively.
+
+Copyright (C) 2003-2010 Gabor Bakos and Zoltan Kovacs
+Portions Copyright (C) 2004 Kalin Kozhuharov

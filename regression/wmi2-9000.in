@@ -1,0 +1,1 @@
+echo "2008.05.13-198 bb " | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r 

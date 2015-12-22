@@ -1,0 +1,1 @@
+echo "<math><apply><plus/><cn>0.09</cn><cn>.004</cn></apply></math>" | $F -I contentMathML -O gnuplot -r

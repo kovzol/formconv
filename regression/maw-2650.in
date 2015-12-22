@@ -1,0 +1,1 @@
+echo "x*exp(sqrt(x^2+1))/(sqrt(x^2+1))" | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r

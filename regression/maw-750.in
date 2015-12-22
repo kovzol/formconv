@@ -1,0 +1,1 @@
+echo "(e^(2*x))/(e^x+1)" | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r

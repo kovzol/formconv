@@ -1,0 +1,1 @@
+echo "sin(x)^(4)-2*sin(x)^(3)+s bb " | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r 

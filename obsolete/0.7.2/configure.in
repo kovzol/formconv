@@ -1,0 +1,167 @@
+# Process this file with autoconf to produce a configure script.
+AC_INIT(formconv, 0.7.2.1, kovzol@math.u-szeged.hu)
+AC_PREREQ(2.52)
+
+# Checks for programs.
+AC_PROG_CXX
+AC_PROG_CC
+AC_PROG_MAKE_SET
+AC_PROG_INSTALL
+
+# Checks for libraries.
+
+# Checks for header files.
+AC_HEADER_STDC
+AC_CHECK_HEADERS([stdlib.h])
+
+# Checks for typedefs, structures, and compiler characteristics.
+AC_C_CONST
+
+
+#################
+# PCCTS...
+#################
+
+AC_MSG_CHECKING(for locate)
+which locate || AC_MSG_ERROR([locate utility is missing, it is needed to continue configuration])
+
+
+AC_ARG_VAR(PCCTS_PATH,
+        [installation directory of pccts])
+
+AC_MSG_CHECKING(installation directory of pccts)
+
+if test x$PCCTS_PATH = x; then
+    PCCTS_PATH=/nulldir
+    fi
+
+if test -d $PCCTS_PATH; then
+    AC_MSG_RESULT($PCCTS_PATH)
+    # Some directory is found... maybe it's OK...
+else
+    locate ATokenBuffer.cpp > /dev/null || {
+     AC_MSG_RESULT(not found)
+     AC_MSG_ERROR([pccts is missing, it is needed to compile formconv])
+     }
+    PCCTS_PATH=`locate ATokenBuffer.cpp | tac | head -1`
+    PCCTS_PATH=`dirname $PCCTS_PATH`
+    PCCTS_PATH=`dirname $PCCTS_PATH`
+    AC_MSG_RESULT($PCCTS_PATH)
+    fi
+
+AC_SUBST(PCCTS_PATH)
+
+
+AC_ARG_VAR(PCCTS_BIN,
+        [directory of executable files of pccts])
+
+AC_MSG_CHECKING(binaries directory of pccts)
+
+if test x$PCCTS_BIN = x; then
+    PCCTS_BIN=/nulldir
+    fi
+
+if test -d $PCCTS_BIN; then
+    AC_MSG_RESULT($PCCTS_BIN)
+    # Some directory is found... maybe it's OK...
+else
+    locate "*antlr" > /dev/null || {
+     AC_MSG_RESULT(not found)
+     AC_MSG_ERROR([pccts is missing, it is needed to compile formconv])
+     }
+    PCCTS_BIN=`locate "*antlr" | tac | head -1`
+    PCCTS_BIN=`dirname $PCCTS_BIN`
+    AC_MSG_RESULT($PCCTS_BIN)
+    fi
+
+AC_SUBST(PCCTS_BIN)
+
+
+AC_ARG_VAR(ANTLR_HEADERS,
+        [directory of antlr headers])
+
+AC_MSG_CHECKING(headers of antlr)
+
+if test x$ANTLR_HEADERS = x; then
+    ANTLR_HEADERS=/nulldir
+    fi
+
+if test -d $ANTLR_HEADERS; then
+    AC_MSG_RESULT($ANTLR_HEADERS)
+    # Some directory is found... maybe it's OK...
+else
+    locate "AParser.cpp" > /dev/null || {
+     AC_MSG_RESULT(not found)
+     AC_MSG_ERROR([pccts is missing, it is needed to compile formconv])
+     }
+    ANTLR_HEADERS=`locate "AParser.cpp" | tac | head -1`
+    ANTLR_HEADERS=`dirname $ANTLR_HEADERS`
+    AC_MSG_RESULT($ANTLR_HEADERS)
+    fi
+
+AC_SUBST(ANTLR_HEADERS)
+
+
+AC_ARG_VAR(SORCERER_HEADERS,
+        [sorcerer headers])
+
+AC_MSG_CHECKING(headers of sorcerer)
+
+if test x$SORCERER_HEADERS = x; then
+    SORCERER_HEADERS=/nulldir
+    fi
+
+if test -d $SORCERER_HEADERS; then
+    AC_MSG_RESULT($SORCERER_HEADERS)
+    # Some directory is found... maybe it's OK...
+else
+    locate "STreeParser.h" > /dev/null || {
+     AC_MSG_RESULT(not found)
+     AC_MSG_ERROR([pccts is missing, it is needed to compile formconv])
+     }
+    SORCERER_HEADERS=`locate "STreeParser.h" | tac | head -1`
+    SORCERER_HEADERS=`dirname $SORCERER_HEADERS`
+    AC_MSG_RESULT($SORCERER_HEADERS)
+    fi
+
+AC_SUBST(SORCERER_HEADERS)
+
+
+AC_ARG_VAR(SORCERER_CPPS,
+        [STreeParser.cpp])
+
+AC_MSG_CHECKING(STreeParser.cpp)
+
+if test x$SORCERER_CPPS = x; then
+    SORCERER_CPPS=/nulldir
+    fi
+
+if test -d $SORCERER_CPPS; then
+    AC_MSG_RESULT($SORCERER_CPPS)
+    # Some directory is found... maybe it's OK...
+else
+    locate "STreeParser.cpp" > /dev/null || {
+     AC_MSG_RESULT(not found)
+     AC_MSG_ERROR([pccts is missing, it is needed to compile formconv])
+     }
+    SORCERER_CPPS=`locate "STreeParser.cpp" | tac | head -1`
+    SORCERER_CPPS=`dirname $SORCERER_CPPS`
+    AC_MSG_RESULT($SORCERER_CPPS)
+    fi
+
+AC_SUBST(SORCERER_CPPS)
+
+AC_DEFINE(VERSION, $PACKAGE_VERSION)
+
+#################
+
+# Checks for library functions.
+
+AC_OUTPUT([formconv.spec
+	   config.h
+           Makefile
+           doc/Makefile
+	   pccts/Makefile
+	   mktgz mkbintgz])
+
+chmod 755 mktgz mkbintgz

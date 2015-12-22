@@ -1,0 +1,1 @@
+echo "((196^(20))*2+64)/176 bb " | $F -x aa,.. -x bb,$ -l simple -I intuitive -O latex -r 
